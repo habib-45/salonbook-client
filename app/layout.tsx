@@ -1,0 +1,59 @@
+import type { Metadata } from "next"
+import { Cormorant_Garamond, Manrope } from "next/font/google"
+import { AppProviders } from "@/components/providers/app-providers"
+import "./globals.css"
+
+const display = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+})
+
+const body = Manrope({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+})
+
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+  ),
+  title: {
+    default: "SalonBook — Thoughtful beauty, beautifully booked",
+    template: "%s · SalonBook",
+  },
+  description:
+    "Discover considered hair, skin, and beauty rituals at SalonBook in Brooklyn. Browse services, request an appointment, and make time for yourself.",
+  keywords: [
+    "salon booking",
+    "hair salon Brooklyn",
+    "facial",
+    "makeup",
+    "manicure",
+    "spa",
+    "appointment booking",
+  ],
+  openGraph: {
+    title: "SalonBook — Thoughtful beauty, beautifully booked",
+    description:
+      "A neighbourhood salon for considered hair, skin, and beauty rituals. Browse the menu and reserve your moment.",
+    type: "website",
+    siteName: "SalonBook",
+  },
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
+      <body>
+        <AppProviders>{children}</AppProviders>
+      </body>
+    </html>
+  )
+}
