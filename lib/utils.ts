@@ -124,6 +124,26 @@ export function pluralize(count: number, singular: string, plural?: string) {
   return `${count} ${count === 1 ? singular : (plural ?? `${singular}s`)}`
 }
 
+export function timeSlotMinutes(slot: string) {
+  const match = slot.match(/^(\d{1,2}):(\d{2})\s(AM|PM)$/i)
+  if (!match) return 0
+
+  const [, hours, minutes, meridiem] = match
+  let hour = Number(hours) % 12
+  if (meridiem.toUpperCase() === "PM") hour += 12
+  return hour * 60 + Number(minutes)
+}
+
+export function sortByAppointmentDate<
+  T extends { appointmentDate: string; timeSlot: string },
+>(items: T[]) {
+  return [...items].sort(
+    (a, b) =>
+      a.appointmentDate.localeCompare(b.appointmentDate) ||
+      timeSlotMinutes(a.timeSlot) - timeSlotMinutes(b.timeSlot)
+  )
+}
+
 export function sortByNewest<T extends { createdAt: string }>(items: T[]) {
   return [...items].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
