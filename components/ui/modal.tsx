@@ -12,6 +12,10 @@ const sizes = {
   xl: "max-w-4xl",
 }
 
+const subscribeToClient = () => () => {}
+const getClientSnapshot = () => true
+const getServerSnapshot = () => false
+
 interface ModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -37,14 +41,14 @@ export function Modal({
   className,
   bodyClassName,
 }: ModalProps) {
-  const [mounted, setMounted] = React.useState(false)
+  const mounted = React.useSyncExternalStore(
+    subscribeToClient,
+    getClientSnapshot,
+    getServerSnapshot
+  )
   const panelRef = React.useRef<HTMLDivElement>(null)
   const titleId = React.useId()
   const descriptionId = React.useId()
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
 
   React.useEffect(() => {
     if (!open) return

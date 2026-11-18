@@ -65,6 +65,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [isHydrated, setIsHydrated] = React.useState(false)
 
   React.useEffect(() => {
+    // Demo persistence is read once after mount so server and client markup match.
     let storedDb: Database | null = null
     let storedSession: string | null = null
 
@@ -87,6 +88,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       storedSession = null
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydrating demo state after mount avoids SSR mismatches.
     setDb(storedDb ?? seedDatabase())
     setSessionUserId(storedSession)
     setIsHydrated(true)

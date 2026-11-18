@@ -45,10 +45,10 @@ export function Navbar() {
   const [accountOpen, setAccountOpen] = React.useState(false)
   const dropdownRef = React.useRef<HTMLDivElement>(null)
 
-  React.useEffect(() => {
+  const closeMenus = React.useCallback(() => {
     setMenuOpen(false)
     setAccountOpen(false)
-  }, [pathname])
+  }, [])
 
   React.useEffect(() => {
     if (!menuOpen) return
@@ -120,6 +120,7 @@ export function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
+                onClick={closeMenus}
                 className={cn(
                   "relative rounded-full px-3.5 py-2 text-[0.8125rem] font-medium transition-colors",
                   isActive(pathname, link.href)
@@ -171,6 +172,7 @@ export function Navbar() {
                     <Link
                       href="/dashboard"
                       role="menuitem"
+                      onClick={closeMenus}
                       className="mt-1 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-white/70 hover:text-ink"
                     >
                       <LayoutDashboard className="size-4" />
@@ -179,6 +181,7 @@ export function Navbar() {
                     <Link
                       href="/dashboard/profile"
                       role="menuitem"
+                      onClick={closeMenus}
                       className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-white/70 hover:text-ink"
                     >
                       <UserRound className="size-4" />
@@ -245,6 +248,7 @@ export function Navbar() {
                 <Link
                   key={link.label}
                   href={link.href}
+                  onClick={closeMenus}
                   className={cn(
                     "flex items-center justify-between rounded-xl px-4 py-3.5 font-serif text-2xl tracking-[-0.02em]",
                     isActive(pathname, link.href)
@@ -269,7 +273,7 @@ export function Navbar() {
                     <p className="truncate text-xs text-ink-soft">{currentUser.email}</p>
                   </div>
                 </div>
-                <ButtonLink href="/dashboard" className="w-full">
+                <ButtonLink href="/dashboard" className="w-full" onClick={closeMenus}>
                   Go to dashboard
                 </ButtonLink>
                 <button
@@ -282,10 +286,10 @@ export function Navbar() {
               </div>
             ) : (
               <div className="space-y-2.5">
-                <ButtonLink href="/signin" variant="outline" className="w-full">
+                <ButtonLink href="/signin" variant="outline" className="w-full" onClick={closeMenus}>
                   Sign in
                 </ButtonLink>
-                <ButtonLink href="/signup" className="w-full">
+                <ButtonLink href="/signup" className="w-full" onClick={closeMenus}>
                   Create account
                 </ButtonLink>
               </div>
@@ -298,7 +302,7 @@ export function Navbar() {
               <p className="mt-2 text-xs leading-5 text-cream/70">
                 Call us at {SALON.phone} or browse the full service menu.
               </p>
-              <ButtonLink href="/services" variant="light" size="sm" className="mt-4">
+              <ButtonLink href="/services" variant="light" size="sm" className="mt-4" onClick={closeMenus}>
                 Explore services
               </ButtonLink>
             </div>
