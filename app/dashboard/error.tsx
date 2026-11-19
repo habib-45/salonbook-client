@@ -48,9 +48,9 @@ export default function DashboardError({
         <p className="mt-5 text-[0.625rem] text-ink-soft/65">
           Still stuck?{" "}
           <Link href="/dashboard/profile" className="font-semibold text-burgundy hover:underline">
-            Reset the demo data
+            Visit your profile
           </Link>{" "}
-          from your profile.
+          to check your account details.
         </p>
       </div>
     </div>

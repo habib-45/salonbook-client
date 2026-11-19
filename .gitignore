@@ -6,6 +6,7 @@ next-env.d.ts
 build/
 dist/
 .env*
+.env
 !.env.example
 .DS_Store
 *.pem

@@ -133,7 +133,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </span>
             </div>
             <span className="rounded-full bg-white/10 px-2 py-0.5 text-[0.5625rem] font-semibold text-cream/55">
-              Demo
+              Live API
             </span>
           </div>
         </div>
@@ -247,7 +247,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-2">
               <span className="hidden items-center gap-1.5 rounded-full border border-[#e6d8c4] bg-[#fffaf2] px-3 py-1.5 text-[0.5625rem] font-bold tracking-[0.1em] text-[#84612d] uppercase md:inline-flex">
                 <span className="size-1.5 rounded-full bg-[#b68a45]" />
-                Front-end demo
+                Secure workspace
               </span>
 
               <div ref={accountRef} className="relative">
@@ -400,7 +400,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </nav>
 
             <div className="border-t border-white/10 px-5 py-5 text-[0.625rem] leading-5 text-cream/35">
-              This dashboard uses sample data stored in your browser.
+              Your salon data is stored securely and synced with the SalonBook API.
             </div>
           </div>
         </div>

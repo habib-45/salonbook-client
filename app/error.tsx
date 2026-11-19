@@ -28,7 +28,7 @@ export default function RootError({
       </h1>
       <p className="mt-3 max-w-md text-sm leading-6 text-ink-soft">
         Something unexpected happened while loading this page. Your saved appointments and
-        profile are safe in this browser.
+        profile are safe in your SalonBook account.
       </p>
       {error.digest ? (
         <p className="mt-3 rounded-full bg-cream-deep px-3 py-1 text-[0.625rem] text-ink-soft">
@@ -46,7 +46,7 @@ export default function RootError({
         </ButtonLink>
       </div>
       <p className="mt-8 text-[0.625rem] leading-5 text-ink-soft/60">
-        If this keeps happening, refresh the page or reset the demo data from your profile.
+        If this keeps happening, refresh the page or contact the salon for help.
       </p>
     </div>
   )
