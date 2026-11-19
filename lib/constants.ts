@@ -1,8 +1,3 @@
-export const STORAGE_KEYS = {
-  database: "salonbook.demo.database.v1",
-  session: "salonbook.demo.session.v1",
-} as const
-
 export const SERVICE_CATEGORIES = [
   "Haircut & Styling",
   "Hair Coloring",
@@ -56,7 +51,7 @@ export const CATEGORY_DETAILS = [
     name: "Spa & Massage",
     description: "Slow, restorative bodywork to release the week.",
     image:
-      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80",
   },
 ] as const
 
@@ -106,14 +101,4 @@ export const DEMO_ACCOUNTS = {
   },
 } as const
 
-export const GOOGLE_DEMO_ACCOUNT = {
-  name: "Ava Thompson",
-  email: "ava.google@salonbook.com",
-  image:
-    "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=400&q=80",
-} as const
-
 export const CURRENCY = "USD"
-
-export const PAYMENT_CLIENT_MESSAGE =
-  "This checkout is a front-end demonstration. No card details are collected and no real payment is processed."
