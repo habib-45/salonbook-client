@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowUpRight,
+  CalendarClock,
   CalendarDays,
   Clock3,
   CreditCard,
@@ -27,6 +28,7 @@ import {
   cn,
   formatCurrency,
   formatDate,
+  formatDateTime,
   formatWeekday,
   todayInputValue,
 } from "@/lib/utils"
@@ -292,6 +294,11 @@ function CustomerAppointmentCard({
                 <span className="line-clamp-2">{appointment.message}</span>
               </p>
             ) : null}
+
+            <p className="mt-2.5 inline-flex items-center gap-1.5 text-[0.625rem] text-ink-soft/75">
+              <CalendarClock className="size-3" />
+              Requested {formatDateTime(appointment.createdAt)}
+            </p>
           </div>
 
           <div className="flex flex-col gap-2.5 border-t border-sand/70 pt-4 sm:flex-row sm:items-center lg:w-[180px] lg:shrink-0 lg:flex-col lg:items-stretch lg:border-t-0 lg:border-l lg:pt-0 lg:pl-5">

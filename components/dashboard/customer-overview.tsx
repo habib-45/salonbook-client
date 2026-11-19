@@ -14,8 +14,7 @@ import {
   Phone,
   ReceiptText,
   Scissors,
-  Sparkles,
-  Wallet,
+  XCircle,
 } from "lucide-react"
 import { useStore } from "@/components/providers/store-provider"
 import { useToast } from "@/components/providers/toast-provider"
@@ -121,12 +120,12 @@ export function CustomerOverview() {
 
       <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          icon={CalendarCheck2}
-          label="Upcoming visits"
-          value={stats.upcoming}
+          icon={CalendarDays}
+          label="Total requests"
+          value={stats.total}
           detail={
             nextAppointment
-              ? `Next on ${formatDate(nextAppointment.appointmentDate)}`
+              ? `Next visit ${formatDate(nextAppointment.appointmentDate)}`
               : "Nothing on the calendar yet"
           }
           tone="sage"
@@ -139,17 +138,17 @@ export function CustomerOverview() {
           tone="gold"
         />
         <StatCard
-          icon={Sparkles}
-          label="Visits completed"
-          value={stats.completed}
-          detail="A little time well spent"
+          icon={CalendarCheck2}
+          label="Confirmed visits"
+          value={stats.confirmed}
+          detail={`${stats.completed} completed`}
           tone="rose"
         />
         <StatCard
-          icon={Wallet}
-          label="Total invested"
-          value={formatCurrency(stats.spent)}
-          detail={`${stats.paidVisits} paid ${stats.paidVisits === 1 ? "visit" : "visits"}`}
+          icon={XCircle}
+          label="Cancelled requests"
+          value={stats.cancelled}
+          detail="Requests you withdrew"
           tone="burgundy"
         />
       </div>

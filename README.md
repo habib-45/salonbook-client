@@ -16,6 +16,13 @@ This client is wired end-to-end to the separate **SalonBook API** (Express, Mong
 
 The local URLs work for development. Replace the two live placeholders with the deployed client and API URLs.
 
+## Repositories
+
+| Repository | URL |
+| --- | --- |
+| Client | _Add your GitHub client repository URL_ |
+| Server | _Add your GitHub server repository URL_ |
+
 ## Demo accounts
 
 The sign-in page can fill these credentials for you. They come from the server seed.

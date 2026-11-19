@@ -97,6 +97,10 @@ export function getCustomerStats(db: Database, customerId: string) {
     total: appointments.length,
     pending: appointments.filter((appointment) => appointment.status === "pending")
       .length,
+    confirmed: appointments.filter((appointment) => appointment.status === "confirmed")
+      .length,
+    cancelled: appointments.filter((appointment) => appointment.status === "cancelled")
+      .length,
     upcoming: appointments.filter(
       (appointment) =>
         appointment.status === "confirmed" && appointment.appointmentDate >= today
@@ -120,6 +124,9 @@ export function getAdminStats(db: Database) {
   return {
     revenue: transactions.reduce((total, transaction) => total + transaction.amount, 0),
     transactionCount: transactions.length,
+    totalAppointments: db.appointments.length,
+    confirmed: db.appointments.filter((appointment) => appointment.status === "confirmed")
+      .length,
     pending: db.appointments.filter((appointment) => appointment.status === "pending")
       .length,
     today: db.appointments.filter(

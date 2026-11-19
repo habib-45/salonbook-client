@@ -6,7 +6,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   CalendarCheck2,
-  CalendarClock,
   CalendarDays,
   Check,
   CircleDollarSign,
@@ -14,7 +13,6 @@ import {
   ReceiptText,
   Scissors,
   ShieldCheck,
-  Sparkles,
   UsersRound,
   X,
 } from "lucide-react"
@@ -125,20 +123,13 @@ export function AdminOverview() {
         }
       />
 
-      <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
-          icon={CalendarClock}
-          label="Today's schedule"
-          value={stats.today}
-          detail={stats.today === 1 ? "1 visit on the books" : `${stats.today} visits on the books`}
+          icon={UsersRound}
+          label="Registered customers"
+          value={stats.customers}
+          detail={`${stats.blockedCustomers} blocked`}
           tone="sage"
-        />
-        <StatCard
-          icon={Sparkles}
-          label="Pending requests"
-          value={stats.pending}
-          detail={stats.pending ? "Waiting for your review" : "The queue is clear"}
-          tone="gold"
         />
         <StatCard
           icon={Scissors}
@@ -152,10 +143,31 @@ export function AdminOverview() {
           tone="rose"
         />
         <StatCard
+          icon={CalendarDays}
+          label="Appointment requests"
+          value={stats.totalAppointments}
+          detail={`${stats.today} visits today`}
+          tone="gold"
+        />
+        <StatCard
+          icon={Clock3}
+          label="Pending requests"
+          value={stats.pending}
+          detail={stats.pending ? "Waiting for your review" : "The queue is clear"}
+          tone="gold"
+        />
+        <StatCard
+          icon={CalendarCheck2}
+          label="Confirmed visits"
+          value={stats.confirmed}
+          detail={`${stats.upcoming} upcoming`}
+          tone="sage"
+        />
+        <StatCard
           icon={CircleDollarSign}
-          label="Paid revenue"
-          value={formatCurrency(stats.revenue)}
-          detail={`${stats.transactionCount} successful ${stats.transactionCount === 1 ? "payment" : "payments"}`}
+          label="Successful payments"
+          value={stats.transactionCount}
+          detail={`${formatCurrency(stats.revenue)} collected`}
           tone="burgundy"
         />
       </div>
