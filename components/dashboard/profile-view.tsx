@@ -7,9 +7,7 @@ import {
   LogOut,
   Mail,
   Phone,
-  RefreshCcw,
   ShieldCheck,
-  Sparkles,
   UserRound,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -25,13 +23,7 @@ import { DashPanel, PageHeader } from "@/components/dashboard/ui"
 import { formatDate } from "@/lib/utils"
 
 export function ProfileView() {
-  const {
-    db,
-    currentUser,
-    updateProfile,
-    resetDemoData,
-    signOut,
-  } = useStore()
+  const { db, currentUser, updateProfile, signOut } = useStore()
   const toast = useToast()
   const router = useRouter()
 
@@ -40,7 +32,7 @@ export function ProfileView() {
   const [image, setImage] = React.useState(currentUser?.image ?? "")
   const [error, setError] = React.useState("")
   const [fieldError, setFieldError] = React.useState("")
-  const [resetOpen, setResetOpen] = React.useState(false)
+  const [isSaving, setIsSaving] = React.useState(false)
   const [signOutOpen, setSignOutOpen] = React.useState(false)
 
   if (!db || !currentUser) return <DashboardSkeleton />
@@ -50,7 +42,7 @@ export function ProfileView() {
     phone !== (currentUser.phone ?? "") ||
     image !== currentUser.image
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError("")
     setFieldError("")
@@ -66,7 +58,9 @@ export function ProfileView() {
       return
     }
 
-    const result = updateProfile({ name, phone, image })
+    setIsSaving(true)
+    const result = await updateProfile({ name, phone, image })
+    setIsSaving(false)
     if (!result.ok) {
       setError(result.error)
       toast.error("Could not save profile", result.error)
@@ -76,13 +70,7 @@ export function ProfileView() {
     setName(result.data.name)
     setPhone(result.data.phone ?? "")
     setImage(result.data.image)
-    toast.success("Profile updated", "Your details have been saved in this browser.")
-  }
-
-  const handleReset = () => {
-    resetDemoData()
-    toast.info("Demo data restored", "You have been signed out. Sign back in to explore.")
-    router.push("/signin")
+    toast.success("Profile updated", "Your details have been saved to your account.")
   }
 
   return (
@@ -90,7 +78,7 @@ export function ProfileView() {
       <PageHeader
         eyebrow="Your account"
         title="A profile that feels like you."
-        description="Keep your contact details and photo up to date. Your email is used to sign in and cannot be changed in the demo."
+        description="Keep your contact details and photo up to date. Your email is used to sign in and cannot be changed here."
       />
 
       <div className="mt-7 grid items-start gap-5 lg:grid-cols-[0.78fr_1.22fr]">
@@ -128,18 +116,7 @@ export function ProfileView() {
             </p>
             <p className="flex items-center gap-2.5">
               <ShieldCheck className="size-3.5 shrink-0 text-rose" />
-              {currentUser.provider === "google" ? "Google-linked demo account" : "Email & password demo account"}
-            </p>
-          </div>
-
-          <div className="relative mt-6 rounded-xl border border-white/10 bg-white/[0.06] p-3.5">
-            <p className="flex items-center gap-1.5 text-[0.5625rem] font-bold tracking-[0.12em] text-gold uppercase">
-              <Sparkles className="size-3" />
-              Demo workspace
-            </p>
-            <p className="mt-1.5 text-[0.6875rem] leading-5 text-cream/50">
-              Your profile and salon data are stored only in this browser. This build is
-              ready to be connected to the real authentication API.
+              {currentUser.provider === "google" ? "Google-linked account" : "Email & password account"}
             </p>
           </div>
 
@@ -211,7 +188,6 @@ export function ProfileView() {
                   type="email"
                   value={currentUser.email}
                   readOnly
-                  disabled
                   className="cursor-not-allowed bg-cream-deep/40 opacity-80"
                 />
               </Field>
@@ -220,7 +196,7 @@ export function ProfileView() {
                 <p className="text-[0.625rem] leading-5 text-ink-soft">
                   {dirty ? "You have unsaved changes." : "Everything is up to date."}
                 </p>
-                <Button type="submit" disabled={!dirty}>
+                <Button type="submit" disabled={!dirty} loading={isSaving}>
                   <UserRound className="size-4" />
                   Save changes
                 </Button>
@@ -229,8 +205,8 @@ export function ProfileView() {
           </DashPanel>
 
           <DashPanel
-            title="Security & demo data"
-            description="Authentication and payments are simulated in this front-end build."
+            title="Account security"
+            description="Your SalonBook account is protected by the API, not by this browser."
           >
             <div className="space-y-3">
               <div className="flex flex-col gap-3 rounded-xl border border-sand/80 bg-white/45 p-3.5 sm:flex-row sm:items-center sm:justify-between">
@@ -241,36 +217,14 @@ export function ProfileView() {
                   <div>
                     <p className="text-xs font-semibold">Password</p>
                     <p className="mt-1 text-[0.6875rem] leading-5 text-ink-soft">
-                      Password changes arrive with the real auth integration.
+                      Passwords are hashed with bcrypt on the SalonBook server. Contact the
+                      salon if you need help changing yours.
                     </p>
                   </div>
                 </div>
                 <span className="shrink-0 rounded-full bg-cream-deep px-2.5 py-1 text-[0.5625rem] font-bold tracking-[0.08em] text-ink-soft uppercase">
-                  Demo only
+                  Protected
                 </span>
-              </div>
-
-              <div className="flex flex-col gap-3 rounded-xl border border-[#e8c7c9] bg-[#fdf7f7] p-3.5 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-start gap-3">
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f7e4e4] text-[#9d3c43]">
-                    <RefreshCcw className="size-4" />
-                  </span>
-                  <div>
-                    <p className="text-xs font-semibold">Reset sample data</p>
-                    <p className="mt-1 text-[0.6875rem] leading-5 text-ink-soft">
-                      Restores the original demo services, appointments, and accounts. You
-                      will be signed out.
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="shrink-0 border-[#e2c4c4] text-[#9d3c43] hover:bg-[#fff1f1]"
-                  onClick={() => setResetOpen(true)}
-                >
-                  Reset demo
-                </Button>
               </div>
             </div>
           </DashPanel>
@@ -278,21 +232,10 @@ export function ProfileView() {
       </div>
 
       <ConfirmDialog
-        open={resetOpen}
-        onOpenChange={setResetOpen}
-        title="Reset all demo data?"
-        description="Every service, appointment, payment, profile change, and account created in this browser will be replaced with the original sample data."
-        confirmLabel="Reset and sign out"
-        cancelLabel="Keep my data"
-        tone="danger"
-        onConfirm={handleReset}
-      />
-
-      <ConfirmDialog
         open={signOutOpen}
         onOpenChange={setSignOutOpen}
         title="Sign out of SalonBook?"
-        description="Your demo data will stay saved in this browser. You can sign back in at any time."
+        description="Your account and appointments stay safe on the server. You can sign back in at any time."
         confirmLabel="Sign out"
         cancelLabel="Stay signed in"
         onConfirm={() => {

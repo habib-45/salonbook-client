@@ -89,9 +89,9 @@ export function CustomerAppointments() {
       )
     })
 
-  const confirmCancellation = () => {
+  const confirmCancellation = async () => {
     if (!cancelTarget) return
-    const result = cancelOwnAppointment(cancelTarget.id)
+    const result = await cancelOwnAppointment(cancelTarget.id)
     if (!result.ok) {
       toast.error("Could not cancel appointment", result.error)
       return

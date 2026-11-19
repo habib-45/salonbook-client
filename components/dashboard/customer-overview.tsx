@@ -84,9 +84,9 @@ export function CustomerOverview() {
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening"
   const firstName = currentUser.name.split(" ")[0]
 
-  const confirmCancellation = () => {
+  const confirmCancellation = async () => {
     if (!cancelTarget) return
-    const result = cancelOwnAppointment(cancelTarget.id)
+    const result = await cancelOwnAppointment(cancelTarget.id)
     if (!result.ok) {
       toast.error("Could not cancel appointment", result.error)
       return
@@ -384,7 +384,7 @@ export function CustomerOverview() {
             title="Payment due"
             description={
               paymentsDue.length > 0
-                ? "Confirmed visits ready for secure demo checkout."
+                ? "Confirmed visits ready for secure checkout."
                 : "Nothing waiting to be paid."
             }
           >
@@ -420,7 +420,7 @@ export function CustomerOverview() {
                   </div>
                 ))}
                 <p className="text-center text-[0.625rem] leading-5 text-ink-soft">
-                  Demo checkout only. No card details are collected.
+                  Secure Stripe checkout. Card details never touch SalonBook.
                 </p>
               </div>
             ) : (
