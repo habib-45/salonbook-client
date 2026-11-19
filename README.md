@@ -8,11 +8,13 @@ This client is wired end-to-end to the separate **SalonBook API** (Express, Mong
 
 | Service | URL |
 | --- | --- |
+| Live client | _Add your Vercel URL after deployment_ |
+| Live API | _Add your deployed API URL after deployment_ |
 | Client (local) | http://localhost:3000 |
 | API (local) | http://localhost:5000 |
 | API health | http://localhost:5000/api/health |
 
-Replace the local URLs with your Vercel URL and deployed API URL after deployment.
+The local URLs work for development. Replace the two live placeholders with the deployed client and API URLs.
 
 ## Demo accounts
 
