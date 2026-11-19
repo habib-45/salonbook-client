@@ -33,8 +33,9 @@ export function ServiceFormModal({
   const [status, setStatus] = React.useState<ServiceStatus>(service?.status ?? "active")
   const [error, setError] = React.useState("")
   const [errors, setErrors] = React.useState<Record<string, string>>({})
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError("")
 
@@ -63,13 +64,15 @@ export function ServiceFormModal({
       status,
     }
 
-    const result = service ? updateService(service.id, input) : addService(input)
+    setIsSubmitting(true)
+    const result = service ? await updateService(service.id, input) : await addService(input)
     if (!result.ok) {
       setError(result.error)
       toast.error(
         service ? "Could not update service" : "Could not add service",
         result.error
       )
+      setIsSubmitting(false)
       return
     }
 
@@ -77,6 +80,7 @@ export function ServiceFormModal({
       service ? "Service updated" : "Service added",
       `${input.serviceName} is now ${status === "active" ? "live on the menu" : "paused"}.`
     )
+    setIsSubmitting(false)
     onClose()
   }
 
@@ -96,10 +100,10 @@ export function ServiceFormModal({
       size="lg"
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>
-          <Button type="submit" form="service-form">
+          <Button type="submit" form="service-form" loading={isSubmitting}>
             <Sparkles className="size-4" />
             {service ? "Save changes" : "Add service"}
           </Button>

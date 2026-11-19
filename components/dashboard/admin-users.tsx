@@ -72,10 +72,10 @@ export function AdminUsers() {
     setFilter("all")
   }
 
-  const handleBlockToggle = () => {
+  const handleBlockToggle = async () => {
     if (!blockTarget) return
     const nextBlocked = !blockTarget.isBlocked
-    const result = setUserBlocked(blockTarget.id, nextBlocked)
+    const result = await setUserBlocked(blockTarget.id, nextBlocked)
     if (!result.ok) {
       toast.error("Could not update customer access", result.error)
       return

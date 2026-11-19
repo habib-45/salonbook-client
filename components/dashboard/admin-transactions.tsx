@@ -118,7 +118,7 @@ export function AdminTransactions() {
   const copySession = async (value: string) => {
     try {
       await navigator.clipboard.writeText(value)
-      toast.success("Session ID copied", "The demo Stripe session ID is on your clipboard.")
+      toast.success("Session ID copied", "The Stripe session ID is on your clipboard.")
     } catch {
       toast.error("Could not copy", "Please select and copy the session ID manually.")
     }
@@ -129,7 +129,7 @@ export function AdminTransactions() {
       <PageHeader
         eyebrow="Transaction report"
         title="Every payment, accounted for."
-        description="Review successful and failed demo payments, search by guest or service, and export the filtered report for your records."
+        description="Review successful and failed payments, search by guest or service, and export the filtered report for your records."
         actions={
           <>
             <ButtonLink href="/dashboard/admin/appointments" variant="outline">
@@ -163,7 +163,7 @@ export function AdminTransactions() {
           icon={ReceiptText}
           label="Transactions"
           value={transactions.length}
-          detail="All demo checkout records"
+          detail="All checkout records"
           tone="neutral"
         />
         <StatCard
@@ -281,7 +281,7 @@ export function AdminTransactions() {
                             type="button"
                             onClick={() => copySession(transaction.stripeSessionId)}
                             className="mt-1 inline-flex max-w-[190px] items-center gap-1.5 truncate text-[0.625rem] text-ink-soft transition hover:text-burgundy"
-                            title="Copy demo Stripe session ID"
+                            title="Copy Stripe session ID"
                           >
                             <Copy className="size-2.5 shrink-0" />
                             {truncateMiddle(transaction.stripeSessionId, 14, 4)}
@@ -345,7 +345,7 @@ export function AdminTransactions() {
                   </span>
                 </p>
                 <p className="text-[0.625rem] text-ink-soft/70">
-                  Demo Stripe records only
+                  Stripe records only
                 </p>
               </div>
             </div>
@@ -412,8 +412,8 @@ export function AdminTransactions() {
       <div className="mt-5 flex flex-col items-center justify-center gap-1.5 text-center text-[0.625rem] leading-5 text-ink-soft/75 sm:flex-row">
         <Wallet className="size-3" />
         <span>
-          Stripe checkout is simulated in this front-end build. Exported reports reflect
-          browser demo data only.
+          Payments are recorded only after Stripe confirms them. Exported reports reflect
+          your SalonBook transaction history.
         </span>
       </div>
     </>

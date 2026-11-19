@@ -82,8 +82,8 @@ export function AdminOverview() {
     .slice(0, 3)
   const inactiveServices = db.services.filter((service) => service.status === "inactive")
 
-  const handleConfirm = (appointment: AppointmentWithDetails) => {
-    const result = confirmAppointment(appointment.id)
+  const handleConfirm = async (appointment: AppointmentWithDetails) => {
+    const result = await confirmAppointment(appointment.id)
     if (!result.ok) {
       toast.error("Could not confirm appointment", result.error)
       return
@@ -94,9 +94,9 @@ export function AdminOverview() {
     )
   }
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (!cancelTarget) return
-    const result = adminCancelAppointment(cancelTarget.id)
+    const result = await adminCancelAppointment(cancelTarget.id)
     if (!result.ok) {
       toast.error("Could not cancel appointment", result.error)
       return

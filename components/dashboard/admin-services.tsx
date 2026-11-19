@@ -44,6 +44,7 @@ export function AdminServices() {
   const [editing, setEditing] = React.useState<Service | null>(null)
   const [deleteTarget, setDeleteTarget] = React.useState<Service | null>(null)
   const [statusTarget, setStatusTarget] = React.useState<Service | null>(null)
+  const [isMutating, setIsMutating] = React.useState(false)
 
   if (!db) return <DashboardSkeleton />
 
@@ -83,9 +84,11 @@ export function AdminServices() {
     setStatus("all")
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!deleteTarget) return
-    const result = deleteService(deleteTarget.id)
+    setIsMutating(true)
+    const result = await deleteService(deleteTarget.id)
+    setIsMutating(false)
     if (!result.ok) {
       toast.error("Could not delete service", result.error)
       return
@@ -94,11 +97,13 @@ export function AdminServices() {
     setDeleteTarget(null)
   }
 
-  const handleStatusChange = () => {
+  const handleStatusChange = async () => {
     if (!statusTarget) return
     const nextStatus: ServiceStatus =
       statusTarget.status === "active" ? "inactive" : "active"
-    const result = setServiceStatus(statusTarget.id, nextStatus)
+    setIsMutating(true)
+    const result = await setServiceStatus(statusTarget.id, nextStatus)
+    setIsMutating(false)
     if (!result.ok) {
       toast.error("Could not update availability", result.error)
       return
@@ -472,6 +477,7 @@ export function AdminServices() {
         confirmLabel="Delete service"
         cancelLabel="Keep service"
         tone="danger"
+        loading={isMutating}
         onConfirm={handleDelete}
       />
 
@@ -495,6 +501,7 @@ export function AdminServices() {
         }
         cancelLabel="Leave as is"
         tone={statusTarget?.status === "active" ? "danger" : "default"}
+        loading={isMutating}
         onConfirm={handleStatusChange}
       />
     </>

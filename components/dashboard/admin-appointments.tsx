@@ -110,8 +110,8 @@ export function AdminAppointments() {
     setQuery("")
   }
 
-  const handleConfirm = (appointment: AppointmentWithDetails) => {
-    const result = confirmAppointment(appointment.id)
+  const handleConfirm = async (appointment: AppointmentWithDetails) => {
+    const result = await confirmAppointment(appointment.id)
     if (!result.ok) {
       toast.error("Could not confirm appointment", result.error)
       return
@@ -122,9 +122,9 @@ export function AdminAppointments() {
     )
   }
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     if (!cancelTarget) return
-    const result = adminCancelAppointment(cancelTarget.id)
+    const result = await adminCancelAppointment(cancelTarget.id)
     if (!result.ok) {
       toast.error("Could not cancel appointment", result.error)
       return
@@ -132,7 +132,7 @@ export function AdminAppointments() {
     toast.success(
       "Appointment cancelled",
       cancelTarget.paymentStatus === "paid"
-        ? "The visit is cancelled. The demo payment record is retained for reporting."
+        ? "The visit is cancelled. The payment record is retained for reporting."
         : "The customer will see the updated appointment status."
     )
     setCancelTarget(null)
@@ -512,8 +512,8 @@ export function AdminAppointments() {
 
       <p className="mt-5 flex items-center justify-center gap-1.5 text-center text-[0.625rem] leading-5 text-ink-soft/75">
         <CreditCard className="size-3" />
-        Payments are simulated in this demo. Real refunds and Stripe records arrive with
-        the backend.
+        Payments are recorded only after Stripe confirms them. Paid visits keep their
+        transaction for reporting.
       </p>
 
       <ConfirmDialog
@@ -530,7 +530,7 @@ export function AdminAppointments() {
                 cancelTarget.timeSlot
               } will be cancelled. ${
                 cancelTarget.paymentStatus === "paid"
-                  ? "The existing demo payment record will be kept for reporting."
+                  ? "The existing payment record will be kept for reporting."
                   : "No payment is attached to this visit."
               }`
             : ""
