@@ -12,8 +12,6 @@ export interface User {
   id: string
   name: string
   email: string
-  /** Demo-only credential storage. Never store passwords in the browser in production. */
-  password: string
   image: string
   role: Role
   isBlocked: boolean
@@ -63,6 +61,38 @@ export interface Database {
   services: Service[]
   appointments: Appointment[]
   transactions: Transaction[]
+}
+
+export interface AuthResponse {
+  token: string
+  user: User
+}
+
+export interface BootstrapData {
+  user: User | null
+  services: Service[]
+  users: User[]
+  appointments: Appointment[]
+  transactions: Transaction[]
+}
+
+export interface AuthConfig {
+  googleClientId: string | null
+  googleDemoEnabled: boolean
+}
+
+export interface CheckoutSession {
+  url: string
+  sessionId: string
+  appointmentId: string
+}
+
+export interface CheckoutSessionStatus {
+  sessionId: string
+  status: string
+  paymentStatus: string
+  appointmentId: string | null
+  appointmentPaymentStatus: PaymentStatus
 }
 
 export type ActionResult<T = undefined> =
