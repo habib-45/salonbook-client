@@ -63,7 +63,7 @@ export function PaymentCancelled() {
           No payment was taken.
         </h1>
         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-ink-soft">
-          You left the demo checkout before completing payment. Your appointment is
+          You left Stripe checkout before completing payment. Your appointment is
           unchanged and you can come back to it whenever you&apos;re ready.
         </p>
       </div>
@@ -139,7 +139,7 @@ export function PaymentCancelled() {
 
       <p className="animate-fade-up delay-225 mt-7 flex items-center justify-center gap-1.5 text-center text-[0.625rem] leading-5 text-ink-soft/70">
         <ShieldCheck className="size-3" />
-        No card details were stored.{" "}
+        No card details were shared with SalonBook.{" "}
         <Link href="/dashboard/appointments" className="font-semibold text-burgundy hover:underline">
           Manage your appointments
         </Link>

@@ -9,8 +9,10 @@ import {
   Check,
   Clock3,
   Copy,
+  LoaderCircle,
   Mail,
   ReceiptText,
+  RefreshCcw,
   ShieldCheck,
   Sparkles,
 } from "lucide-react"
@@ -19,7 +21,9 @@ import { useToast } from "@/components/providers/toast-provider"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { DashboardSkeleton } from "@/components/ui/feedback"
 import { StatusBadge } from "@/components/ui/status-badge"
+import { apiRequest, messageFromError } from "@/lib/api"
 import { getAppointmentTransaction, getService } from "@/lib/selectors"
+import type { CheckoutSessionStatus } from "@/lib/types"
 import {
   formatCurrency,
   formatDate,
@@ -28,18 +32,80 @@ import {
   truncateMiddle,
 } from "@/lib/utils"
 
+type ConfirmationState = "checking" | "verified" | "pending" | "error"
+
 export function PaymentSuccess() {
   const params = useParams<{ id: string }>()
-  const { db, currentUser } = useStore()
+  const { db, currentUser, refreshData } = useStore()
   const toast = useToast()
+
+  const [sessionId] = React.useState<string | null>(() =>
+    typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search).get("session_id")
+  )
+  const [confirmation, setConfirmation] = React.useState<ConfirmationState>("checking")
+  const [confirmationError, setConfirmationError] = React.useState("")
+
+  const appointment = db?.appointments.find((item) => item.id === params.id)
+  const transaction = db && appointment
+    ? getAppointmentTransaction(db, appointment.id)
+    : undefined
+  const alreadyPaid = appointment?.paymentStatus === "paid"
+
+  const checkPayment = React.useCallback(async () => {
+    if (!sessionId) return
+    try {
+      const status = await apiRequest<CheckoutSessionStatus>(
+        `/payments/session/${encodeURIComponent(sessionId)}`,
+        { signal: AbortSignal.timeout(10_000) }
+      )
+      setConfirmationError("")
+      if (status.appointmentPaymentStatus === "paid") {
+        await refreshData()
+        setConfirmation("verified")
+        return "verified" as const
+      }
+      return "pending" as const
+    } catch (error) {
+      setConfirmationError(messageFromError(error))
+      return "error" as const
+    }
+  }, [refreshData, sessionId])
+
+  React.useEffect(() => {
+    if (!currentUser || alreadyPaid || !sessionId) return
+
+    let cancelled = false
+    let attempts = 0
+
+    const poll = async () => {
+      while (!cancelled && attempts < 20) {
+        attempts += 1
+        const result = await checkPayment()
+        if (cancelled) return
+        if (result === "verified") {
+          setConfirmation("verified")
+          return
+        }
+        if (result === "error" && attempts >= 4) {
+          setConfirmation("error")
+          return
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2_500))
+      }
+      if (!cancelled) setConfirmation("pending")
+    }
+
+    void poll()
+    return () => {
+      cancelled = true
+    }
+  }, [alreadyPaid, checkPayment, currentUser, sessionId])
 
   if (!db || !currentUser) return <DashboardSkeleton />
 
-  const appointment = db.appointments.find((item) => item.id === params.id)
   const service = appointment ? getService(db, appointment.serviceId) : undefined
-  const transaction = appointment
-    ? getAppointmentTransaction(db, appointment.id)
-    : undefined
 
   if (!appointment || appointment.customerId !== currentUser.id) {
     return (
@@ -64,27 +130,74 @@ export function PaymentSuccess() {
   }
 
   if (!transaction) {
+    const stillChecking = confirmation === "checking" && Boolean(sessionId)
+    const needsAttention = confirmation === "pending" || confirmation === "error"
+    const Icon = stillChecking ? ShieldCheck : needsAttention ? RefreshCcw : ReceiptText
+
     return (
       <div className="flex min-h-[70vh] items-center justify-center text-center">
         <div className="max-w-md">
           <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-gold-light text-[#84612d]">
-            <ShieldCheck className="size-6" />
+            {stillChecking ? (
+              <LoaderCircle className="size-6 animate-spin" />
+            ) : (
+              <Icon className="size-6" />
+            )}
           </span>
           <h1 className="mt-5 font-serif text-[2.3rem] leading-tight tracking-[-0.03em]">
-            No payment recorded yet.
+            {stillChecking
+              ? "Confirming your payment."
+              : needsAttention
+                ? "Payment is still processing."
+                : "No payment recorded yet."}
           </h1>
           <p className="mt-3 text-sm leading-6 text-ink-soft">
-            This appointment does not have a completed payment in the demo record. You can
-            return to checkout whenever you&apos;re ready.
+            {stillChecking
+              ? "Stripe has sent you back to SalonBook. We're waiting for the payment confirmation to reach our server — this usually takes a few seconds."
+              : needsAttention
+                ? confirmationError ||
+                  "Stripe has not confirmed this payment yet. If you completed the payment, give it a moment and check again."
+                : "This appointment does not have a completed payment yet. You can return to checkout whenever you're ready."}
           </p>
           <div className="mt-6 flex flex-col justify-center gap-2.5 sm:flex-row">
-            <ButtonLink href={`/dashboard/payments/${appointment.id}`}>
-              Complete payment
-            </ButtonLink>
-            <ButtonLink href="/dashboard/appointments" variant="outline">
+            {needsAttention ? (
+              <Button
+                onClick={async () => {
+                  setConfirmation("checking")
+                  setConfirmationError("")
+                  const result = await checkPayment()
+                  if (result === "verified") {
+                    toast.success("Payment confirmed", "Your receipt is ready.")
+                  } else if (result === "error") {
+                    toast.error("Still processing", "Stripe has not confirmed this payment yet.")
+                  }
+                }}
+              >
+                <RefreshCcw className="size-4" />
+                Check again
+              </Button>
+            ) : null}
+            {!stillChecking ? (
+              <ButtonLink
+                href={`/dashboard/payments/${appointment.id}`}
+                variant={needsAttention ? "outline" : "primary"}
+              >
+                Complete payment
+              </ButtonLink>
+            ) : null}
+            <ButtonLink
+              href="/dashboard/appointments"
+              variant={needsAttention ? "ghost" : "outline"}
+            >
               My appointments
             </ButtonLink>
           </div>
+          {stillChecking ? (
+            <p className="mt-5 text-[0.625rem] leading-5 text-ink-soft/70">
+              You can safely close this page. Your appointment will update as soon as
+              Stripe&apos;s webhook is verified.
+            </p>
+          ) : null}
         </div>
       </div>
     )
@@ -93,7 +206,7 @@ export function PaymentSuccess() {
   const copySession = async () => {
     try {
       await navigator.clipboard.writeText(transaction.stripeSessionId)
-      toast.success("Session ID copied", "The demo Stripe session ID is on your clipboard.")
+      toast.success("Session ID copied", "The Stripe session ID is on your clipboard.")
     } catch {
       toast.error("Could not copy", "Please select and copy the session ID manually.")
     }
@@ -111,8 +224,8 @@ export function PaymentSuccess() {
           Beautifully done.
         </h1>
         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-ink-soft">
-          Your demo payment is recorded. Your appointment is confirmed and this receipt is
-          saved in your dashboard.
+          Stripe confirmed your payment. Your appointment is paid, and this receipt is saved
+          in your SalonBook account.
         </p>
       </div>
 
@@ -212,7 +325,7 @@ export function PaymentSuccess() {
             </div>
             <div className="flex items-center justify-between gap-3">
               <span>Status</span>
-              <span className="font-semibold text-[#516b48]">Paid · Demo</span>
+              <span className="font-semibold text-[#516b48]">Paid · Stripe</span>
             </div>
           </div>
         </div>
@@ -234,8 +347,8 @@ export function PaymentSuccess() {
       <div className="animate-fade-up delay-225 mt-7 rounded-2xl border border-sand/70 bg-white/35 p-4 text-center">
         <p className="inline-flex items-center gap-1.5 text-[0.625rem] leading-5 text-ink-soft">
           <Mail className="size-3 text-gold" />
-          In production, a Stripe receipt would be emailed automatically. This receipt is
-          stored in your browser demo data.
+          Stripe emails a payment receipt to the address used at checkout. You can also
+          return to this page from your appointment history.
         </p>
         <p className="mt-1 text-[0.625rem] text-ink-soft/60">
           Questions?{" "}

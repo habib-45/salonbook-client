@@ -4,7 +4,7 @@ import { PaymentCancelled } from "@/components/dashboard/payment-cancelled"
 
 export const metadata: Metadata = {
   title: "Checkout cancelled",
-  description: "Your SalonBook demo checkout was closed without taking payment.",
+  description: "Your SalonBook checkout was closed without taking payment.",
 }
 
 export default function PaymentCancelledPage() {

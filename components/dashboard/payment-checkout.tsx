@@ -3,7 +3,7 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import {
   ArrowLeft,
   CalendarDays,
@@ -20,9 +20,7 @@ import { useStore } from "@/components/providers/store-provider"
 import { useToast } from "@/components/providers/toast-provider"
 import { Button, ButtonLink } from "@/components/ui/button"
 import { DashboardSkeleton, FormAlert } from "@/components/ui/feedback"
-import { Field, Input } from "@/components/ui/form-field"
 import { PageHeader } from "@/components/dashboard/ui"
-import { PAYMENT_CLIENT_MESSAGE } from "@/lib/constants"
 import { getAppointmentTransaction, getService } from "@/lib/selectors"
 import {
   formatCurrency,
@@ -33,24 +31,11 @@ import {
 
 export function PaymentCheckout() {
   const params = useParams<{ id: string }>()
-  const router = useRouter()
-  const { db, currentUser, completePayment } = useStore()
+  const { db, currentUser, startCheckout } = useStore()
   const toast = useToast()
 
-  const [cardName, setCardName] = React.useState("")
-  const [cardNumber, setCardNumber] = React.useState("")
-  const [expiry, setExpiry] = React.useState("")
-  const [cvc, setCvc] = React.useState("")
   const [error, setError] = React.useState("")
-  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({})
   const [isProcessing, setIsProcessing] = React.useState(false)
-  const timerRef = React.useRef<number | null>(null)
-
-  React.useEffect(() => {
-    return () => {
-      if (timerRef.current) window.clearTimeout(timerRef.current)
-    }
-  }, [])
 
   if (!db || !currentUser) return <DashboardSkeleton />
 
@@ -129,61 +114,19 @@ export function PaymentCheckout() {
     )
   }
 
-  const validate = () => {
-    const nextErrors: Record<string, string> = {}
-    if (cardName.trim().length < 2) {
-      nextErrors.cardName = "Enter the name shown on the card."
-    }
-    if (cardNumber.replace(/\s/g, "").length !== 16) {
-      nextErrors.cardNumber = "Enter a 16-digit demo card number."
-    }
-    const expiryMatch = expiry.match(/^(\d{2})\/(\d{2})$/)
-    if (!expiryMatch) {
-      nextErrors.expiry = "Use MM/YY format."
-    } else {
-      const month = Number(expiryMatch[1])
-      const year = 2000 + Number(expiryMatch[2])
-      const expiryDate = new Date(year, month, 0, 23, 59, 59)
-      if (month < 1 || month > 12) {
-        nextErrors.expiry = "Enter a valid month."
-      } else if (expiryDate < new Date()) {
-        nextErrors.expiry = "This demo card has expired."
-      }
-    }
-    if (!/^\d{3,4}$/.test(cvc)) {
-      nextErrors.cvc = "Enter 3 or 4 digits."
-    }
-    setFieldErrors(nextErrors)
-    return Object.keys(nextErrors).length === 0
-  }
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const handleCheckout = async () => {
     setError("")
-    if (!validate()) return
-
     setIsProcessing(true)
-    timerRef.current = window.setTimeout(() => {
-      const result = completePayment(appointment.id)
-      if (!result.ok) {
-        setError(result.error)
-        toast.error("Payment could not be completed", result.error)
-        setIsProcessing(false)
-        return
-      }
+    const result = await startCheckout(appointment.id)
+    if (!result.ok) {
+      setError(result.error)
+      toast.error("Could not start checkout", result.error)
+      setIsProcessing(false)
+      return
+    }
 
-      toast.success("Payment complete", "Your demo receipt is ready to view.")
-      router.push(`/dashboard/payments/${appointment.id}/success`)
-    }, 1100)
-  }
-
-  const fillDemoCard = () => {
-    setCardName(currentUser.name)
-    setCardNumber("4242 4242 4242 4242")
-    setExpiry("12/30")
-    setCvc("123")
-    setFieldErrors({})
-    toast.info("Demo card filled", "No real card details are collected or stored.")
+    toast.success("Redirecting to Stripe", "Finish the payment on Stripe's secure page.")
+    window.location.assign(result.data.url)
   }
 
   return (
@@ -199,7 +142,7 @@ export function PaymentCheckout() {
       <PageHeader
         eyebrow="Secure checkout"
         title="Complete your appointment."
-        description="This is a front-end demo of the Stripe checkout flow. Your card values never leave this page."
+        description="Pay with a card on Stripe's secure checkout page. Your card details are entered on Stripe and never touch SalonBook."
         className="mt-5"
       />
 
@@ -211,126 +154,56 @@ export function PaymentCheckout() {
             </span>
             <div>
               <p className="text-xs font-bold tracking-[0.04em]">
-                Demo checkout — no real payment
+                Stripe Checkout — secure card payment
               </p>
               <p className="mt-1 text-[0.6875rem] leading-5 text-[#725b36]/85">
-                {PAYMENT_CLIENT_MESSAGE}
+                You will be redirected to Stripe to enter your card. SalonBook only marks
+                this appointment paid after Stripe confirms the payment through its webhook.
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} noValidate className="space-y-5 p-5 sm:p-6">
+          <div className="space-y-5 p-5 sm:p-6">
             {error ? <FormAlert>{error}</FormAlert> : null}
 
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <h2 className="font-serif text-[1.6rem] tracking-[-0.02em]">
-                  Payment details
-                </h2>
-                <p className="mt-1 text-xs text-ink-soft">
-                  Use any validly formatted demo card.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={fillDemoCard}
-                className="shrink-0 rounded-full border border-sand bg-white/60 px-3 py-1.5 text-[0.625rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
-              >
-                Use demo card
-              </button>
-            </div>
-
-            <Field label="Name on card" htmlFor="card-name" error={fieldErrors.cardName}>
-              <Input
-                id="card-name"
-                value={cardName}
-                onChange={(event) => {
-                  setCardName(event.target.value)
-                  setFieldErrors((current) => ({ ...current, cardName: "" }))
-                }}
-                placeholder="Sofia Bennett"
-                autoComplete="cc-name"
-                aria-invalid={Boolean(fieldErrors.cardName)}
-              />
-            </Field>
-
-            <Field
-              label="Card number"
-              htmlFor="card-number"
-              error={fieldErrors.cardNumber}
-              hint="Demo only"
-            >
-              <div className="relative">
-                <Input
-                  id="card-number"
-                  inputMode="numeric"
-                  value={cardNumber}
-                  onChange={(event) => {
-                    const digits = event.target.value.replace(/\D/g, "").slice(0, 16)
-                    setCardNumber(digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim())
-                    setFieldErrors((current) => ({ ...current, cardNumber: "" }))
-                  }}
-                  placeholder="4242 4242 4242 4242"
-                  autoComplete="cc-number"
-                  className="pr-12"
-                  aria-invalid={Boolean(fieldErrors.cardNumber)}
-                />
-                <CreditCard className="pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 text-ink-soft" />
-              </div>
-            </Field>
-
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Expiry" htmlFor="card-expiry" error={fieldErrors.expiry}>
-                <Input
-                  id="card-expiry"
-                  inputMode="numeric"
-                  value={expiry}
-                  onChange={(event) => {
-                    const digits = event.target.value.replace(/\D/g, "").slice(0, 4)
-                    setExpiry(
-                      digits.length > 2
-                        ? `${digits.slice(0, 2)}/${digits.slice(2)}`
-                        : digits
-                    )
-                    setFieldErrors((current) => ({ ...current, expiry: "" }))
-                  }}
-                  placeholder="MM/YY"
-                  autoComplete="cc-exp"
-                  aria-invalid={Boolean(fieldErrors.expiry)}
-                />
-              </Field>
-
-              <Field label="CVC" htmlFor="card-cvc" error={fieldErrors.cvc}>
-                <Input
-                  id="card-cvc"
-                  inputMode="numeric"
-                  value={cvc}
-                  onChange={(event) => {
-                    setCvc(event.target.value.replace(/\D/g, "").slice(0, 4))
-                    setFieldErrors((current) => ({ ...current, cvc: "" }))
-                  }}
-                  placeholder="123"
-                  autoComplete="cc-csc"
-                  aria-invalid={Boolean(fieldErrors.cvc)}
-                />
-              </Field>
-            </div>
-
-            <div className="rounded-xl bg-cream-deep/60 px-3.5 py-3 text-[0.625rem] leading-5 text-ink-soft">
-              <p className="flex items-start gap-2">
-                <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-sage" />
-                This demo never stores, sends, or validates card details against a payment
-                processor. Fields are cleared when you leave this page.
+            <div>
+              <h2 className="font-serif text-[1.6rem] tracking-[-0.02em]">
+                One secure step
+              </h2>
+              <p className="mt-1 text-xs leading-5 text-ink-soft">
+                Continue to Stripe to complete the payment for your confirmed appointment.
+                You can return here any time if you change your mind.
               </p>
             </div>
 
-            <Button type="submit" size="lg" className="w-full" loading={isProcessing}>
+            <ul className="space-y-2.5 text-xs text-ink-soft">
+              {[
+                "Card details are entered only on Stripe's hosted checkout.",
+                "Your payment status updates automatically when Stripe confirms it.",
+                "A receipt appears in your account after payment succeeds.",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-sage-light text-sage">
+                    <Check className="size-3" />
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <Button
+              type="button"
+              size="lg"
+              className="w-full"
+              loading={isProcessing}
+              onClick={handleCheckout}
+            >
               {isProcessing ? (
-                "Processing demo payment…"
+                "Opening Stripe…"
               ) : (
                 <>
                   <LockKeyhole className="size-4" />
-                  Pay {formatCurrency(appointment.servicePrice)}
+                  Pay {formatCurrency(appointment.servicePrice)} with Stripe
                 </>
               )}
             </Button>
@@ -344,10 +217,10 @@ export function PaymentCheckout() {
               </Link>
               <span className="inline-flex items-center gap-1">
                 <LockKeyhole className="size-3" />
-                Simulated secure checkout
+                Secured by Stripe
               </span>
             </div>
-          </form>
+          </div>
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-24">
@@ -411,7 +284,7 @@ export function PaymentCheckout() {
                   <span>{formatCurrency(appointment.servicePrice)}</span>
                 </div>
                 <div className="flex items-center justify-between gap-3 text-ink-soft">
-                  <span>Demo processing</span>
+                  <span>Processing</span>
                   <span>$0.00</span>
                 </div>
                 <div className="flex items-baseline justify-between gap-3 border-t border-sand/70 pt-3">
@@ -425,7 +298,7 @@ export function PaymentCheckout() {
               <div className="mt-4 rounded-xl bg-sage-light/60 px-3 py-2.5 text-[0.625rem] leading-5 text-[#516b48]">
                 <p className="flex items-start gap-1.5">
                   <Check className="mt-0.5 size-3 shrink-0" />
-                  Your appointment is confirmed. Payment secures the booking in this demo.
+                  Your appointment is confirmed. Paying now reserves your stylist&apos;s time.
                 </p>
               </div>
             </div>
@@ -434,12 +307,12 @@ export function PaymentCheckout() {
           <div className="rounded-2xl border border-sand/80 bg-white/40 p-4 text-[0.625rem] leading-5 text-ink-soft">
             <p className="flex items-center gap-1.5 font-semibold text-ink">
               <ShieldCheck className="size-3.5 text-sage" />
-              About this checkout
+              How this payment works
             </p>
             <p className="mt-1.5">
-              In production, this page would create a Stripe Checkout session on the
-              server, redirect to Stripe, and confirm the payment through a webhook. This
-              build demonstrates the client experience only.
+              SalonBook creates a Stripe Checkout session on the server, then Stripe hosts
+              the card form. A verified Stripe webhook records your transaction and marks
+              the appointment paid. Refreshing this page will never mark a payment complete.
             </p>
             <ButtonLink
               href="/dashboard/appointments"
