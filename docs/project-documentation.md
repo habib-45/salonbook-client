@@ -1,11 +1,12 @@
 # SalonBook — Project Documentation
 
-This document explains what was built, how the demo works, how each assignment requirement is covered, and what changes when the real backend is connected.
+This document explains what was built, how the full-stack architecture fits together, and how each assignment requirement is covered.
 
-- **Project:** SalonBook — salon appointment booking frontend
+- **Project:** SalonBook — full-stack salon appointment booking platform
 - **Assignment:** Programming Hero full-stack assignment, Category 002
-- **Stack:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4
-- **Status:** Frontend complete with an interactive browser-local demo data layer
+- **Client stack:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4
+- **API stack:** Express 5, MongoDB, JWT, bcrypt, Stripe, ImgBB
+- **Status:** Client and API wired end-to-end
 - **Companion docs:** [README](../README.md) · [Design system](design-system.md)
 
 ---
@@ -18,7 +19,7 @@ SalonBook is a two-sided booking platform:
 - **Customers** track pending and confirmed visits, cancel pending requests, pay for confirmed appointments, and maintain their profile.
 - **Admins** manage the service catalogue, approve or cancel appointments, block or restore customer access, and review/export transactions.
 
-The UI is production-shaped: typed domain models, role guards, validation, loading skeletons, empty states, accessible dialogs, and toast feedback. Because the API, Better Auth, ImgBB, and Stripe projects are not connected yet, the current data layer runs entirely in the browser and is clearly presented as a demo.
+The UI is production-shaped: typed domain models, role guards, validation, loading skeletons, empty states, accessible dialogs, and toast feedback. The data layer calls a separate Express API backed by MongoDB; authentication uses JWTs, Google tokens are verified server-side, images are uploaded to ImgBB, and payments use Stripe Checkout with a verified webhook.
 
 ---
 
@@ -39,7 +40,7 @@ The UI is production-shaped: typed domain models, role guards, validation, loadi
 | Sort services by price | Done | Recommended, price ascending, price descending, and duration sort options |
 | Customer requests an appointment | Done | Booking form in `service-detail.tsx`, `bookAppointment` action |
 | Customer cancels a pending appointment | Done | `cancelOwnAppointment` action, confirmation dialog in `customer-appointments.tsx` |
-| Customer pays for a confirmed appointment | Done | Demo checkout under `app/dashboard/payments/[id]`, `completePayment` action |
+| Customer pays for a confirmed appointment | Done | Stripe Checkout under `app/dashboard/payments/[id]`, verified webhook records payment |
 | Admin service create/update/delete | Done | `components/dashboard/admin-services.tsx`, `service-form-modal.tsx` |
 | Admin activates/deactivates services | Done | Status control in `admin-services.tsx`, `setServiceStatus` action |
 | Admin confirms/cancels appointments | Done | `components/dashboard/admin-appointments.tsx` and admin overview queue |
@@ -55,26 +56,26 @@ The UI is production-shaped: typed domain models, role guards, validation, loadi
 
 ---
 
-## 3. Scope and demo model
+## 3. Scope and architecture
 
 ### What is real in this repository
 
 - All pages, layouts, route protection, forms, validation, dialogs, and responsive behavior.
-- Typed domain models and a complete in-browser business layer.
-- A fully functional customer and admin experience backed by seeded data.
-- CSV export, receipt printing, image compression, and cross-tab storage synchronization.
+- A typed API client, token persistence, bootstrap hydration, and async actions.
+- A fully functional customer and admin experience backed by MongoDB.
+- CSV export, receipt printing, image compression before upload, and Stripe redirect checkout.
 
-### What is simulated
+### How each area is implemented
 
-| Area | Current behavior | Production replacement |
-| --- | --- | --- |
-| Authentication | Demo credentials stored in `localStorage`; session is a user ID key | Better Auth sessions validated by the API |
-| Google sign-in | Creates/reuses a fixed demo Google customer | Google OAuth provider through Better Auth |
-| Image upload | File is resized to max 1400 px and compressed to a JPEG data URL | Upload to ImgBB or object storage, store URL |
-| Payments | Validated demo card fields, 1.1 s simulated processing, local transaction record | Stripe Checkout Session + webhook |
-| Data | Per-browser `localStorage` database | MongoDB through the Express API |
-
-The demo is intentionally explicit about this in the UI, README, checkout, receipt, and profile screens. No real card details are collected or transmitted.
+| Area | Implementation |
+| --- | --- |
+| Authentication | Email/password checked by the API; bcrypt hashes; signed JWT returned to the client |
+| Session | JWT in `localStorage`, sent as `Authorization: Bearer` and verified on every request |
+| Google sign-in | Google Identity Services access token verified by the API; seeded fallback when unconfigured |
+| Image upload | Browser compresses to a data URL; API uploads to ImgBB or stores a size-limited inline fallback |
+| Payments | Stripe Checkout Session created by the API; hosted card form; verified webhook marks paid |
+| Data | MongoDB collections `users`, `services`, `appointments`, and `transactions` |
+| Role checks | UI `AuthGate` plus server middleware that re-reads the role and blocked flag |
 
 ---
 
@@ -105,13 +106,14 @@ Browser
 | Access control | `components/auth/auth-gate.tsx`, dashboard pages | Redirect unauthenticated users; gate customer/admin routes; block disabled accounts |
 | Presentation | `components/marketing`, `components/dashboard` | Page sections, tables, cards, forms, checkout, receipts |
 | Design primitives | `components/ui` | Buttons, fields, modal, confirm dialog, avatar, badges, skeletons, image upload |
-| State and actions | `components/providers/store-provider.tsx` | Hydration, persistence, authentication, CRUD, business rules, session |
-| Domain and selectors | `lib/types.ts`, `lib/seed.ts`, `lib/selectors.ts`, `lib/utils.ts` | Types, seeded database, joins/statistics, formatting and validation helpers |
+| State and actions | `components/providers/store-provider.tsx` | Bootstrap hydration, token session, async API actions, optimistic user state |
+| API client | `lib/api.ts`, `lib/google.ts` | Fetch wrapper, typed errors, token storage, Google token request |
+| Domain and selectors | `lib/types.ts`, `lib/selectors.ts`, `lib/utils.ts` | Types, joins/statistics, formatting and date helpers |
 | Styling | `app/globals.css` | Tailwind theme tokens, typography, base styles, animations |
 
-### Why a client data layer
+### Data flow
 
-There is no backend to call yet. A client store keeps the assignment demonstrable end-to-end while preserving a clean seam: pages call typed actions such as `bookAppointment` or `setServiceStatus`; only `store-provider.tsx` knows that the implementation is `localStorage`. Replacing those action bodies with API requests is the intended migration path.
+Pages call typed store actions such as `bookAppointment` or `setServiceStatus`. Each action calls the Express API, then refreshes the role-scoped `/api/bootstrap` snapshot so every view sees consistent server data. The UI never writes domain data directly. This keeps ownership checks, duplicate-slot prevention, and payment state on the server.
 
 ### Access control model
 
@@ -119,7 +121,7 @@ Protection is intentionally layered:
 
 1. **Route shell** — `app/dashboard/layout.tsx` wraps every dashboard page in `AuthGate`, which redirects unauthenticated visitors to `/signin?callbackUrl=...` and shows a blocked-account screen.
 2. **Role gate** — customer-only pages (`/dashboard/appointments`, payment routes) and admin-only pages (`/dashboard/admin/*`) add `AuthGate allow={[...]}`. A signed-in user on the wrong route is redirected to `/dashboard` with a toast.
-3. **Action guards** — every mutating action re-checks session, role, ownership, status, and validation. UI hiding alone is never trusted.
+3. **API guards** — every protected route verifies the JWT, reloads the user, re-checks the blocked flag and role, and enforces ownership and status rules. UI hiding alone is never trusted.
 4. **Navigation** — the dashboard shell renders separate customer and admin navigation, so admin links are not shown to customers.
 
 `callbackUrl` is sanitized by `safeCallbackUrl` so only same-origin relative paths are accepted.
@@ -136,14 +138,15 @@ All types live in `lib/types.ts`.
 | --- | --- | --- |
 | `id` | string | Prefixed unique ID |
 | `name` | string | Display name |
-| `email` | string | Normalized to lowercase for comparison |
-| `password` | string | Demo only; plain text in local storage |
-| `image` | string | Remote URL or compressed data URL |
+| `email` | string | Normalized to lowercase; unique index |
+| `image` | string | Remote URL or inline fallback data URL |
 | `role` | `"customer" \| "admin"` | Authorization boundary |
 | `isBlocked` | boolean | Blocks sign-in and protected access |
 | `phone` | string? | Optional profile field |
-| `provider` | `"credentials" \| "google"`? | Demo account origin |
+| `provider` | `"credentials" \| "google"`? | Account origin |
 | `createdAt` | ISO string | "Member since" display |
+
+Password hashes are stored in MongoDB with bcrypt and are never returned by the API.
 
 ### Service
 
@@ -183,19 +186,19 @@ All types live in `lib/types.ts`.
 | `customerId` | string | References a customer |
 | `amount` | number | Appointment price snapshot |
 | `currency` | string | USD |
-| `stripeSessionId` | string | Demo `cs_test_demo_...` reference |
-| `status` | `"paid" \| "failed"` | Demo report status |
+| `stripeSessionId` | string | Verified Stripe Checkout Session ID |
+| `status` | `"paid" \| "failed"` | Payment report status |
 | `createdAt` | ISO string | Payment timestamp |
 
 ### Database
 
-`Database` groups `users`, `services`, `appointments`, and `transactions`. It is seeded by `lib/seed.ts` and persisted under `salonbook.demo.database.v1`. The active user ID is stored under `salonbook.demo.session.v1`.
+`Database` groups `users`, `services`, `appointments`, and `transactions`. The API stores them in MongoDB and returns a role-scoped snapshot from `/api/bootstrap`. The client keeps only the JWT under `salonbook.token`; all domain data is re-fetched from the server.
 
 ### Seeded data
 
 | Entity | Count | Notes |
 | --- | --- | --- |
-| Users | 5 | 1 admin, 4 customers; Noah Williams is blocked |
+| Users | 6 | 1 admin, 4 credential customers, 1 Google customer; Noah Williams is blocked |
 | Services | 9 | 8 active, 1 inactive (`Scalp Detox Ritual`) |
 | Appointments | 8 | Pending, confirmed, and cancelled examples across customers |
 | Transactions | 3 | 2 paid, 1 failed |
@@ -208,12 +211,13 @@ Appointment dates are relative to the day the seed is first created, so the dash
 
 ### Authentication and account access
 
-- Sign-in matches normalized email and exact demo password.
-- Blocked accounts cannot sign in and see a dedicated blocked screen if their session is active.
-- Sign-up requires a name of at least 2 characters, a valid email, a unique email, and a password with at least 6 characters, one uppercase letter, and one lowercase letter.
+- Sign-in normalizes the email and verifies the password against its bcrypt hash in MongoDB.
+- The API issues a signed JWT; every protected request re-reads the user, role, and blocked flag from the database.
+- Blocked accounts cannot sign in or use protected endpoints and see a dedicated blocked screen if their token is still active.
+- Sign-up requires a name of at least 2 characters, a valid unique email, and a password with at least 6 characters, one uppercase letter, and one lowercase letter.
 - New accounts are always `customer` role and are signed in immediately.
-- Google demo sign-in reuses `ava.google@salonbook.com` or creates it once; blocked Google accounts are rejected.
-- Sign-out clears the session ID and redirects home.
+- Google sign-in sends a Google token to the API for verification; the seeded Google fallback is used when no client ID is configured and demo mode is enabled.
+- Sign-out clears the stored JWT and redirects home.
 
 ### Booking
 
@@ -246,18 +250,18 @@ Customer requests        pending ──────────────► c
 - Customers may cancel only their own **pending** appointments.
 - Admins may confirm only **pending** appointments.
 - Admins may cancel any appointment that is not already cancelled.
-- Paid appointments can still be cancelled by an admin; the demo keeps the historical transaction for reporting.
+- Paid appointments can still be cancelled by an admin; the historical transaction remains for reporting.
 - There is no reschedule or refund workflow in this scope.
 
 ### Payments
 
-- Only the customer who owns the appointment can pay.
+- Only the customer who owns the appointment can start checkout.
 - Only a **confirmed** appointment can be paid.
-- An appointment can be paid once; the checkout, success, and action layers all guard duplicates.
-- Checkout validates a name, a 16-digit demo card, a future `MM/YY` expiry, and a 3–4 digit CVC. No card values are stored.
-- A successful payment sets `paymentStatus: "paid"` and creates a paid transaction with a demo Stripe session ID.
+- An appointment can be paid once; checkout, session status, and the webhook all guard duplicates.
+- The API creates a Stripe Checkout Session from the stored appointment price. Card details are entered only on Stripe.
+- The appointment becomes paid and a transaction is written **only** when a signature-verified Stripe webhook arrives with a matching amount.
 - The receipt shows the transaction, appointment, customer, and service, supports copying the session ID, and can be printed.
-- A cancelled appointment checkout explains that no payment is due.
+- A pending appointment explains that it must be confirmed before payment; a cancelled one explains that no payment is due.
 
 ### Services
 
@@ -291,8 +295,8 @@ Customer requests        pending ──────────────► c
 ### Admin service change
 
 1. Admin opens **Services**, searches or filters, and chooses **Add service** or **Edit**.
-2. The modal validates fields and compresses an uploaded image.
-3. Saving writes to the store and updates the public menu immediately.
+2. The modal validates fields, compresses an uploaded image, and sends it to the API, which uploads to ImgBB.
+3. Saving writes through the API and updates the public menu immediately.
 4. **Deactivate** removes the service from public booking while preserving history.
 5. **Delete** is offered only when no appointment references the service.
 
@@ -329,15 +333,17 @@ Customer requests        pending ──────────────► c
 | Duplicate slot | Disabled slot in UI and action-level rejection |
 | Inactive service | Paused detail state; action rejects |
 | Admin tries to book | Action rejects with an explanatory message |
-| Non-owner payment | Private-checkout state and action rejection |
+| Non-owner payment | Private-checkout state and API 403 |
 | Already-paid appointment | "Already paid" state with receipt link |
 | Cancelled appointment checkout | "No payment due" state with rebook link |
-| Service deletion with history | Action error; admin told to deactivate |
-| Blocking an admin | Action rejects; no UI path exposes it |
+| Pending appointment checkout | "Awaiting confirmation" state before Stripe |
+| Service deletion with history | API 409; admin told to deactivate |
+| Blocking an admin | No UI path; API rejects non-customer accounts |
 | Unknown service ID | Friendly not-found state inside the protected detail page |
 | Unknown route | Branded 404 page |
 | Rendering exception | Root and dashboard error boundaries with retry |
-| Corrupt local storage | Store falls back to a fresh seed instead of crashing |
+| Expired or invalid token | Client clears the session and redirects to sign-in |
+| API offline | Connection banner with retry; page actions show an error toast |
 
 ---
 
@@ -350,9 +356,9 @@ Customer requests        pending ──────────────► c
 | Google demo customer | `ava.google@salonbook.com` | Google demo button |
 | Blocked customer | `noah@example.com` | `Customer123` |
 
-The sign-in page includes one-click credential filling for the demo customer and admin.
+The sign-in page includes one-click credential filling for the demo customer and admin. These accounts come from `npm run seed` in the API repository.
 
-To reset: use **Reset demo data** on `/dashboard/profile`, clear both `salonbook.demo.*` keys, or open a private window.
+To reset the demo snapshot, run `npm run seed:fresh` in the server repository. The client clears its JWT when the API reports it is invalid.
 
 ---
 
@@ -376,11 +382,11 @@ To reset: use **Reset demo data** on `/dashboard/profile`, clear both `salonbook
 - [ ] `/dashboard` shows correct counts, next visit, pending requests, unpaid prompt, activity, and recommendations.
 - [ ] `/dashboard/appointments` filters by status and searches service names.
 - [ ] A pending request can be cancelled after confirmation; a confirmed one cannot be cancelled by the customer.
-- [ ] A confirmed unpaid visit opens checkout; a paid one links to the receipt.
-- [ ] Checkout rejects incomplete/expired card fields and duplicate payment.
-- [ ] Successful payment updates both appointment and transaction, and the receipt prints.
+- [ ] A confirmed unpaid visit opens Stripe Checkout; a paid one links to the receipt.
+- [ ] Pending and cancelled visits show the correct checkout state.
+- [ ] With Stripe test keys, a completed payment is marked paid only after the webhook arrives.
 - [ ] Profile updates persist after refresh and phone validation rejects short numbers.
-- [ ] Reset demo data signs the user out and restores the seed.
+- [ ] Signing out clears the token; an invalid token redirects to sign-in.
 
 ### Admin
 
@@ -410,87 +416,76 @@ To reset: use **Reset demo data** on `/dashboard/profile`, clear both `salonbook
 ## 12. Build, performance, and accessibility notes
 
 - **Server/client split:** marketing layouts and metadata stay server-rendered; interactive views are client components. The store hydrates after mount to keep server and client markup deterministic.
-- **Images:** remote Unsplash images use `next/image` with appropriate `sizes`. Local uploads are compressed client-side before storage to limit `localStorage` growth.
+- **Images:** remote Unsplash images use `next/image` with appropriate `sizes`. Uploads are compressed in the browser, then sent to the API for ImgBB storage.
 - **Selectors:** joins and statistics are memoized by their callers where appropriate, and pure selectors keep dashboards consistent.
 - **Bundle discipline:** no heavy UI framework runtime is added; primitives are local and icons are tree-shaken from lucide-react.
 - **Accessibility:** semantic landmarks, labelled forms, focus-visible styles, live-region toasts, dialog escape handling, and text alternatives for images.
-- **Error recovery:** corrupt storage is ignored, error boundaries offer retry, and payment/booking failures are recoverable without losing the session.
+- **Error recovery:** invalid tokens are cleared, API failures surface a retry banner, and payment/booking failures are recoverable without losing the session.
 
 ---
 
-## 13. Backend integration plan
+## 13. API integration
 
-The customer, admin, and payment flows are already shaped around the API that should replace the demo store.
-
-### Recommended API surface
+The client talks to the Express API in the companion `serverside` repository. All routes are prefixed with `/api`.
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| `POST` | `/api/auth/sign-up` | Create a customer account |
-| `POST` | `/api/auth/sign-in` | Credential sign-in |
-| `GET` | `/api/auth/session` | Current session and role |
-| `POST` | `/api/auth/sign-out` | End the session |
-| `GET` | `/api/services` | Public active services with search/category/sort |
-| `GET` | `/api/services/:id` | Service details |
-| `POST` | `/api/services` | Admin create |
-| `PATCH` | `/api/services/:id` | Admin update/status |
-| `DELETE` | `/api/services/:id` | Admin delete with history guard |
-| `GET` | `/api/appointments` | Role-scoped appointment list |
-| `POST` | `/api/appointments` | Customer booking request |
-| `PATCH` | `/api/appointments/:id/cancel` | Customer or admin cancellation |
-| `PATCH` | `/api/appointments/:id/confirm` | Admin confirmation |
-| `POST` | `/api/payments/checkout-session` | Create Stripe Checkout Session |
-| `POST` | `/api/payments/webhook` | Stripe webhook, signature verified |
-| `GET` | `/api/transactions` | Admin report |
-| `GET` | `/api/users` | Admin customer directory |
-| `PATCH` | `/api/users/:id/block` | Admin block/unblock |
-| `POST` | `/api/uploads` | Image upload (ImgBB or storage provider) |
+| `POST` | `/auth/register` | Create a customer account |
+| `POST` | `/auth/login` | Credential sign-in |
+| `GET` | `/auth/config` | Google client ID and demo availability |
+| `POST` | `/auth/google` | Verify a Google token and issue a JWT |
+| `POST` | `/auth/google/demo` | Seeded Google fallback when enabled |
+| `GET` | `/auth/me` | Current user |
+| `GET` | `/bootstrap` | Role-scoped user, services, appointments, transactions |
+| `GET` | `/services` | Active services (admins may include inactive) |
+| `GET` | `/services/:id` | Service details |
+| `POST` | `/services` | Admin create |
+| `PATCH` | `/services/:id` | Admin update |
+| `PATCH` | `/services/:id/status` | Admin activate/pause |
+| `DELETE` | `/services/:id` | Admin delete when unused |
+| `GET` | `/appointments` | Role-scoped appointment list |
+| `POST` | `/appointments` | Customer booking request |
+| `PATCH` | `/appointments/:id/cancel` | Customer or admin cancellation |
+| `PATCH` | `/appointments/:id/confirm` | Admin confirmation |
+| `POST` | `/payments/checkout-session` | Create Stripe Checkout Session |
+| `GET` | `/payments/session/:sessionId` | Poll payment status |
+| `POST` | `/payments/webhook` | Stripe webhook, signature verified |
+| `GET` | `/transactions` | Role-scoped transaction list |
+| `GET` | `/users` | Admin customer directory |
+| `PATCH` | `/users/me` | Update own profile |
+| `PATCH` | `/users/:id/block` | Admin block/unblock |
+| `POST` | `/uploads/image` | Image upload (ImgBB or inline fallback) |
 
-### Rules to move server-side
+### Server-side rules
 
-- Session validation and role checks on every request.
-- Ownership checks for appointments and payments.
+- Session validation, role checks, and blocked-account checks on every protected request.
+- Ownership checks for appointments, payments, and profile updates.
 - Booking validation (active service, future date, valid slot, duplicate prevention).
 - Appointment status transitions and service deletion guards.
-- Blocked-account enforcement at sign-in and in the session middleware.
-- Password hashing and secure cookie settings.
+- Password hashing with bcrypt; hashes are never serialized.
 - Stripe amount calculation from the database, not the client.
 - Payment state changes only from a verified webhook.
-- Image type and size validation, and storage quotas.
+- Image type and size validation before upload.
 
 ### Environment variables
 
 | Variable | Scope | Purpose |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Client | Public origin for metadata and redirect URLs |
-| `NEXT_PUBLIC_API_URL` | Client | Express API base URL (reserved) |
-| `NEXT_PUBLIC_IMGBB_API_KEY` | Client | ImgBB upload key (reserved) |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Client | Stripe.js key (reserved) |
-| `NEXT_PUBLIC_DEMO_MODE` | Client | Demo messaging toggle (reserved) |
+| `NEXT_PUBLIC_API_URL` | Client | Express API base URL, including `/api` |
+| `NEXT_PUBLIC_APP_URL` | Client | Public origin for metadata |
 
-Backend-only values (not committed here): MongoDB URI, Better Auth secret and URL, Google OAuth client ID/secret, Stripe secret key and webhook signing secret, ImgBB key if uploads are proxied by the server.
-
-### Migration sequence
-
-1. Build the Express + MongoDB API and seed the same domain model.
-2. Add Better Auth, session cookies, and role-aware middleware.
-3. Replace `store-provider.tsx` action bodies with API calls while keeping the UI contracts.
-4. Move image uploads behind the API and store returned URLs.
-5. Add Stripe Checkout Sessions, success/cancel URLs, and the webhook.
-6. Remove `NEXT_PUBLIC_DEMO_MODE` messaging and delete the local seed once the API is authoritative.
+Server-only values live in the API repository: `PORT`, `MONGODB_URI`, `DB_USER`, `DB_PASS`, `DB_NAME`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_URL`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_CURRENCY`, `IMGBB_API_KEY`, `GOOGLE_CLIENT_ID`, and `ALLOW_GOOGLE_DEMO`.
 
 ---
 
 ## 14. Known limitations
 
-- Demo data, credentials, and payments are browser-local and not secure.
-- Google sign-in and Stripe are simulations; no external service is contacted.
-- Data does not sync across devices and can be lost when storage is cleared.
-- Seed dates are relative to first creation; clear storage to refresh examples.
+- Stripe payments require server keys and a webhook secret; without them the checkout page shows a configuration message.
+- Google OAuth requires an authorized JavaScript origin and a server client ID; otherwise the seeded demo account is used.
+- ImgBB uploads require a key; without one the API stores compressed inline data URLs for local development.
 - No email verification, password reset, reschedule, refund, or coupon flow.
-- Admin authorization is client-side in the demo and must be duplicated on the server.
-- Uploaded data URLs can approach storage limits if many large images are added; production should use an image host.
-- The production build is verified for this environment; deployment-specific cache or monorepo issues may require clearing `.next`.
+- Uploaded inline images are size-limited; production should configure ImgBB.
+- The seeded passwords are for review only and must be changed for a real salon.
 
 ---
 
@@ -502,19 +497,20 @@ Work was delivered in focused commits so each layer is reviewable:
 2. Design tokens and shared UI primitives.
 3. Editorial homepage, navbar, and footer.
 4. Searchable and filterable service menu.
-5. Sign-in, sign-up, and demo Google flow.
+5. Sign-in, sign-up, and Google flow.
 6. Protected service details and booking requests.
 7. Config and lint corrections.
 8. Dashboard shell and role navigation.
 9. Shared selectors and statistics.
 10. Customer and admin overviews.
 11. Customer appointments and profile.
-12. Demo checkout, receipt, and cancellation.
+12. Stripe checkout, receipt, and cancellation.
 13. Admin services, appointments, customers, and transactions.
 14. Loading, error, and not-found states.
-15. README and project documentation.
+15. API-backed store, token session, and Google OAuth.
+16. README, server documentation, and project documentation.
 
-Run `git log --oneline` for the full list. The repository contains 20+ meaningful commits.
+Run `git log --oneline` in both repositories for the full list.
 
 ---
 
@@ -533,6 +529,8 @@ Run `git log --oneline` for the full list. The repository contains 20+ meaningfu
 - [x] 20+ meaningful commits
 - [x] README with setup, routes, demo accounts, and scripts
 - [x] Environment variable names documented
+- [x] Express API, MongoDB, JWT auth, and role middleware
+- [x] Stripe Checkout with verified webhook payments
+- [x] ImgBB uploads with an inline development fallback
 - [x] TypeScript, ESLint, and production build verified
 - [ ] Add live site and repository URLs after deployment
-- [ ] Replace demo actions with the live API, Better Auth, ImgBB, and Stripe

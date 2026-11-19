@@ -1,212 +1,134 @@
-# SalonBook — Salon Appointment Booking (Frontend)
+# SalonBook - Salon Appointment Booking (Client)
 
-A responsive, editorial salon booking experience built with **Next.js 16**, **React 19**, and **Tailwind CSS v4**. Guests can explore a curated service menu, request appointments, and pay once the salon confirms. Customers manage their own bookings and profile, while admins run the service menu, approval queue, customer access, and transaction reporting from a dedicated dashboard.
+A responsive, editorial salon booking experience built with **Next.js 16**, **React 19**, and **Tailwind CSS v4**. Guests discover the salon and browse the menu, customers request and manage appointments, and admins run services, approvals, customers, and payments from a dedicated dashboard.
 
-> **Demo notice:** this repository is the frontend with a fully interactive, browser-local data layer. There is no Express/MongoDB server connected yet, so authentication, image uploads, and payments are simulated with `localStorage`. Google sign-in and Stripe checkout are clearly labeled demonstrations. The data layer is isolated behind typed actions so it can be replaced with real API calls without rewriting the UI.
+This client is wired end-to-end to the separate **SalonBook API** (Express, MongoDB, JWT, Stripe, ImgBB). Authentication, bookings, images, and payments are handled by the server; the browser stores only the signed session token.
 
-## Table of contents
+## Live links
 
-- [Demo accounts](#demo-accounts)
-- [Features](#features)
-- [Routes](#routes)
-- [Tech stack](#tech-stack)
-- [Getting started](#getting-started)
-- [How the demo works](#how-the-demo-works)
-- [Environment variables](#environment-variables)
-- [Scripts](#scripts)
-- [Project structure](#project-structure)
-- [Quality checks](#quality-checks)
-- [Limitations and backend roadmap](#limitations-and-backend-roadmap)
-- [Documentation](#documentation)
+| Service | URL |
+| --- | --- |
+| Client (local) | http://localhost:3000 |
+| API (local) | http://localhost:5000 |
+| API health | http://localhost:5000/api/health |
+
+Replace the local URLs with your Vercel URL and deployed API URL after deployment.
 
 ## Demo accounts
 
-The sign-in page can fill these credentials for you.
+The sign-in page can fill these credentials for you. They come from the server seed.
 
 | Role | Name | Email | Password |
 | --- | --- | --- | --- |
-| Customer | Sofia Bennett | `customer@salonbook.com` | `Customer123` |
-| Admin | Amara Chen | `admin@salonbook.com` | `Admin123` |
-| Customer (Google demo) | Ava Thompson | `ava.google@salonbook.com` | _no password — use the Google demo button_ |
-| Blocked customer (for testing) | Noah Williams | `noah@example.com` | `Customer123` |
+| Customer | Sofia Bennett | customer@salonbook.com | Customer123 |
+| Admin | Amara Chen | admin@salonbook.com | Admin123 |
+| Customer (Google demo) | Ava Thompson | ava.google@salonbook.com | no password - use the Google button |
+| Blocked customer | Noah Williams | noah@example.com | Customer123 |
 
-The seeded database includes active and inactive services, pending, confirmed, and cancelled appointments, paid and failed transactions, and one blocked customer so every admin flow can be reviewed immediately.
+The seed also includes active and paused services, pending, confirmed, and cancelled appointments, and paid and failed transactions so every flow can be reviewed immediately.
 
 ## Features
 
 ### Public experience
 
-- **Home page** with a warm, editorial hero, featured services, category discovery, salon philosophy, testimonials, visit details, and a closing booking call to action.
-- **Browse services** with live search by name, category filtering, and sorting by recommended, price ascending/descending, or duration.
-- **Service details** with imagery, price, duration, category, an "experience" overview, and a protected appointment request form.
-- **Sign in and sign up** with inline validation, password visibility controls, live password rules, an optional profile photo, and demo-account shortcuts.
-- **Simulated Google sign-in** that creates or reuses a demo Google customer account.
-- **Responsive navigation** with a mobile drawer, account-aware actions, and accessible focus states.
-- **Branded 404, error boundary, and loading states** at the app and dashboard levels.
+- **Home page** with an editorial hero, featured services, category discovery, salon philosophy, testimonials, visit details, and booking calls to action.
+- **Browse services** with live search by name, category filters, and sorting by recommended, price ascending/descending, or duration.
+- **Sign in / sign up** with validation, show-password controls, and one-tap demo credentials.
+- **Google sign-in** through Google Identity Services. If the server has no OAuth client ID, a clearly seeded Google account is available when demo mode is enabled.
+- Responsive navigation, mobile menu, accessible controls, and toast notifications.
 
-### Customer dashboard
+### Customer experience
 
-- **Overview** with total, pending, upcoming, and completed appointment counts, total spend, next visit, pending requests, outstanding payment prompts, recent activity, and service recommendations.
-- **My appointments** with status and search filters, date and time details, cancellation for pending requests, and checkout for confirmed unpaid visits.
-- **Booking rules** that prevent past dates, invalid slots, inactive services, admin bookings, blocked accounts, and duplicate active slots for the same customer.
-- **Payment flow** for confirmed appointments with card-field validation, a demo-card filler, duplicate-payment protection, a printable receipt, and a cancellation return page.
-- **Editable profile** with name, phone, compressed profile photo, account metadata, and a guarded demo-data reset.
+- **Overview** with upcoming visits, pending requests, payment reminders, and recommended services.
+- **Appointments** with status and payment filters, search, cancellation of pending requests, and payment entry points for confirmed visits.
+- **Secure Stripe checkout** for confirmed unpaid appointments. Card details are entered on Stripe, not in this app.
+- **Payment receipt** that polls the API until the verified Stripe webhook marks the appointment paid.
+- **Profile** update for name, phone, and photo. Images are uploaded to ImgBB by the API.
+- **Protected service details** with a booking form, date limits, slot availability for the signed-in customer, and success confirmation.
 
-### Admin dashboard
+### Admin experience
 
-- **Overview** with pending approvals, today's schedule, upcoming visits, revenue, transaction count, active services, customer totals, blocked accounts, and unpaid confirmed visits.
-- **Service management** with search, category and status filters, add/edit modal, service-card preview, image upload, activate/deactivate, and deletion blocked when appointment history exists.
-- **Appointment management** with status and payment filters, customer/service search, confirm, cancel, and joined customer/service details.
-- **Customer management** with search, blocked/active filters, visit and spend summaries, and block/unblock confirmation.
-- **Transaction reporting** with paid/failed filters, customer and service joins, copyable demo Stripe session IDs, and a working CSV export of the filtered report.
-- **Shared profile** for administrators, plus role-aware navigation that never exposes admin links to customers.
+- **Overview** with revenue, pending approvals, today's schedule, unpaid confirmed visits, top customers, and quick actions.
+- **Service management** with create, edit, activate/pause, and delete. Services with appointment history can be paused instead of deleted.
+- **Appointment management** to confirm pending requests and cancel pending or confirmed visits.
+- **Customer management** with search, status filters, salon history, and block/unblock controls.
+- **Transactions** with paid/failed filters, search, totals, and CSV export.
+- **Profile** with the same secure update flow as customers.
 
-### Quality and UX
+### Platform behavior
 
-- Role-based gates around every protected route, including customer-only and admin-only pages.
-- Blocked-account screens and sign-in rejection with clear recovery paths.
-- Toast notifications for every action; no `alert()`, `confirm()`, or `prompt()`.
-- Loading skeletons, disabled/submitting buttons, empty states, and inline field errors.
-- Responsive layouts across mobile, tablet, and desktop.
-- Accessible dialogs, labels, error messages, keyboard escape handling, and focus-visible styles.
-- A single warm design system documented in [docs/design-system.md](docs/design-system.md).
+- JWT bearer authentication stored in `localStorage` and validated by the API on every request.
+- Role-based route protection in the UI and role verification on the server.
+- Blocked accounts are signed out and blocked from every protected endpoint.
+- No `alert()` or `confirm()` - all feedback uses accessible toasts and dialogs.
+- Loading skeletons, empty states, inline validation, error boundaries, and an API connection banner.
 
 ## Routes
 
 | Route | Access | Purpose |
 | --- | --- | --- |
-| `/` | Public | Editorial home page |
-| `/services` | Public | Searchable, filterable service menu |
-| `/services/[id]` | Signed-in user | Service details and appointment request |
-| `/signin` | Public | Sign in with credentials or demo Google |
+| `/` | Public | Home page |
+| `/services` | Public | Search, filter, and sort services |
+| `/services/[id]` | Signed in | Service detail and booking |
+| `/signin` | Public | Sign in |
 | `/signup` | Public | Create a customer account |
-| `/dashboard` | Protected | Role-based customer or admin overview |
-| `/dashboard/appointments` | Customer only | Appointment list, cancel, and pay |
-| `/dashboard/profile` | Protected | Edit profile and reset demo data |
-| `/dashboard/payments/[id]` | Customer only | Demo checkout for a confirmed appointment |
-| `/dashboard/payments/[id]/success` | Customer only | Payment receipt |
-| `/dashboard/payments/[id]/cancel` | Customer only | Checkout cancellation state |
-| `/dashboard/admin` | Admin only | Redirects to `/dashboard` |
-| `/dashboard/admin/services` | Admin only | Service CRUD and availability |
-| `/dashboard/admin/appointments` | Admin only | Confirm and cancel appointments |
-| `/dashboard/admin/users` | Admin only | Customer directory and access control |
-| `/dashboard/admin/transactions` | Admin only | Transaction report and CSV export |
-
-Unauthenticated visitors to a protected route are redirected to `/signin` with a safe `callbackUrl`. A signed-in user who opens a route for the other role is redirected to their own dashboard with a toast.
+| `/dashboard` | Customer/Admin | Role-aware overview |
+| `/dashboard/appointments` | Customer | Customer appointment list |
+| `/dashboard/payments/[id]` | Customer | Stripe checkout handoff |
+| `/dashboard/payments/[id]/success` | Customer | Payment confirmation and receipt |
+| `/dashboard/payments/[id]/cancel` | Customer | Checkout cancelled |
+| `/dashboard/profile` | Customer/Admin | Profile settings |
+| `/dashboard/admin` | Admin | Salon overview |
+| `/dashboard/admin/services` | Admin | Service management |
+| `/dashboard/admin/appointments` | Admin | Appointment management |
+| `/dashboard/admin/users` | Admin | Customer management |
+| `/dashboard/admin/transactions` | Admin | Transaction report |
 
 ## Tech stack
 
-- **Framework:** Next.js 16.4 (App Router, server components, metadata API)
-- **UI:** React 19, Tailwind CSS v4, local design-system primitives
-- **Language:** TypeScript 5 in strict mode
-- **Icons:** lucide-react
-- **Fonts:** Cormorant Garamond (display) and Manrope (body) via `next/font/google`
-- **State:** React context + `localStorage` for the demo data layer
-- **Notifications:** custom toast provider with accessible live regions
-- **Images:** `next/image` for remote imagery; canvas compression for local uploads
-- **Tooling:** ESLint 9, Next.js ESLint config, TypeScript `--noEmit`
-
-No component library runtime is required beyond the local primitives in `components/ui`.
+- Next.js 16 App Router (Turbopack)
+- React 19
+- TypeScript (strict)
+- Tailwind CSS v4
+- Lucide icons
+- Google Identity Services
+- Stripe Checkout (redirect flow)
+- Express API + MongoDB backend in the companion `serverside` repository
 
 ## Getting started
 
 ### Prerequisites
 
 - Node.js 20 or newer
-- npm 10 or newer
+- The SalonBook API running at `http://localhost:5000`
+- A seeded MongoDB database (see the server README)
 
-### Install and run
+### Install
 
 ```bash
 npm install
+```
+
+### Configure
+
+Copy `.env.example` to `.env`:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+`NEXT_PUBLIC_API_URL` must include the `/api` prefix.
+
+### Run
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open http://localhost:3000.
 
-The app seeds itself on first load. No environment variables are required for the demo.
-
-### Production build
-
-```bash
-npm run build
-npm run start
-```
-
-If your environment has a stale `.next` cache or an unusual monorepo layout, remove `.next` and rebuild.
-
-## How the demo works
-
-1. **Seed** — `lib/seed.ts` builds a fresh database with realistic users, services, appointments, and transactions. Dates are relative to the day the database is first created.
-2. **Persist** — `components/providers/store-provider.tsx` hydrates from `localStorage` after mount, then writes every change back. The database and session use versioned keys:
-   - `salonbook.demo.database.v1`
-   - `salonbook.demo.session.v1`
-3. **Act** — the provider exposes typed actions for sign-in, sign-up, profile updates, service CRUD, booking, cancellation, confirmation, payment, and blocking. These actions enforce the same business rules the real API should enforce.
-4. **Derive** — `lib/selectors.ts` joins appointments to services and customers and calculates dashboard statistics so every view is consistent.
-5. **Reset** — use **Reset demo data** on the profile page, or clear the two keys above from browser storage. A private window also starts with a fresh seed.
-
-Because the data is per-browser, changes do not sync between tabs beyond the `storage` event, devices, or users. Passwords and payment details are demo-only and must never be treated as secure.
-
-## Environment variables
-
-The demo runs with **no environment variables required**. `.env.example` documents the names reserved for the future integration. Copy it to `.env.local` when those services are connected:
-
-```bash
-cp .env.example .env.local
-```
-
-| Variable | Currently used | Purpose |
-| --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Yes | Public origin used by metadata and future payment redirects. Defaults to `http://localhost:3000`. |
-| `NEXT_PUBLIC_API_URL` | Reserved | Base URL of the Express API. |
-| `NEXT_PUBLIC_IMGBB_API_KEY` | Reserved | ImgBB key for image uploads once the API proxies them. |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Reserved | Stripe publishable key for Checkout. |
-| `NEXT_PUBLIC_DEMO_MODE` | Reserved | Toggles demo-only messaging when the backend is introduced. |
-
-Server-only secrets (MongoDB URI, Better Auth secret, Stripe secret key, webhook signing secret, ImgBB key if kept private) belong in the server project and must never be committed to this client.
-
-## Scripts
-
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the development server |
-| `npm run build` | Create a production build |
-| `npm run start` | Serve the production build |
-| `npm run lint` | Run ESLint across the project |
-| `npm run typecheck` | Run TypeScript with no emit |
-
-## Project structure
-
-```text
-app/
-  (auth)/                 Sign-in and sign-up screens
-  (marketing)/            Home, service menu, and service detail
-  dashboard/              Protected shell, customer pages, admin pages, payments
-  error.tsx               Root error boundary
-  loading.tsx             Root loading state
-  not-found.tsx           Custom 404
-components/
-  auth/                   Auth gate, forms, demo accounts, Google button
-  dashboard/              Dashboard shell, views, forms, checkout, receipts
-  marketing/              Home page, navbar, footer, service browser and cards
-  providers/              Store, toast, and composed app providers
-  ui/                     Buttons, fields, dialogs, feedback, image upload, badges
-lib/
-  constants.ts            Categories, time slots, salon details, demo accounts
-  seed.ts                 Seeded demo database
-  selectors.ts            Joined data and dashboard statistics
-  types.ts                Domain and action types
-  utils.ts                Formatting, validation, date, and sorting helpers
-docs/
-  project-documentation.md
-  design-system.md
-```
-
-The source of truth for the UI is the App Router in `app/`. Components are feature-grouped; reusable primitives do not depend on feature code.
-
-## Quality checks
-
-The project is verified with:
+### Quality checks
 
 ```bash
 npm run typecheck
@@ -214,35 +136,91 @@ npm run lint
 npm run build
 ```
 
-The development smoke test covers `/`, `/services`, `/services/service_1`, `/signin`, `/signup`, `/dashboard`, and `/dashboard/admin/services`, plus a 404 route.
+## Environment variables
 
-See [docs/project-documentation.md](docs/project-documentation.md) for the requirement map, data model, business rules, and QA checklist.
+Names only; never commit real values.
 
-## Limitations and backend roadmap
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_API_URL` | Yes | Base URL of the Express API, including `/api` |
+| `NEXT_PUBLIC_APP_URL` | No | Public origin used for metadata |
 
-- Demo credentials, sessions, password storage, and payments live in the browser and are **not secure**.
-- Google sign-in and Stripe checkout are simulations, not live OAuth or payment integrations.
-- Data is per-browser and does not survive clearing site storage.
-- Uploaded images are compressed to data URLs; no image host is called.
-- Admin and customer authorization is enforced client-side by the demo store. The real backend must enforce every rule independently.
+Server-only secrets (JWT, MongoDB, Stripe, ImgBB, Google) live in the API repository and are never exposed to the client.
 
-The planned backend integration:
+## How authentication works
 
-1. Replace the typed demo actions with `fetch` calls to the Express API.
-2. Move authentication to Better Auth and validate sessions on the server.
-3. Upload images to ImgBB (or another provider) from the API.
-4. Create Stripe Checkout Sessions on the server and mark appointments paid only from a verified webhook.
-5. Hash passwords, keep all secrets server-side, and enforce role, ownership, status, and duplicate-slot rules in the API.
+1. The client posts credentials to `/api/auth/login` or `/api/auth/register`.
+2. The API returns a signed JWT and the safe user object.
+3. The client stores the token under `salonbook.token` and sends it as `Authorization: Bearer <token>`.
+4. On load, the client calls `/api/bootstrap` to hydrate the current user and role-scoped data.
+5. `AuthGate` redirects unauthenticated visitors to `/signin?callbackUrl=...` and blocks role mismatches.
+6. The API re-checks the token, role, and blocked flag from MongoDB on every protected request.
 
-## Documentation
+Google sign-in requests an access token from Google Identity Services, sends it to `/api/auth/google`, and receives the same SalonBook JWT after the API verifies the token with Google.
 
-- [Project documentation](docs/project-documentation.md) — requirement mapping, architecture, data model, flows, QA checklist, and integration plan.
-- [Design system](docs/design-system.md) — tokens, typography, components, patterns, motion, and accessibility.
+## How payments work
 
-## Author
+1. A confirmed, unpaid appointment shows **Pay securely**.
+2. The client calls `POST /api/payments/checkout-session`.
+3. The API creates a Stripe Checkout Session and returns its hosted URL.
+4. The browser redirects to Stripe, where the card is entered.
+5. Stripe returns the customer to `/dashboard/payments/[id]/success?session_id=...`.
+6. The success page polls `/api/payments/session/:sessionId` and refreshes the dashboard until the appointment is paid.
+7. Only the signature-verified Stripe webhook writes the transaction and marks the appointment paid. Refreshing or calling client endpoints cannot mark a payment complete.
 
-Built as part of the Programming Hero full-stack assignment series.
+Without `STRIPE_SECRET_KEY` on the server, the checkout page shows a clear configuration message instead of collecting card details.
 
-- **Name:** _Add your name_
-- **GitHub:** _Add your GitHub profile_
-- **Email:** _Add your contact email_
+## Project structure
+
+```text
+client-side/
+  app/                        App Router pages and layouts
+  components/
+    auth/                     Sign in/up, AuthGate, demo accounts
+    dashboard/                Customer and admin views
+    marketing/                Home, services, navbar, footer
+    providers/                Store, toast, app providers
+    ui/                       Buttons, forms, dialogs, feedback
+  lib/
+    api.ts                    Fetch wrapper and token storage
+    google.ts                 Google Identity Services loader
+    selectors.ts              Derived dashboard data
+    types.ts                  Domain and API types
+    utils.ts                  Formatting and date helpers
+  docs/                       Architecture and design notes
+```
+
+## Server dependency
+
+This client expects the API from the `serverside` repository:
+
+- Express 5 + MongoDB
+- JWT auth with bcrypt password hashing
+- Role and blocked-user checks
+- Services, appointments, users, transactions
+- Stripe Checkout + verified webhook
+- ImgBB uploads
+
+See the server README for API routes, seeding, Stripe CLI setup, Google OAuth origins, and environment variables.
+
+## Deployment
+
+### Vercel
+
+1. Import this repository.
+2. Set `NEXT_PUBLIC_API_URL` to `https://your-api-host/api`.
+3. Set `NEXT_PUBLIC_APP_URL` to your Vercel URL.
+4. Deploy.
+
+### API
+
+Deploy the `serverside` repository, set `CLIENT_URL` to the Vercel origin, enable CORS for it, configure Stripe and Google, and add the deployed webhook endpoint in Stripe.
+
+Update the **Live links** table above with the final URLs.
+
+## Notes
+
+- The demo accounts are seeded server records. Change the seed passwords before using this in a real salon.
+- Google demo mode is intended for local review. Configure `GOOGLE_CLIENT_ID` for real Google authentication.
+- Image uploads fall back to inline data URLs when ImgBB is not configured; configure ImgBB for production.
+- Payments require Stripe keys and webhook forwarding; see the server README.

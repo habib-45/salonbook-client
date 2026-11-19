@@ -218,7 +218,7 @@ Supported statuses: `pending`, `confirmed`, `cancelled`, `paid`, `unpaid`, `acti
 
 ### Destructive actions
 
-- Always confirm cancellation, deletion, blocking, and demo reset.
+- Always confirm cancellation, deletion, and blocking.
 - Name the object in the dialog: "Cancel this appointment?" not "Are you sure?"
 - Use `destructive` styling only on the irreversible action.
 
@@ -239,7 +239,7 @@ Respect reduced motion where practical; keep essential state changes instantaneo
 
 - Warm, human, and concise. Prefer "Request appointment" over "Submit".
 - Use "guest" and "customer" interchangeably in marketing; use "customer" in admin tables.
-- Explain demo limitations plainly: "This checkout is a front-end demonstration."
+- Payment copy describes the Stripe hosted checkout and webhook-verified receipt.
 - Errors should say what happened and what to do next.
 - Avoid exclamation marks, jargon, and pressure language.
 - Prices are USD and formatted without decimals when whole.
