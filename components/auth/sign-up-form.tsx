@@ -46,7 +46,7 @@ export function SignUpForm() {
   const checks = passwordChecks(password)
   const passwordValid = Object.values(checks).every(Boolean)
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError("")
 
@@ -59,7 +59,7 @@ export function SignUpForm() {
     if (Object.keys(nextErrors).length > 0) return
 
     setIsSubmitting(true)
-    const result = signUp({ name, email, password, image })
+    const result = await signUp({ name, email, password, image })
 
     if (!result.ok) {
       setError(result.error)
@@ -72,10 +72,10 @@ export function SignUpForm() {
     router.replace(destination)
   }
 
-  const handleGoogle = () => {
+  const handleGoogle = async () => {
     setError("")
     setGoogleLoading(true)
-    const result = signInWithGoogle()
+    const result = await signInWithGoogle()
 
     if (!result.ok) {
       setError(result.error)
@@ -84,7 +84,7 @@ export function SignUpForm() {
       return
     }
 
-    toast.success("Welcome to SalonBook", "Your Google demo account is ready.")
+    toast.success("Welcome to SalonBook", "Your Google account is connected.")
     router.replace(destination)
   }
 
@@ -249,8 +249,8 @@ export function SignUpForm() {
       </p>
 
       <p className="mt-5 border-t border-sand/70 pt-4 text-center text-[0.625rem] leading-5 text-ink-soft/75">
-        Demo preview: registration is stored in your browser. Google sign-in opens a demo
-        customer account.
+        Your password is hashed with bcrypt before it is stored, and your profile lives in
+        the SalonBook database — never in this browser.
       </p>
     </div>
   )

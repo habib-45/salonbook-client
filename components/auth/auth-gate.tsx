@@ -17,7 +17,7 @@ export function AuthGate({
   children: React.ReactNode
   allow?: Role[]
 }) {
-  const { currentUser, isHydrated, signOut } = useStore()
+  const { currentUser, isHydrated, isSigningOut, signOut } = useStore()
   const pathname = usePathname()
   const router = useRouter()
   const toast = useToast()
@@ -25,10 +25,10 @@ export function AuthGate({
   const roleBlocked = Boolean(currentUser && allow && !allow.includes(currentUser.role))
 
   React.useEffect(() => {
-    if (!isHydrated || currentUser || redirected.current) return
+    if (!isHydrated || currentUser || isSigningOut || redirected.current) return
     redirected.current = true
     router.replace(`/signin?callbackUrl=${encodeURIComponent(pathname)}`)
-  }, [currentUser, isHydrated, pathname, router])
+  }, [currentUser, isHydrated, isSigningOut, pathname, router])
 
   React.useEffect(() => {
     if (!isHydrated || !roleBlocked || redirected.current) return
@@ -42,7 +42,7 @@ export function AuthGate({
   }
 
   if (!currentUser) {
-    return <AuthLoading />
+    return <AuthLoading label={isSigningOut ? "Signing you out…" : undefined} />
   }
 
   if (currentUser.isBlocked) {

@@ -29,7 +29,7 @@ export function SignInForm() {
 
   const destination = safeCallbackUrl(searchParams.get("callbackUrl"))
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError("")
 
@@ -40,7 +40,7 @@ export function SignInForm() {
     if (Object.keys(nextErrors).length > 0) return
 
     setIsSubmitting(true)
-    const result = signIn({ email, password })
+    const result = await signIn({ email, password })
 
     if (!result.ok) {
       setError(result.error)
@@ -53,10 +53,10 @@ export function SignInForm() {
     router.replace(destination)
   }
 
-  const handleGoogle = () => {
+  const handleGoogle = async () => {
     setError("")
     setGoogleLoading(true)
-    const result = signInWithGoogle()
+    const result = await signInWithGoogle()
 
     if (!result.ok) {
       setError(result.error)
@@ -65,7 +65,7 @@ export function SignInForm() {
       return
     }
 
-    toast.success("Signed in with Google", "Welcome to your SalonBook demo workspace.")
+    toast.success("Signed in with Google", "Welcome back to SalonBook.")
     router.replace(destination)
   }
 
@@ -170,8 +170,8 @@ export function SignInForm() {
       </p>
 
       <p className="mt-6 border-t border-sand/70 pt-5 text-center text-[0.625rem] leading-5 text-ink-soft/75">
-        This frontend preview stores demo data in your browser. Google sign-in opens a demo
-        customer session. No real passwords are sent to a server.
+        Passwords are hashed with bcrypt and your session is protected by a signed token.
+        Google sign-in uses OAuth when configured.
       </p>
     </div>
   )

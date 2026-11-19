@@ -123,7 +123,7 @@ function ServiceDetailContent() {
     )
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError("")
 
@@ -134,7 +134,7 @@ function ServiceDetailContent() {
     if (Object.keys(nextErrors).length > 0) return
 
     setIsSubmitting(true)
-    const result = bookAppointment({
+    const result = await bookAppointment({
       serviceId: service.id,
       appointmentDate: date,
       timeSlot,
