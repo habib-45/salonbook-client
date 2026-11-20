@@ -242,3 +242,5 @@ Deploy the [`serside-9`](https://github.com/habib-45/serside-9) repository, set 
 - Google demo mode is intended for local review. Configure `GOOGLE_CLIENT_ID` for real Google authentication.
 - Image uploads fall back to inline data URLs when ImgBB is not configured; configure ImgBB for production.
 - Payments require Stripe keys and a webhook secret on the API; see the server README.
+#   s a l o n b o o k - c l i e n t  
+ 
