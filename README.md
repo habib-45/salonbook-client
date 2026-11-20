@@ -2,30 +2,28 @@
 
 A responsive, editorial salon booking experience built with **Next.js 16**, **React 19**, and **Tailwind CSS v4**. Guests discover the salon and browse the menu, customers request and manage appointments, and admins run services, approvals, customers, and payments from a dedicated dashboard.
 
-This client is wired end-to-end to the separate **SalonBook API** (Express, MongoDB, JWT, Stripe, ImgBB). Authentication, bookings, images, and payments are handled by the server; the browser stores only the signed session token.
+This client is wired end-to-end to the separate **SalonBook API** (Express, MongoDB, **Better Auth**, Stripe, ImgBB). Authentication, bookings, images, and payments are handled by the server; the browser stores only the signed Better Auth JWT.
 
 ## Live links
 
 | Service | URL |
 | --- | --- |
-| Live client | _Add your Vercel URL after deployment_ |
-| Live API | _Add your deployed API URL after deployment_ |
+| Live client | https://salonbook-client-sandy.vercel.app |
+| Live API | https://salonbook-api-mu.vercel.app |
+| API health | https://salonbook-api-mu.vercel.app/api/health |
 | Client (local) | http://localhost:3000 |
 | API (local) | http://localhost:5000 |
-| API health | http://localhost:5000/api/health |
-
-The local URLs work for development. Replace the two live placeholders with the deployed client and API URLs.
 
 ## Repositories
 
 | Repository | URL |
 | --- | --- |
-| Client | _Add your GitHub client repository URL_ |
-| Server | _Add your GitHub server repository URL_ |
+| Client | https://github.com/habib-45/client-side-9 |
+| Server | https://github.com/habib-45/serside-9 |
 
 ## Demo accounts
 
-The sign-in page can fill these credentials for you. They come from the server seed.
+The sign-in page can fill these credentials for you. They come from the server's `npm run seed:demo` or full `npm run seed` snapshot.
 
 | Role | Name | Email | Password |
 | --- | --- | --- | --- |
@@ -42,14 +40,15 @@ The seed also includes active and paused services, pending, confirmed, and cance
 
 - **Home page** with an editorial hero, featured services, category discovery, salon philosophy, testimonials, visit details, and booking calls to action.
 - **Browse services** with live search by name, category filters, and sorting by recommended, price ascending/descending, or duration.
-- **Sign in / sign up** with validation, show-password controls, and one-tap demo credentials.
+- **Sign in / sign up** with validation, show-password controls, an optional profile photo on sign-up, and one-tap demo credentials.
 - **Google sign-in** through Google Identity Services. If the server has no OAuth client ID, a clearly seeded Google account is available when demo mode is enabled.
+- **Light and dark theme** with a one-tap toggle, system-theme detection, and no flash on first paint.
 - Responsive navigation, mobile menu, accessible controls, and toast notifications.
 
 ### Customer experience
 
-- **Overview** with upcoming visits, pending requests, payment reminders, and recommended services.
-- **Appointments** with status and payment filters, search, cancellation of pending requests, and payment entry points for confirmed visits.
+- **Overview** with total requests, pending requests, confirmed visits, cancelled requests, upcoming visits, payment reminders, and recommended services.
+- **Appointments** with status and payment filters, search, request timestamps, cancellation of pending requests, and payment entry points for confirmed visits.
 - **Secure Stripe checkout** for confirmed unpaid appointments. Card details are entered on Stripe, not in this app.
 - **Payment receipt** that polls the API until the verified Stripe webhook marks the appointment paid.
 - **Profile** update for name, phone, and photo. Images are uploaded to ImgBB by the API.
@@ -57,7 +56,7 @@ The seed also includes active and paused services, pending, confirmed, and cance
 
 ### Admin experience
 
-- **Overview** with revenue, pending approvals, today's schedule, unpaid confirmed visits, top customers, and quick actions.
+- **Overview** with registered customers, active services, total requests, pending requests, confirmed visits, successful payments, today's schedule, and quick actions.
 - **Service management** with create, edit, activate/pause, and delete. Services with appointment history can be paused instead of deleted.
 - **Appointment management** to confirm pending requests and cancel pending or confirmed visits.
 - **Customer management** with search, status filters, salon history, and block/unblock controls.
@@ -66,7 +65,7 @@ The seed also includes active and paused services, pending, confirmed, and cance
 
 ### Platform behavior
 
-- JWT bearer authentication stored in `localStorage` and validated by the API on every request.
+- **Better Auth JWT** stored in `localStorage` and verified by the API on every request.
 - Role-based route protection in the UI and role verification on the server.
 - Blocked accounts are signed out and blocked from every protected endpoint.
 - No `alert()` or `confirm()` - all feedback uses accessible toasts and dialogs.
@@ -102,7 +101,7 @@ The seed also includes active and paused services, pending, confirmed, and cance
 - Lucide icons
 - Google Identity Services
 - Stripe Checkout (redirect flow)
-- Express API + MongoDB backend in the companion `serverside` repository
+- Express 5 + MongoDB API with Better Auth in the companion [`serside-9`](https://github.com/habib-45/serside-9) repository
 
 ## Getting started
 
@@ -154,18 +153,28 @@ Names only; never commit real values.
 | `NEXT_PUBLIC_API_URL` | Yes | Base URL of the Express API, including `/api` |
 | `NEXT_PUBLIC_APP_URL` | No | Public origin used for metadata |
 
-Server-only secrets (JWT, MongoDB, Stripe, ImgBB, Google) live in the API repository and are never exposed to the client.
+Server-only secrets (Better Auth, MongoDB, Stripe, ImgBB, Google) live in the API repository and are never exposed to the client.
 
 ## How authentication works
 
 1. The client posts credentials to `/api/auth/login` or `/api/auth/register`.
-2. The API returns a signed JWT and the safe user object.
-3. The client stores the token under `salonbook.token` and sends it as `Authorization: Bearer <token>`.
-4. On load, the client calls `/api/bootstrap` to hydrate the current user and role-scoped data.
-5. `AuthGate` redirects unauthenticated visitors to `/signin?callbackUrl=...` and blocks role mismatches.
-6. The API re-checks the token, role, and blocked flag from MongoDB on every protected request.
+2. Express delegates credential verification to **Better Auth**, which checks the bcrypt hash in its MongoDB `account` collection.
+3. The API returns a JWT signed by the Better Auth JWT plugin plus the safe user object.
+4. The client stores the token under `salonbook.token` and sends it as `Authorization: Bearer <token>`.
+5. On load, the client calls `/api/bootstrap` to hydrate the current user and role-scoped data.
+6. `AuthGate` redirects unauthenticated visitors to `/signin?callbackUrl=...` and blocks role mismatches.
+7. The API verifies the JWT with Better Auth, re-reads the user, and re-checks the role and blocked flag on every protected request.
 
-Google sign-in requests an access token from Google Identity Services, sends it to `/api/auth/google`, and receives the same SalonBook JWT after the API verifies the token with Google.
+Google sign-in requests an access token from Google Identity Services, sends it to `/api/auth/google`, and receives the same Better Auth-issued JWT after the API verifies the token with Google and links the account.
+
+## Theming
+
+The app ships with a light and dark salon palette.
+
+- `components/providers/theme-provider.tsx` stores the preference in `localStorage` under `salonbook-theme` and supports `light`, `dark`, and `system`.
+- `components/ui/theme-toggle.tsx` is available in the public navbar, auth layout, dashboard header, and mobile sidebar.
+- `app/layout.tsx` runs a tiny inline script before paint to apply the stored or system theme, preventing a flash of the wrong colours.
+- `app/globals.css` defines the semantic tokens (`paper`, `surface`, `accent`, `ink`, `sand`, status colours) and overrides them under `html.dark`. Components use the tokens instead of raw colours.
 
 ## How payments work
 
@@ -188,8 +197,8 @@ client-side/
     auth/                     Sign in/up, AuthGate, demo accounts
     dashboard/                Customer and admin views
     marketing/                Home, services, navbar, footer
-    providers/                Store, toast, app providers
-    ui/                       Buttons, forms, dialogs, feedback
+    providers/                Store, toast, theme, app providers
+    ui/                       Buttons, forms, dialogs, feedback, theme toggle
   lib/
     api.ts                    Fetch wrapper and token storage
     google.ts                 Google Identity Services loader
@@ -201,11 +210,11 @@ client-side/
 
 ## Server dependency
 
-This client expects the API from the `serverside` repository:
+This client expects the API from the [`serside-9`](https://github.com/habib-45/serside-9) repository:
 
 - Express 5 + MongoDB
-- JWT auth with bcrypt password hashing
-- Role and blocked-user checks
+- Better Auth email/password with bcrypt and the JWT plugin
+- Role and blocked-user checks on every protected route
 - Services, appointments, users, transactions
 - Stripe Checkout + verified webhook
 - ImgBB uploads
@@ -214,22 +223,22 @@ See the server README for API routes, seeding, Stripe CLI setup, Google OAuth or
 
 ## Deployment
 
-### Vercel
+The client and API are deployed on Vercel.
 
-1. Import this repository.
-2. Set `NEXT_PUBLIC_API_URL` to `https://your-api-host/api`.
-3. Set `NEXT_PUBLIC_APP_URL` to your Vercel URL.
-4. Deploy.
+### Client
+
+1. Import the client repository into Vercel.
+2. Set `NEXT_PUBLIC_API_URL` to `https://salonbook-api-mu.vercel.app/api`.
+3. Set `NEXT_PUBLIC_APP_URL` to the deployed client origin.
+4. Deploy with `vercel deploy --prod`.
 
 ### API
 
-Deploy the `serverside` repository, set `CLIENT_URL` to the Vercel origin, enable CORS for it, configure Stripe and Google, and add the deployed webhook endpoint in Stripe.
-
-Update the **Live links** table above with the final URLs.
+Deploy the [`serside-9`](https://github.com/habib-45/serside-9) repository, set `CLIENT_URL` to the Vercel client origin, configure Better Auth, Stripe, ImgBB, and Google, and add the deployed Stripe webhook endpoint.
 
 ## Notes
 
 - The demo accounts are seeded server records. Change the seed passwords before using this in a real salon.
 - Google demo mode is intended for local review. Configure `GOOGLE_CLIENT_ID` for real Google authentication.
 - Image uploads fall back to inline data URLs when ImgBB is not configured; configure ImgBB for production.
-- Payments require Stripe keys and webhook forwarding; see the server README.
+- Payments require Stripe keys and a webhook secret on the API; see the server README.
