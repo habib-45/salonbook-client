@@ -1,142 +1,328 @@
-# SalonBook - Salon Appointment Booking (Client)
+# 💇 SalonBook – Salon Appointment Booking Platform
 
-A responsive, editorial salon booking experience built with **Next.js 16**, **React 19**, and **Tailwind CSS v4**. Guests discover the salon and browse the menu, customers request and manage appointments, and admins run services, approvals, customers, and payments from a dedicated dashboard.
+A responsive, modern, and editorial salon booking experience built with **Next.js 16, React 19, TypeScript, and Tailwind CSS v4**.
 
-This client is wired end-to-end to the separate **SalonBook API** (Express, MongoDB, **Better Auth**, Stripe, ImgBB). Authentication, bookings, images, and payments are handled by the server; the browser stores only the signed Better Auth JWT.
+SalonBook allows guests to discover salon services, customers to request and manage appointments, and administrators to manage services, appointments, customers, and payments through a dedicated dashboard.
 
-## Live links
+The client is connected to a separate **SalonBook API** built with Express.js, MongoDB, Better Auth, Stripe, and ImgBB.
+
+---
+
+## 🌐 Live Links
 
 | Service | URL |
-| --- | --- |
-| Live client | https://salonbook-client-sandy.vercel.app |
-| Live API | https://salonbook-api-mu.vercel.app |
-| API health | https://salonbook-api-mu.vercel.app/api/health |
-| Client (local) | http://localhost:3000 |
-| API (local) | http://localhost:5000 |
+|---|---|
+| Live Client | [SalonBook Client](https://salonbook-client-sandy.vercel.app/) |
+| Live API | [SalonBook API](https://salonbook-api-mu.vercel.app/) |
+| API Health | [API Health Check](https://salonbook-api-mu.vercel.app/api/health) |
+| Local Client | http://localhost:3000 |
+| Local API | http://localhost:5000 |
 
-## Repositories
+## 📂 GitHub Repositories
 
 | Repository | URL |
-| --- | --- |
-| Client | https://github.com/habib-45/client-side-9 |
-| Server | https://github.com/habib-45/serside-9 |
+|---|---|
+| Client | [salonbook-client](https://github.com/habib-45/salonbook-client) |
+| Server | [serside-9](https://github.com/habib-45/serside-9) |
 
-## Demo accounts
+## ✨ Features
 
-The sign-in page can fill these credentials for you. They come from the server's `npm run seed:demo` or full `npm run seed` snapshot.
+### 🌍 Public Experience
 
-| Role | Name | Email | Password |
-| --- | --- | --- | --- |
-| Customer | Sofia Bennett | customer@salonbook.com | Customer123 |
-| Admin | Amara Chen | admin@salonbook.com | Admin123 |
-| Customer (Google demo) | Ava Thompson | ava.google@salonbook.com | no password - use the Google button |
-| Blocked customer | Noah Williams | noah@example.com | Customer123 |
+- Modern editorial-style homepage.
+- Featured salon services.
+- Service search by name.
+- Category-based service filtering.
+- Sorting by price and duration.
+- Customer registration and login.
+- Google Sign-In integration.
+- Light and Dark theme.
+- Responsive navigation and mobile menu.
+- Accessible UI controls and toast notifications.
 
-The seed also includes active and paused services, pending, confirmed, and cancelled appointments, and paid and failed transactions so every flow can be reviewed immediately.
+### 👤 Customer Dashboard
 
-## Features
+- Personalized customer dashboard.
+- Appointment statistics and upcoming visits.
+- Book salon appointments.
+- View appointment status.
+- Filter appointments by status and payment.
+- Cancel pending appointments.
+- Secure Stripe Checkout.
+- Payment confirmation and receipts.
+- Customer profile management.
+- Profile photo upload.
+- Service availability and booking form.
 
-### Public experience
+### 🛠️ Admin Dashboard
 
-- **Home page** with an editorial hero, featured services, category discovery, salon philosophy, testimonials, visit details, and booking calls to action.
-- **Browse services** with live search by name, category filters, and sorting by recommended, price ascending/descending, or duration.
-- **Sign in / sign up** with validation, show-password controls, an optional profile photo on sign-up, and one-tap demo credentials.
-- **Google sign-in** through Google Identity Services. If the server has no OAuth client ID, a clearly seeded Google account is available when demo mode is enabled.
-- **Light and dark theme** with a one-tap toggle, system-theme detection, and no flash on first paint.
-- Responsive navigation, mobile menu, accessible controls, and toast notifications.
+- Admin dashboard with salon statistics.
+- Create, edit, and delete services.
+- Activate or pause services.
+- Approve pending appointments.
+- Cancel pending or confirmed appointments.
+- Search and filter customers.
+- Block and unblock customers.
+- View payment transactions.
+- Filter paid and failed transactions.
+- Export transaction reports as CSV.
+- Admin profile management.
 
-### Customer experience
+### 🔐 Authentication & Security
 
-- **Overview** with total requests, pending requests, confirmed visits, cancelled requests, upcoming visits, payment reminders, and recommended services.
-- **Appointments** with status and payment filters, search, request timestamps, cancellation of pending requests, and payment entry points for confirmed visits.
-- **Secure Stripe checkout** for confirmed unpaid appointments. Card details are entered on Stripe, not in this app.
-- **Payment receipt** that polls the API until the verified Stripe webhook marks the appointment paid.
-- **Profile** update for name, phone, and photo. Images are uploaded to ImgBB by the API.
-- **Protected service details** with a booking form, date limits, slot availability for the signed-in customer, and success confirmation.
+- Better Auth JWT authentication.
+- Email and password authentication.
+- Google authentication.
+- Role-based access control.
+- Protected customer and admin routes.
+- Server-side JWT verification.
+- Blocked-user protection.
+- Secure API communication.
+- Stripe webhook signature verification.
 
-### Admin experience
+### 💳 Payment System
 
-- **Overview** with registered customers, active services, total requests, pending requests, confirmed visits, successful payments, today's schedule, and quick actions.
-- **Service management** with create, edit, activate/pause, and delete. Services with appointment history can be paused instead of deleted.
-- **Appointment management** to confirm pending requests and cancel pending or confirmed visits.
-- **Customer management** with search, status filters, salon history, and block/unblock controls.
-- **Transactions** with paid/failed filters, search, totals, and CSV export.
-- **Profile** with the same secure update flow as customers.
+- Stripe Checkout integration.
+- Secure hosted payment page.
+- Payment status verification.
+- Automatic payment confirmation through Stripe webhooks.
+- Transaction history and receipts.
 
-### Platform behavior
+---
 
-- **Better Auth JWT** stored in `localStorage` and verified by the API on every request.
-- Role-based route protection in the UI and role verification on the server.
-- Blocked accounts are signed out and blocked from every protected endpoint.
-- No `alert()` or `confirm()` - all feedback uses accessible toasts and dialogs.
-- Loading skeletons, empty states, inline validation, error boundaries, and an API connection banner.
+## 🧰 Technology Stack
 
-## Routes
+### Frontend
 
-| Route | Access | Purpose |
-| --- | --- | --- |
-| `/` | Public | Home page |
-| `/services` | Public | Search, filter, and sort services |
-| `/services/[id]` | Signed in | Service detail and booking |
-| `/signin` | Public | Sign in |
-| `/signup` | Public | Create a customer account |
-| `/dashboard` | Customer/Admin | Role-aware overview |
-| `/dashboard/appointments` | Customer | Customer appointment list |
-| `/dashboard/payments/[id]` | Customer | Stripe checkout handoff |
-| `/dashboard/payments/[id]/success` | Customer | Payment confirmation and receipt |
-| `/dashboard/payments/[id]/cancel` | Customer | Checkout cancelled |
-| `/dashboard/profile` | Customer/Admin | Profile settings |
-| `/dashboard/admin` | Admin | Salon overview |
-| `/dashboard/admin/services` | Admin | Service management |
-| `/dashboard/admin/appointments` | Admin | Appointment management |
-| `/dashboard/admin/users` | Admin | Customer management |
-| `/dashboard/admin/transactions` | Admin | Transaction report |
-
-## Tech stack
-
-- Next.js 16 App Router (Turbopack)
+- Next.js 16 App Router
 - React 19
-- TypeScript (strict)
+- TypeScript
 - Tailwind CSS v4
-- Lucide icons
+- Lucide React
 - Google Identity Services
-- Stripe Checkout (redirect flow)
-- Express 5 + MongoDB API with Better Auth in the companion [`serside-9`](https://github.com/habib-45/serside-9) repository
 
-## Getting started
+### Backend
+
+- Node.js
+- Express.js 5
+- MongoDB
+- Better Auth
+- JWT Authentication
+
+### Payment & Storage
+
+- Stripe Checkout
+- ImgBB Image Upload
+
+### Deployment & Tools
+
+- Vercel
+- GitHub
+- npm
+
+---
+
+## 📁 Project Structure
+
+```text
+salonbook-client/
+│
+├── app/
+│   ├── (public)/
+│   ├── (auth)/
+│   ├── dashboard/
+│   ├── services/
+│   ├── layout.tsx
+│   └── globals.css
+│
+├── components/
+│   ├── auth/
+│   ├── dashboard/
+│   ├── marketing/
+│   ├── providers/
+│   └── ui/
+│
+├── docs/
+│
+├── lib/
+│   ├── api.ts
+│   ├── google.ts
+│   ├── selectors.ts
+│   ├── types.ts
+│   └── utils.ts
+│
+├── public/
+├── .env.example
+├── .gitignore
+├── next.config.ts
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+└── README.md
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 20 or newer
-- The SalonBook API running at `http://localhost:5000`
-- A seeded MongoDB database (see the server README)
+Make sure you have installed:
 
-### Install
+- Node.js 20 or newer
+- npm
+- MongoDB (configured through the backend)
+- SalonBook API
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/habib-45/salonbook-client.git
+```
+
+### 2. Navigate to the Project
+
+```bash
+cd salonbook-client
+```
+
+### 3. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### Configure
+### 4. Configure Environment Variables
 
-Copy `.env.example` to `.env`:
+Create a `.env` file in the project root.
 
-```bash
+```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 `NEXT_PUBLIC_API_URL` must include the `/api` prefix.
 
-### Run
+### 5. Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open your browser:
 
-### Quality checks
+http://localhost:3000
+
+### 6. Build for Production
+
+```bash
+npm run build
+```
+
+---
+
+## 🔑 Demo Accounts
+
+The following demo accounts are provided by the backend seed data.
+
+| Role | Name | Email | Password |
+|---|---|---|---|
+| Customer | Sofia Bennett | customer@salonbook.com | Customer123 |
+| Admin | Amara Chen | admin@salonbook.com | Admin123 |
+| Google Demo | Ava Thompson | ava.google@salonbook.com | Google Sign-In |
+| Blocked Customer | Noah Williams | noah@example.com | Customer123 |
+
+The demo environment also includes active and paused services, different appointment statuses, and paid and failed transactions.
+
+---
+
+## 📌 Application Routes
+
+| Route | Access | Description |
+|---|---|---|
+| `/` | Public | Homepage |
+| `/services` | Public | Browse salon services |
+| `/services/[id]` | Signed In | Service details and booking |
+| `/signin` | Public | User login |
+| `/signup` | Public | Customer registration |
+| `/dashboard` | Customer/Admin | Dashboard overview |
+| `/dashboard/appointments` | Customer | Appointment management |
+| `/dashboard/payments/[id]` | Customer | Stripe checkout |
+| `/dashboard/payments/[id]/success` | Customer | Payment confirmation |
+| `/dashboard/payments/[id]/cancel` | Customer | Checkout cancellation |
+| `/dashboard/profile` | Customer/Admin | Profile settings |
+| `/dashboard/admin` | Admin | Admin overview |
+| `/dashboard/admin/services` | Admin | Service management |
+| `/dashboard/admin/appointments` | Admin | Appointment management |
+| `/dashboard/admin/users` | Admin | Customer management |
+| `/dashboard/admin/transactions` | Admin | Transaction reports |
+
+---
+
+## 🔌 Backend API Integration
+
+SalonBook Client communicates with a separate Express.js backend.
+
+**Backend Repository:** [serside-9](https://github.com/habib-45/serside-9)
+
+Backend responsibilities include:
+
+- User registration and authentication.
+- Google authentication.
+- JWT verification.
+- Salon service management.
+- Appointment management.
+- Customer management.
+- Stripe payment processing.
+- ImgBB image uploads.
+- Transaction management.
+
+---
+
+## 🔐 How Authentication Works
+
+1. The client sends login or registration requests to the API.
+2. The Express backend delegates credential verification to Better Auth.
+3. The API returns a JWT and safe user information.
+4. The client stores the authentication token under `salonbook.token`.
+5. The token is sent with protected API requests using the Bearer authorization header.
+6. The backend verifies the JWT and checks user roles and blocked status.
+7. Protected pages enforce customer and admin access.
+
+Google Sign-In uses Google Identity Services and backend token verification.
+
+---
+
+## 💳 Payment Workflow
+
+1. Customer books a salon appointment.
+2. Admin confirms the appointment.
+3. Customer selects **Pay Securely**.
+4. Backend creates a Stripe Checkout Session.
+5. Customer completes payment through Stripe.
+6. Stripe sends a verified webhook to the backend.
+7. Backend updates the payment and appointment status.
+8. Customer can view the payment receipt.
+
+Card details are handled by Stripe, not stored in the client application.
+
+---
+
+## 🌙 Theme Support
+
+SalonBook supports three theme preferences:
+
+- Light Mode
+- Dark Mode
+- System Theme
+
+The selected theme is stored locally, and an early theme initialization script helps prevent incorrect theme flashing on page load.
+
+---
+
+## 🧪 Quality Checks
+
+Run the following commands before deployment:
 
 ```bash
 npm run typecheck
@@ -144,104 +330,56 @@ npm run lint
 npm run build
 ```
 
-## Environment variables
+---
 
-Names only; never commit real values.
+## 🚀 Deployment
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `NEXT_PUBLIC_API_URL` | Yes | Base URL of the Express API, including `/api` |
-| `NEXT_PUBLIC_APP_URL` | No | Public origin used for metadata |
+The frontend is deployed using Vercel.
 
-Server-only secrets (Better Auth, MongoDB, Stripe, ImgBB, Google) live in the API repository and are never exposed to the client.
+### Frontend Deployment
 
-## How authentication works
+1. Push the client project to GitHub.
+2. Import the repository into Vercel.
+3. Configure the required environment variables.
+4. Set the production API URL.
+5. Deploy the application.
 
-1. The client posts credentials to `/api/auth/login` or `/api/auth/register`.
-2. Express delegates credential verification to **Better Auth**, which checks the bcrypt hash in its MongoDB `account` collection.
-3. The API returns a JWT signed by the Better Auth JWT plugin plus the safe user object.
-4. The client stores the token under `salonbook.token` and sends it as `Authorization: Bearer <token>`.
-5. On load, the client calls `/api/bootstrap` to hydrate the current user and role-scoped data.
-6. `AuthGate` redirects unauthenticated visitors to `/signin?callbackUrl=...` and blocks role mismatches.
-7. The API verifies the JWT with Better Auth, re-reads the user, and re-checks the role and blocked flag on every protected request.
+Production environment:
 
-Google sign-in requests an access token from Google Identity Services, sends it to `/api/auth/google`, and receives the same Better Auth-issued JWT after the API verifies the token with Google and links the account.
-
-## Theming
-
-The app ships with a light and dark salon palette.
-
-- `components/providers/theme-provider.tsx` stores the preference in `localStorage` under `salonbook-theme` and supports `light`, `dark`, and `system`.
-- `components/ui/theme-toggle.tsx` is available in the public navbar, auth layout, dashboard header, and mobile sidebar.
-- `app/layout.tsx` runs a tiny inline script before paint to apply the stored or system theme, preventing a flash of the wrong colours.
-- `app/globals.css` defines the semantic tokens (`paper`, `surface`, `accent`, `ink`, `sand`, status colours) and overrides them under `html.dark`. Components use the tokens instead of raw colours.
-
-## How payments work
-
-1. A confirmed, unpaid appointment shows **Pay securely**.
-2. The client calls `POST /api/payments/checkout-session`.
-3. The API creates a Stripe Checkout Session and returns its hosted URL.
-4. The browser redirects to Stripe, where the card is entered.
-5. Stripe returns the customer to `/dashboard/payments/[id]/success?session_id=...`.
-6. The success page polls `/api/payments/session/:sessionId` and refreshes the dashboard until the appointment is paid.
-7. Only the signature-verified Stripe webhook writes the transaction and marks the appointment paid. Refreshing or calling client endpoints cannot mark a payment complete.
-
-Without `STRIPE_SECRET_KEY` on the server, the checkout page shows a clear configuration message instead of collecting card details.
-
-## Project structure
-
-```text
-client-side/
-  app/                        App Router pages and layouts
-  components/
-    auth/                     Sign in/up, AuthGate, demo accounts
-    dashboard/                Customer and admin views
-    marketing/                Home, services, navbar, footer
-    providers/                Store, toast, theme, app providers
-    ui/                       Buttons, forms, dialogs, feedback, theme toggle
-  lib/
-    api.ts                    Fetch wrapper and token storage
-    google.ts                 Google Identity Services loader
-    selectors.ts              Derived dashboard data
-    types.ts                  Domain and API types
-    utils.ts                  Formatting and date helpers
-  docs/                       Architecture and design notes
+```env
+NEXT_PUBLIC_API_URL=https://salonbook-api-mu.vercel.app/api
+NEXT_PUBLIC_APP_URL=https://salonbook-client-sandy.vercel.app
 ```
 
-## Server dependency
+### Backend Deployment
 
-This client expects the API from the [`serside-9`](https://github.com/habib-45/serside-9) repository:
+The backend is maintained separately in the `serside-9` repository.
 
-- Express 5 + MongoDB
-- Better Auth email/password with bcrypt and the JWT plugin
-- Role and blocked-user checks on every protected route
-- Services, appointments, users, transactions
-- Stripe Checkout + verified webhook
-- ImgBB uploads
+Configure MongoDB, Better Auth, Stripe, ImgBB, Google authentication, and client origin variables in the backend deployment.
 
-See the server README for API routes, seeding, Stripe CLI setup, Google OAuth origins, and environment variables.
+---
 
-## Deployment
+## 🔒 Security Notes
 
-The client and API are deployed on Vercel.
+- Never expose backend secrets in frontend environment variables.
+- Never commit `.env` files.
+- Keep sensitive credentials on the backend.
+- Verify authentication tokens on the server.
+- Enforce role-based authorization on protected endpoints.
+- Verify Stripe webhook signatures before updating payment records.
+- Change demo passwords before real-world production use.
 
-### Client
+---
 
-1. Import the client repository into Vercel.
-2. Set `NEXT_PUBLIC_API_URL` to `https://salonbook-api-mu.vercel.app/api`.
-3. Set `NEXT_PUBLIC_APP_URL` to the deployed client origin.
-4. Deploy with `vercel deploy --prod`.
+## 👨‍💻 Author
 
-### API
+**Habib**
 
-Deploy the [`serside-9`](https://github.com/habib-45/serside-9) repository, set `CLIENT_URL` to the Vercel client origin, configure Better Auth, Stripe, ImgBB, and Google, and add the deployed Stripe webhook endpoint.
+- GitHub: [habib-45](https://github.com/habib-45)
+- Project: SalonBook – Salon Appointment Booking Platform
 
-## Notes
+---
 
-- The demo accounts are seeded server records. Change the seed passwords before using this in a real salon.
-- Google demo mode is intended for local review. Configure `GOOGLE_CLIENT_ID` for real Google authentication.
-- Image uploads fall back to inline data URLs when ImgBB is not configured; configure ImgBB for production.
-- Payments require Stripe keys and a webhook secret on the API; see the server README.
-#   s a l o n b o o k - c l i e n t  
- #   s a l o n b o o k - c l i e n t  
- 
+⭐ If you find this project interesting, consider giving the repository a star!
+
+**Built with ❤️ by Habib**
