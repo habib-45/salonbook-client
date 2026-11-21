@@ -1,3 +1,6 @@
+"use client"
+
+import * as React from "react"
 import Image from "next/image"
 import { cn, getInitials } from "@/lib/utils"
 
@@ -9,7 +12,10 @@ interface AvatarProps {
 }
 
 export function Avatar({ src, name, size = 40, className }: AvatarProps) {
-  if (!src) {
+  const [failedSrc, setFailedSrc] = React.useState<string | null>(null)
+  const hasImage = Boolean(src) && failedSrc !== src
+
+  if (!hasImage) {
     return (
       <span
         aria-label={name}
@@ -26,11 +32,15 @@ export function Avatar({ src, name, size = 40, className }: AvatarProps) {
 
   return (
     <Image
-      src={src}
+      src={src as string}
       alt={name}
       width={size}
       height={size}
-      unoptimized={src.startsWith("data:")}
+      // Remote profile images can come from Cloudinary, ImgBB, Google, or a
+      // data URL. Loading them directly avoids host configuration failures and
+      // keeps the avatar working when the image service is unavailable.
+      unoptimized
+      onError={() => setFailedSrc(src ?? null)}
       className={cn("shrink-0 rounded-full object-cover", className)}
       style={{ width: size, height: size }}
     />

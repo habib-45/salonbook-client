@@ -19,6 +19,7 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { DashboardSkeleton, FormAlert } from "@/components/ui/feedback"
 import { Field, Input } from "@/components/ui/form-field"
 import { ImageUpload } from "@/components/ui/image-upload"
+import { AdminProfilePhoto } from "@/components/dashboard/admin-profile-photo"
 import { DashPanel, PageHeader } from "@/components/dashboard/ui"
 import { formatDate } from "@/lib/utils"
 
@@ -37,10 +38,12 @@ export function ProfileView() {
 
   if (!db || !currentUser) return <DashboardSkeleton />
 
+  const isAdmin = currentUser.role === "admin"
+
   const dirty =
     name !== currentUser.name ||
     phone !== (currentUser.phone ?? "") ||
-    image !== currentUser.image
+    (!isAdmin && image !== currentUser.image)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -59,7 +62,11 @@ export function ProfileView() {
     }
 
     setIsSaving(true)
-    const result = await updateProfile({ name, phone, image })
+    const result = await updateProfile({
+      name,
+      phone,
+      image: isAdmin ? currentUser.image : image,
+    })
     setIsSaving(false)
     if (!result.ok) {
       setError(result.error)
@@ -88,7 +95,11 @@ export function ProfileView() {
 
           <div className="relative flex items-center gap-4">
             <span className="rounded-full ring-2 ring-white/15 ring-offset-2 ring-offset-burgundy-dark">
-              <Avatar src={image || currentUser.image} name={name || currentUser.name} size={64} />
+              <Avatar
+                src={isAdmin ? currentUser.image : image || currentUser.image}
+                name={name || currentUser.name}
+                size={64}
+              />
             </span>
             <div className="min-w-0">
               <p className="text-[0.5625rem] font-bold tracking-[0.14em] text-paper/45 uppercase">
@@ -133,6 +144,15 @@ export function ProfileView() {
         </div>
 
         <div className="space-y-5">
+          {isAdmin ? (
+            <DashPanel
+              title="Profile photo"
+              description="Upload a clear photo for your dashboard and account. Your initials appear automatically when no photo is available."
+            >
+              <AdminProfilePhoto user={currentUser} />
+            </DashPanel>
+          ) : null}
+
           <DashPanel
             title="Personal details"
             description="This information appears on your appointments and payment receipts."
@@ -140,13 +160,15 @@ export function ProfileView() {
             <form onSubmit={handleSubmit} noValidate className="space-y-5">
               {error ? <FormAlert>{error}</FormAlert> : null}
 
-              <ImageUpload
-                value={image}
-                onChange={setImage}
-                label="Profile photo"
-                hint="Square images work best"
-                aspect="square"
-              />
+              {!isAdmin ? (
+                <ImageUpload
+                  value={image}
+                  onChange={setImage}
+                  label="Profile photo"
+                  hint="Square images work best"
+                  aspect="square"
+                />
+              ) : null}
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Full name" htmlFor="profile-name" error={fieldError}>

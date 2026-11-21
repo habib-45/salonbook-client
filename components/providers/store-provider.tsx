@@ -35,6 +35,7 @@ interface StoreContextValue {
   signOut: () => void
   refreshData: () => Promise<void>
   updateProfile: (input: ProfileInput) => Promise<ActionResult<User>>
+  updateProfilePhoto: (image: string) => Promise<ActionResult<User>>
   addService: (input: ServiceInput) => Promise<ActionResult<Service>>
   updateService: (serviceId: string, input: ServiceInput) => Promise<ActionResult<Service>>
   deleteService: (serviceId: string) => Promise<ActionResult>
@@ -259,6 +260,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     [refreshData]
   )
 
+  const updateProfilePhoto = React.useCallback<StoreContextValue["updateProfilePhoto"]>(
+    async (image) =>
+      run(async () => {
+        const { user } = await apiRequest<{ user: User }>("/users/me/photo", {
+          method: "PATCH",
+          body: { image },
+        })
+        setCurrentUser(user)
+        await refreshData()
+        return user
+      }),
+    [refreshData]
+  )
+
   const addService = React.useCallback<StoreContextValue["addService"]>(
     async (input) =>
       run(async () => {
@@ -406,6 +421,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       signOut,
       refreshData,
       updateProfile,
+      updateProfilePhoto,
       addService,
       updateService,
       deleteService,
@@ -437,6 +453,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       signUp,
       startCheckout,
       updateProfile,
+      updateProfilePhoto,
       updateService,
     ]
   )
