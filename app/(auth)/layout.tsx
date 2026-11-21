@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ArrowUpRight, Star } from "lucide-react"
 import { Logo } from "@/components/ui/logo"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,7 +22,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14">
           <div className="flex items-center justify-between gap-5">
             <Logo variant="light" />
-            <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[0.6rem] font-bold tracking-[0.14em] text-cream/80 uppercase backdrop-blur">
+            <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[0.6rem] font-bold tracking-[0.14em] text-paper/80 uppercase backdrop-blur">
               Brooklyn · Est. 2018
             </span>
           </div>
@@ -32,11 +33,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                 <Star key={index} className="size-3.5 fill-current" />
               ))}
             </div>
-            <blockquote className="font-serif text-[2.8rem] leading-[1.04] tracking-[-0.035em] text-cream xl:text-[3.3rem]">
+            <blockquote className="font-serif text-[2.8rem] leading-[1.04] tracking-[-0.035em] text-paper xl:text-[3.3rem]">
               “A little time for yourself isn&apos;t a luxury. It&apos;s a{" "}
               <span className="italic text-rose">rhythm.</span>”
             </blockquote>
-            <p className="mt-5 text-[0.6875rem] font-bold tracking-[0.15em] text-cream/50 uppercase">
+            <p className="mt-5 text-[0.6875rem] font-bold tracking-[0.15em] text-paper/50 uppercase">
               The SalonBook philosophy
             </p>
 
@@ -57,14 +58,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                   />
                 ))}
               </div>
-              <p className="text-xs leading-5 text-cream/60">
-                Trusted by <span className="font-semibold text-cream">1,200+ guests</span> who
+              <p className="text-xs leading-5 text-paper/60">
+                Trusted by <span className="font-semibold text-paper">1,200+ guests</span> who
                 make time for themselves.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[0.65rem] text-cream/40">
+          <div className="flex items-center justify-between text-[0.65rem] text-paper/40">
             <span>24 Willow Lane, Brooklyn</span>
             <span className="inline-flex items-center gap-1">
               View the salon <ArrowUpRight className="size-3" />
@@ -78,13 +79,16 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <div className="lg:hidden">
             <Logo />
           </div>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-soft transition hover:text-ink"
-          >
-            <ArrowLeft className="size-3.5" />
-            Back to salon
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle size="sm" />
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-soft transition hover:text-ink"
+            >
+              <ArrowLeft className="size-3.5" />
+              Back to salon
+            </Link>
+          </div>
         </div>
         <div className="flex flex-1 items-start justify-center px-5 py-6 sm:px-8 sm:py-10 lg:items-center lg:px-12">
           <div className="w-full max-w-[26rem] animate-fade-up">{children}</div>

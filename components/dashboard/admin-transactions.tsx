@@ -177,7 +177,7 @@ export function AdminTransactions() {
         />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-sand/80 bg-white/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
+      <div className="mt-6 rounded-2xl border border-sand/80 bg-surface/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
         <div className="flex flex-col gap-3 sm:flex-row">
           <label className="relative flex-1">
             <span className="sr-only">Search transactions</span>
@@ -205,7 +205,7 @@ export function AdminTransactions() {
             aria-label="Filter by payment status"
             value={filter}
             onChange={(event) => setFilter(event.target.value as StatusFilter)}
-            className="h-11 bg-white/70 sm:w-[180px]"
+            className="h-11 bg-surface/70 sm:w-[180px]"
           >
             <option value="all">All transactions</option>
             <option value="paid">Paid only</option>
@@ -224,7 +224,7 @@ export function AdminTransactions() {
           <button
             type="button"
             onClick={clearFilters}
-            className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
+            className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-surface/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
           >
             <X className="size-3" />
             Clear filters
@@ -272,7 +272,7 @@ export function AdminTransactions() {
                   </thead>
                   <tbody className="divide-y divide-sand/70">
                     {visible.map((transaction) => (
-                      <tr key={transaction.id} className="transition hover:bg-white/45">
+                      <tr key={transaction.id} className="transition hover:bg-surface/45">
                         <td className="px-5 py-3.5">
                           <p className="max-w-[160px] truncate text-xs font-semibold">
                             {transaction.id}
@@ -280,7 +280,7 @@ export function AdminTransactions() {
                           <button
                             type="button"
                             onClick={() => copySession(transaction.stripeSessionId)}
-                            className="mt-1 inline-flex max-w-[190px] items-center gap-1.5 truncate text-[0.625rem] text-ink-soft transition hover:text-burgundy"
+                            className="mt-1 inline-flex max-w-[190px] items-center gap-1.5 truncate text-[0.625rem] text-ink-soft transition hover:text-accent"
                             title="Copy Stripe session ID"
                           >
                             <Copy className="size-2.5 shrink-0" />
@@ -318,7 +318,7 @@ export function AdminTransactions() {
                           {formatDateTime(transaction.createdAt)}
                         </td>
                         <td className="px-5 py-3.5 text-right">
-                          <p className="text-sm font-bold text-burgundy">
+                          <p className="text-sm font-bold text-accent">
                             {formatCurrency(transaction.amount, transaction.currency)}
                           </p>
                           <p className="mt-0.5 text-[0.5625rem] text-ink-soft">
@@ -382,7 +382,7 @@ export function AdminTransactions() {
                           {formatDateTime(transaction.createdAt)}
                         </p>
                       </div>
-                      <p className="shrink-0 text-sm font-bold text-burgundy">
+                      <p className="shrink-0 text-sm font-bold text-accent">
                         {formatCurrency(transaction.amount, transaction.currency)}
                       </p>
                     </div>
@@ -392,7 +392,7 @@ export function AdminTransactions() {
                     <button
                       type="button"
                       onClick={() => copySession(transaction.stripeSessionId)}
-                      className="inline-flex items-center gap-1.5 hover:text-burgundy"
+                      className="inline-flex items-center gap-1.5 hover:text-accent"
                     >
                       <Copy className="size-3" />
                       {truncateMiddle(transaction.stripeSessionId, 12, 4)}

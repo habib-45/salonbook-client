@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-sans: var(--font-body);
   --font-serif: var(--font-display);
+}
 
+@theme {
   --color-ink: #241c18;
   --color-ink-soft: #66574e;
   --color-cream: #faf5ef;
@@ -18,10 +22,71 @@
   --color-sage-light: #e7eee3;
   --color-gold: #b2874b;
   --color-gold-light: #f1e5d1;
+
+  --color-paper: #faf5ef;
+  --color-surface: #ffffff;
+  --color-scrim: #1b1210;
+  --color-accent: #59243a;
+
+  --color-danger: #9d3c43;
+  --color-danger-soft: #fff1f1;
+  --color-danger-line: #e2c4c4;
+  --color-danger-solid: #9d3c43;
+  --color-danger-solid-hover: #843138;
+
+  --color-success: #516b48;
+  --color-success-soft: #f2f8ee;
+  --color-success-line: #ccdac5;
+  --color-success-solid: #718c66;
+
+  --color-warning: #84612d;
+  --color-warning-soft: #fbf4e5;
+  --color-warning-line: #ead7b3;
+  --color-warning-solid: #b68a45;
 }
 
 :root {
   color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+
+  --color-ink: #f4ede5;
+  --color-ink-soft: #b7a89e;
+  --color-cream: #15110f;
+  --color-cream-deep: #211a16;
+  --color-sand: #352a24;
+  --color-sand-dark: #4a3a31;
+  --color-burgundy: #6e2d45;
+  --color-burgundy-dark: #3d1727;
+  --color-rose: #d795a4;
+  --color-rose-light: #38232a;
+  --color-sage: #9cb394;
+  --color-sage-light: #253024;
+  --color-gold: #d6ab69;
+  --color-gold-light: #33291d;
+
+  --color-paper: #faf5ef;
+  --color-surface: #241d19;
+  --color-scrim: #0b0807;
+  --color-accent: #e3a3b0;
+
+  --color-danger: #f2a8af;
+  --color-danger-soft: #3a2226;
+  --color-danger-line: #5c353b;
+  --color-danger-solid: #a84750;
+  --color-danger-solid-hover: #b8545c;
+
+  --color-success: #a8c59e;
+  --color-success-soft: #232e22;
+  --color-success-line: #384a35;
+  --color-success-solid: #7e9b74;
+
+  --color-warning: #e3c086;
+  --color-warning-soft: #32281b;
+  --color-warning-line: #4d3d27;
+  --color-warning-solid: #c29a57;
 }
 
 * {
@@ -94,7 +159,7 @@ a {
     letter-spacing: 0.18em;
     line-height: 1;
     text-transform: uppercase;
-    color: var(--color-burgundy);
+    color: var(--color-accent);
   }
 
   .eyebrow::before {
@@ -110,7 +175,7 @@ a {
     height: 2.875rem;
     border-radius: 0.75rem;
     border: 1px solid color-mix(in srgb, var(--color-sand) 90%, var(--color-ink));
-    background: rgba(255, 255, 255, 0.72);
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
     padding-inline: 0.875rem;
     font-size: 0.875rem;
     color: var(--color-ink);
@@ -130,8 +195,8 @@ a {
   }
 
   .input-field:focus {
-    border-color: var(--color-burgundy);
-    background: #fff;
+    border-color: var(--color-accent);
+    background: var(--color-surface);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-rose) 24%, transparent);
   }
 
@@ -146,7 +211,7 @@ a {
     resize: vertical;
     border-radius: 0.75rem;
     border: 1px solid color-mix(in srgb, var(--color-sand) 90%, var(--color-ink));
-    background: rgba(255, 255, 255, 0.72);
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
     padding: 0.75rem 0.875rem;
     font-size: 0.875rem;
     line-height: 1.55;
@@ -163,8 +228,8 @@ a {
   }
 
   .textarea-field:focus {
-    border-color: var(--color-burgundy);
-    background: #fff;
+    border-color: var(--color-accent);
+    background: var(--color-surface);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-rose) 24%, transparent);
   }
 
@@ -180,7 +245,7 @@ a {
   .surface-card {
     border: 1px solid color-mix(in srgb, var(--color-sand) 80%, transparent);
     border-radius: 1.25rem;
-    background: rgba(255, 255, 255, 0.66);
+    background: color-mix(in srgb, var(--color-surface) 66%, transparent);
     box-shadow: 0 20px 50px -42px rgba(52, 37, 28, 0.5);
   }
 }
@@ -265,7 +330,7 @@ a {
   background: linear-gradient(
     90deg,
     color-mix(in srgb, var(--color-cream-deep) 60%, transparent) 20%,
-    #fffaf5 50%,
+    var(--color-surface) 50%,
     color-mix(in srgb, var(--color-cream-deep) 60%, transparent) 80%
   );
   background-size: 1200px 100%;

@@ -133,7 +133,7 @@ export function PaymentCheckout() {
     <>
       <Link
         href="/dashboard/appointments"
-        className="inline-flex items-center gap-2 text-xs font-semibold text-ink-soft transition hover:text-burgundy"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-ink-soft transition hover:text-accent"
       >
         <ArrowLeft className="size-3.5" />
         Back to appointments
@@ -148,7 +148,7 @@ export function PaymentCheckout() {
 
       <div className="mt-7 grid items-start gap-5 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="surface-card overflow-hidden">
-          <div className="flex items-start gap-3 border-b border-sand/70 bg-[#fffaf2] px-5 py-4 text-[#725b36] sm:px-6">
+          <div className="flex items-start gap-3 border-b border-sand/70 bg-warning-soft px-5 py-4 text-warning sm:px-6">
             <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gold-light">
               <Sparkles className="size-4" />
             </span>
@@ -156,7 +156,7 @@ export function PaymentCheckout() {
               <p className="text-xs font-bold tracking-[0.04em]">
                 Stripe Checkout — secure card payment
               </p>
-              <p className="mt-1 text-[0.6875rem] leading-5 text-[#725b36]/85">
+              <p className="mt-1 text-[0.6875rem] leading-5 text-warning/85">
                 You will be redirected to Stripe to enter your card. SalonBook only marks
                 this appointment paid after Stripe confirms the payment through its webhook.
               </p>
@@ -236,13 +236,13 @@ export function PaymentCheckout() {
                 />
               ) : null}
               <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
-              <span className="absolute bottom-3 left-3 rounded-full border border-white/30 bg-cream/90 px-2.5 py-1 text-[0.5625rem] font-bold tracking-[0.1em] text-burgundy uppercase backdrop-blur">
+              <span className="absolute bottom-3 left-3 rounded-full border border-white/30 bg-cream/90 px-2.5 py-1 text-[0.5625rem] font-bold tracking-[0.1em] text-accent uppercase backdrop-blur">
                 {service?.category ?? "Salon ritual"}
               </span>
             </div>
 
             <div className="p-5">
-              <p className="text-[0.5625rem] font-bold tracking-[0.14em] text-burgundy uppercase">
+              <p className="text-[0.5625rem] font-bold tracking-[0.14em] text-accent uppercase">
                 Order summary
               </p>
               <h2 className="mt-1.5 font-serif text-[1.7rem] leading-tight tracking-[-0.025em]">
@@ -289,13 +289,13 @@ export function PaymentCheckout() {
                 </div>
                 <div className="flex items-baseline justify-between gap-3 border-t border-sand/70 pt-3">
                   <span className="text-sm font-semibold">Total due</span>
-                  <span className="font-serif text-[1.9rem] leading-none tracking-[-0.03em] text-burgundy">
+                  <span className="font-serif text-[1.9rem] leading-none tracking-[-0.03em] text-accent">
                     {formatCurrency(appointment.servicePrice)}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-4 rounded-xl bg-sage-light/60 px-3 py-2.5 text-[0.625rem] leading-5 text-[#516b48]">
+              <div className="mt-4 rounded-xl bg-sage-light/60 px-3 py-2.5 text-[0.625rem] leading-5 text-success">
                 <p className="flex items-start gap-1.5">
                   <Check className="mt-0.5 size-3 shrink-0" />
                   Your appointment is confirmed. Paying now reserves your stylist&apos;s time.
@@ -304,7 +304,7 @@ export function PaymentCheckout() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-sand/80 bg-white/40 p-4 text-[0.625rem] leading-5 text-ink-soft">
+          <div className="rounded-2xl border border-sand/80 bg-surface/40 p-4 text-[0.625rem] leading-5 text-ink-soft">
             <p className="flex items-center gap-1.5 font-semibold text-ink">
               <ShieldCheck className="size-3.5 text-sage" />
               How this payment works
@@ -347,8 +347,8 @@ function PaymentState({
   tone?: "neutral" | "gold" | "sage"
 }) {
   const toneClasses = {
-    neutral: "bg-cream-deep text-burgundy",
-    gold: "bg-gold-light text-[#84612d]",
+    neutral: "bg-cream-deep text-accent",
+    gold: "bg-gold-light text-warning",
     sage: "bg-sage-light text-sage",
   }
 

@@ -111,7 +111,7 @@ export function PaymentSuccess() {
     return (
       <div className="flex min-h-[70vh] items-center justify-center text-center">
         <div className="max-w-md">
-          <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+          <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-cream-deep text-accent">
             <ReceiptText className="size-6" />
           </span>
           <h1 className="mt-5 font-serif text-[2.3rem] leading-tight tracking-[-0.03em]">
@@ -137,7 +137,7 @@ export function PaymentSuccess() {
     return (
       <div className="flex min-h-[70vh] items-center justify-center text-center">
         <div className="max-w-md">
-          <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-gold-light text-[#84612d]">
+          <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-gold-light text-warning">
             {stillChecking ? (
               <LoaderCircle className="size-6 animate-spin" />
             ) : (
@@ -229,10 +229,10 @@ export function PaymentSuccess() {
         </p>
       </div>
 
-      <div className="animate-fade-up delay-75 mt-7 overflow-hidden rounded-[1.35rem] border border-sand/80 bg-white/70 shadow-[0_24px_70px_-45px_rgba(52,37,28,0.5)]">
-        <div className="flex flex-col gap-4 bg-burgundy-dark px-5 py-5 text-cream sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <div className="animate-fade-up delay-75 mt-7 overflow-hidden rounded-[1.35rem] border border-sand/80 bg-surface/70 shadow-[0_24px_70px_-45px_rgba(52,37,28,0.5)]">
+        <div className="flex flex-col gap-4 bg-burgundy-dark px-5 py-5 text-paper sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
-            <p className="text-[0.5625rem] font-bold tracking-[0.16em] text-cream/45 uppercase">
+            <p className="text-[0.5625rem] font-bold tracking-[0.16em] text-paper/45 uppercase">
               SalonBook · Payment receipt
             </p>
             <p className="mt-1 font-serif text-[1.8rem] leading-tight tracking-[-0.025em]">
@@ -242,9 +242,9 @@ export function PaymentSuccess() {
           <div className="flex items-center gap-2">
             <StatusBadge
               status="paid"
-              className="border-white/15 bg-white/10 text-cream"
+              className="border-white/15 bg-white/10 text-paper"
             />
-            <span className="text-[0.625rem] text-cream/45">
+            <span className="text-[0.625rem] text-paper/45">
               {formatDateTime(transaction.createdAt)}
             </span>
           </div>
@@ -252,11 +252,11 @@ export function PaymentSuccess() {
 
         <div className="p-5 sm:p-6">
           <div className="flex items-start gap-3.5">
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gold-light text-[#84612d]">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-gold-light text-warning">
               <Sparkles className="size-5" />
             </span>
             <div>
-              <p className="text-[0.5625rem] font-bold tracking-[0.12em] text-burgundy uppercase">
+              <p className="text-[0.5625rem] font-bold tracking-[0.12em] text-accent uppercase">
                 {service?.category ?? "Salon ritual"}
               </p>
               <h2 className="mt-0.5 font-serif text-[1.6rem] leading-tight tracking-[-0.025em]">
@@ -300,13 +300,13 @@ export function PaymentSuccess() {
             </div>
             <div className="flex items-baseline justify-between gap-3 border-t border-sand/70 pt-3">
               <span className="font-semibold">Total paid</span>
-              <span className="font-serif text-2xl leading-none tracking-[-0.03em] text-burgundy">
+              <span className="font-serif text-2xl leading-none tracking-[-0.03em] text-accent">
                 {formatCurrency(transaction.amount, transaction.currency)}
               </span>
             </div>
           </div>
 
-          <div className="mt-5 space-y-2 rounded-xl border border-sand/70 bg-white/45 p-3.5 text-[0.625rem] text-ink-soft">
+          <div className="mt-5 space-y-2 rounded-xl border border-sand/70 bg-surface/45 p-3.5 text-[0.625rem] text-ink-soft">
             <div className="flex items-center justify-between gap-3">
               <span>Transaction</span>
               <span className="truncate font-semibold text-ink">{transaction.id}</span>
@@ -316,7 +316,7 @@ export function PaymentSuccess() {
               <button
                 type="button"
                 onClick={copySession}
-                className="inline-flex items-center gap-1.5 font-semibold text-ink transition hover:text-burgundy"
+                className="inline-flex items-center gap-1.5 font-semibold text-ink transition hover:text-accent"
                 title="Copy session ID"
               >
                 {truncateMiddle(transaction.stripeSessionId, 16, 5)}
@@ -325,7 +325,7 @@ export function PaymentSuccess() {
             </div>
             <div className="flex items-center justify-between gap-3">
               <span>Status</span>
-              <span className="font-semibold text-[#516b48]">Paid · Stripe</span>
+              <span className="font-semibold text-success">Paid · Stripe</span>
             </div>
           </div>
         </div>
@@ -344,7 +344,7 @@ export function PaymentSuccess() {
         </Button>
       </div>
 
-      <div className="animate-fade-up delay-225 mt-7 rounded-2xl border border-sand/70 bg-white/35 p-4 text-center">
+      <div className="animate-fade-up delay-225 mt-7 rounded-2xl border border-sand/70 bg-surface/35 p-4 text-center">
         <p className="inline-flex items-center gap-1.5 text-[0.625rem] leading-5 text-ink-soft">
           <Mail className="size-3 text-gold" />
           Stripe emails a payment receipt to the address used at checkout. You can also
@@ -352,7 +352,7 @@ export function PaymentSuccess() {
         </p>
         <p className="mt-1 text-[0.625rem] text-ink-soft/60">
           Questions?{" "}
-          <Link href="/#visit" className="font-semibold text-burgundy hover:underline">
+          <Link href="/#visit" className="font-semibold text-accent hover:underline">
             Contact the salon
           </Link>
           .

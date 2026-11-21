@@ -19,7 +19,7 @@ export default function RootError({
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center bg-cream px-5 py-14 text-center">
       <Logo />
-      <span className="mt-10 flex size-14 items-center justify-center rounded-full bg-[#f7e4e4] text-[#9d3c43]">
+      <span className="mt-10 flex size-14 items-center justify-center rounded-full bg-danger-soft text-danger">
         <CircleAlert className="size-6" />
       </span>
       <p className="eyebrow mt-6 justify-center before:hidden">Something interrupted us</p>

@@ -161,7 +161,7 @@ export function AdminServices() {
         />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-sand/80 bg-white/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
+      <div className="mt-6 rounded-2xl border border-sand/80 bg-surface/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
         <div className="flex flex-col gap-3 lg:flex-row">
           <label className="relative flex-1">
             <span className="sr-only">Search services</span>
@@ -190,7 +190,7 @@ export function AdminServices() {
               aria-label="Filter by category"
               value={category}
               onChange={(event) => setCategory(event.target.value)}
-              className="h-11 bg-white/70 lg:w-[210px]"
+              className="h-11 bg-surface/70 lg:w-[210px]"
             >
               <option value="All categories">All categories</option>
               {SERVICE_CATEGORIES.map((option) => (
@@ -206,7 +206,7 @@ export function AdminServices() {
               onChange={(event) =>
                 setStatus(event.target.value as "all" | ServiceStatus)
               }
-              className="h-11 bg-white/70 lg:w-[170px]"
+              className="h-11 bg-surface/70 lg:w-[170px]"
             >
               <option value="all">All availability</option>
               <option value="active">Active only</option>
@@ -226,7 +226,7 @@ export function AdminServices() {
           <button
             type="button"
             onClick={clearFilters}
-            className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
+            className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-surface/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
           >
             <X className="size-3" />
             Clear filters
@@ -281,7 +281,7 @@ export function AdminServices() {
                     {filtered.map((service) => {
                       const bookingCount = getServiceAppointmentCount(db, service.id)
                       return (
-                        <tr key={service.id} className="transition hover:bg-white/45">
+                        <tr key={service.id} className="transition hover:bg-surface/45">
                           <td className="px-5 py-3.5">
                             <div className="flex items-center gap-3">
                               <div className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-cream-deep">
@@ -303,7 +303,7 @@ export function AdminServices() {
                               </div>
                             </div>
                           </td>
-                          <td className="px-5 py-3.5 text-sm font-semibold text-burgundy">
+                          <td className="px-5 py-3.5 text-sm font-semibold text-accent">
                             {formatCurrency(service.price)}
                           </td>
                           <td className="px-5 py-3.5 text-xs text-ink-soft">
@@ -390,7 +390,7 @@ export function AdminServices() {
                           <StatusBadge status={service.status} className="shrink-0" />
                         </div>
                         <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[0.6875rem] text-ink-soft">
-                          <span className="font-bold text-burgundy">
+                          <span className="font-bold text-accent">
                             {formatCurrency(service.price)}
                           </span>
                           <span>{formatDuration(service.duration)}</span>
@@ -429,7 +429,7 @@ export function AdminServices() {
                         size="sm"
                         disabled={bookingCount > 0}
                         onClick={() => setDeleteTarget(service)}
-                        className="text-[#9d3c43] hover:bg-[#fff1f1]"
+                        className="text-danger hover:bg-danger-soft"
                         aria-label={
                           bookingCount > 0
                             ? "Delete unavailable: service has appointment history"
@@ -529,11 +529,11 @@ function ServiceAction({
       title={label}
       aria-label={label}
       className={cn(
-        "flex size-8 items-center justify-center rounded-full border border-sand/80 bg-white/55 text-ink-soft transition",
+        "flex size-8 items-center justify-center rounded-full border border-sand/80 bg-surface/55 text-ink-soft transition",
         danger
-          ? "hover:border-[#e2c4c4] hover:bg-[#fff1f1] hover:text-[#9d3c43]"
-          : "hover:border-sand-dark hover:bg-white hover:text-ink",
-        disabled && "cursor-not-allowed opacity-35 hover:border-sand/80 hover:bg-white/55 hover:text-ink-soft"
+          ? "hover:border-danger-line hover:bg-danger-soft hover:text-danger"
+          : "hover:border-sand-dark hover:bg-surface hover:text-ink",
+        disabled && "cursor-not-allowed opacity-35 hover:border-sand/80 hover:bg-surface/55 hover:text-ink-soft"
       )}
     >
       {children}

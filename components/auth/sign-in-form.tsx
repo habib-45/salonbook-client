@@ -76,7 +76,7 @@ export function SignInForm() {
         <h1 className="font-serif text-[2.9rem] leading-[0.98] tracking-[-0.04em] text-ink sm:text-[3.25rem]">
           Your chair is
           <br />
-          <span className="italic text-burgundy">waiting.</span>
+          <span className="italic text-accent">waiting.</span>
         </h1>
         <p className="mt-4 text-sm leading-6 text-ink-soft">
           Sign in to manage your appointments, payments, and profile.
@@ -163,15 +163,15 @@ export function SignInForm() {
         New to SalonBook?{" "}
         <Link
           href="/signup"
-          className="font-semibold text-burgundy underline decoration-rose/50 underline-offset-4 transition hover:decoration-burgundy"
+          className="font-semibold text-accent underline decoration-rose/50 underline-offset-4 transition hover:decoration-accent"
         >
           Create an account
         </Link>
       </p>
 
       <p className="mt-6 border-t border-sand/70 pt-5 text-center text-[0.625rem] leading-5 text-ink-soft/75">
-        Passwords are hashed with bcrypt and your session is protected by a signed token.
-        Google sign-in uses OAuth when configured.
+        Passwords are hashed with bcrypt and sessions are issued by Better Auth as signed
+        JWTs. Google sign-in is verified with Google OAuth when configured.
       </p>
     </div>
   )

@@ -29,15 +29,15 @@ const icons = {
 }
 
 const styles = {
-  success: "border-[#cddbc7] bg-[#f7fbf4] text-[#3f5837]",
-  error: "border-[#e9c9c8] bg-[#fff7f6] text-[#8b3337]",
-  info: "border-[#e6d8c4] bg-[#fffaf2] text-[#725b36]",
+  success: "border-success-line bg-success-soft text-success",
+  error: "border-danger-line bg-danger-soft text-danger",
+  info: "border-warning-line bg-warning-soft text-warning",
 }
 
 const iconStyles = {
-  success: "bg-[#e3eedd] text-[#54784a]",
-  error: "bg-[#f5dedd] text-[#a24043]",
-  info: "bg-[#f3e7d6] text-[#9b7132]",
+  success: "bg-success-soft text-success",
+  error: "bg-danger-line/40 text-danger",
+  info: "bg-warning-soft text-warning",
 }
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -121,7 +121,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 onClick={() => dismiss(toast.id)}
-                className="mt-0.5 rounded-full p-1 opacity-50 transition hover:bg-black/5 hover:opacity-100"
+                className="mt-0.5 rounded-full p-1 opacity-50 transition hover:bg-ink/10 hover:opacity-100"
                 aria-label="Dismiss notification"
               >
                 <X className="size-3.5" />

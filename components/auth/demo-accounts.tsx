@@ -9,7 +9,7 @@ export function DemoAccounts({
   onSelect: (email: string, password: string) => void
 }) {
   return (
-    <div className="mt-6 rounded-2xl border border-sand/80 bg-white/35 p-3.5">
+    <div className="mt-6 rounded-2xl border border-sand/80 bg-surface/35 p-3.5">
       <div className="flex items-center justify-between gap-3">
         <p className="text-[0.625rem] font-bold tracking-[0.13em] text-ink-soft uppercase">
           Demo accounts
@@ -25,9 +25,9 @@ export function DemoAccounts({
               key={key}
               type="button"
               onClick={() => onSelect(account.email, account.password)}
-              className="group flex items-start gap-2.5 rounded-xl border border-sand/70 bg-cream/60 p-2.5 text-left transition hover:border-sand-dark hover:bg-white"
+              className="group flex items-start gap-2.5 rounded-xl border border-sand/70 bg-cream/60 p-2.5 text-left transition hover:border-sand-dark hover:bg-surface"
             >
-              <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+              <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-cream-deep text-accent">
                 <Icon className="size-3.5" />
               </span>
               <span className="min-w-0">

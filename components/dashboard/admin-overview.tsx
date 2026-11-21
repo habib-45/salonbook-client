@@ -179,7 +179,7 @@ export function AdminOverview() {
             description="Confirm a request to unlock payment, or cancel it if the time no longer works."
             action={
               pending.length > 0 ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fbf4e5] px-2.5 py-1 text-[0.625rem] font-semibold text-[#84612d]">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-2.5 py-1 text-[0.625rem] font-semibold text-warning">
                   <Clock3 className="size-3" />
                   {pending.length} waiting
                 </span>
@@ -222,7 +222,7 @@ export function AdminOverview() {
                       </div>
 
                       <div className="flex shrink-0 items-center gap-2 pl-[50px] lg:pl-0">
-                        <span className="mr-1 hidden text-xs font-bold text-burgundy sm:block">
+                        <span className="mr-1 hidden text-xs font-bold text-accent sm:block">
                           {formatCurrency(appointment.servicePrice)}
                         </span>
                         <Button size="sm" onClick={() => handleConfirm(appointment)}>
@@ -259,7 +259,7 @@ export function AdminOverview() {
               <div className="border-t border-sand/70 px-5 py-3.5 sm:px-6">
                 <Link
                   href="/dashboard/admin/appointments"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-burgundy hover:underline"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline"
                 >
                   View all {pending.length} requests
                   <ArrowRight className="size-3.5" />
@@ -282,7 +282,7 @@ export function AdminOverview() {
             action={
               <Link
                 href="/dashboard/admin/appointments"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-burgundy hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline"
               >
                 Manage
                 <ArrowRight className="size-3.5" />
@@ -298,7 +298,7 @@ export function AdminOverview() {
                     className="flex items-center gap-3.5 px-5 py-3.5 sm:px-6"
                   >
                     <div className="flex w-16 shrink-0 flex-col items-center rounded-xl bg-cream-deep/70 px-2 py-2">
-                      <span className="text-[0.625rem] font-bold text-burgundy">
+                      <span className="text-[0.625rem] font-bold text-accent">
                         {appointment.timeSlot}
                       </span>
                     </div>
@@ -334,18 +334,18 @@ export function AdminOverview() {
         </div>
 
         <div className="space-y-5">
-          <div className="relative overflow-hidden rounded-[1.35rem] border border-burgundy-dark/20 bg-burgundy-dark p-5 text-cream shadow-[0_24px_60px_-36px_rgba(64,25,42,0.7)] sm:p-6">
+          <div className="relative overflow-hidden rounded-[1.35rem] border border-burgundy-dark/20 bg-burgundy-dark p-5 text-paper shadow-[0_24px_60px_-36px_rgba(64,25,42,0.7)] sm:p-6">
             <div className="pointer-events-none absolute -top-16 -right-14 size-44 rounded-full bg-rose/25 blur-[50px]" />
             <div className="relative">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[0.5625rem] font-bold tracking-[0.15em] text-cream/45 uppercase">
+                  <p className="text-[0.5625rem] font-bold tracking-[0.15em] text-paper/45 uppercase">
                     Revenue at a glance
                   </p>
                   <p className="mt-3 font-serif text-[2.5rem] leading-none tracking-[-0.035em]">
                     {formatCurrency(stats.revenue)}
                   </p>
-                  <p className="mt-1.5 text-[0.6875rem] text-cream/50">
+                  <p className="mt-1.5 text-[0.6875rem] text-paper/50">
                     From {stats.transactionCount} paid{" "}
                     {stats.transactionCount === 1 ? "appointment" : "appointments"}
                   </p>
@@ -357,18 +357,18 @@ export function AdminOverview() {
 
               <div className="mt-5 grid grid-cols-2 gap-2.5 text-[0.6875rem]">
                 <div className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5">
-                  <p className="text-cream/40">Payment due</p>
-                  <p className="mt-1 font-semibold text-cream">{stats.unpaidConfirmed}</p>
+                  <p className="text-paper/40">Payment due</p>
+                  <p className="mt-1 font-semibold text-paper">{stats.unpaidConfirmed}</p>
                 </div>
                 <div className="rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2.5">
-                  <p className="text-cream/40">Upcoming</p>
-                  <p className="mt-1 font-semibold text-cream">{stats.upcoming}</p>
+                  <p className="text-paper/40">Upcoming</p>
+                  <p className="mt-1 font-semibold text-paper">{stats.upcoming}</p>
                 </div>
               </div>
 
               <Link
                 href="/dashboard/admin/transactions"
-                className="mt-4 inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold text-cream/65 transition hover:text-cream"
+                className="mt-4 inline-flex items-center gap-1.5 text-[0.6875rem] font-semibold text-paper/65 transition hover:text-paper"
               >
                 Open transaction report
                 <ArrowUpRight className="size-3" />
@@ -381,7 +381,7 @@ export function AdminOverview() {
             action={
               <Link
                 href="/dashboard/admin/transactions"
-                className="inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-burgundy hover:underline"
+                className="inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-accent hover:underline"
               >
                 View all
                 <ArrowRight className="size-3" />
@@ -408,7 +408,7 @@ export function AdminOverview() {
                       </p>
                     </div>
                     <div className="shrink-0 text-right">
-                      <p className="text-xs font-bold text-burgundy">
+                      <p className="text-xs font-bold text-accent">
                         {formatCurrency(transaction.amount, transaction.currency)}
                       </p>
                       <StatusBadge
@@ -432,7 +432,7 @@ export function AdminOverview() {
             action={
               <Link
                 href="/dashboard/admin/users"
-                className="inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-burgundy hover:underline"
+                className="inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-accent hover:underline"
               >
                 Manage
                 <ArrowRight className="size-3" />
@@ -447,21 +447,21 @@ export function AdminOverview() {
                   <p className="flex items-center gap-1.5 truncate text-xs font-semibold">
                     {customer.name}
                     {customer.isBlocked ? (
-                      <ShieldCheck className="size-3 shrink-0 text-[#9d3c43]" />
+                      <ShieldCheck className="size-3 shrink-0 text-danger" />
                     ) : null}
                   </p>
                   <p className="truncate text-[0.625rem] text-ink-soft">
                     {appointments} {appointments === 1 ? "appointment" : "appointments"}
                   </p>
                 </div>
-                <span className="shrink-0 text-xs font-bold text-burgundy">
+                <span className="shrink-0 text-xs font-bold text-accent">
                   {formatCurrency(spend)}
                 </span>
               </div>
             ))}
             <Link
               href="/dashboard/admin/users"
-              className="flex items-center justify-center gap-1.5 rounded-xl border border-sand/70 bg-white/45 py-2.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
+              className="flex items-center justify-center gap-1.5 rounded-xl border border-sand/70 bg-surface/45 py-2.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
             >
               <UsersRound className="size-3.5" />
               View all customers

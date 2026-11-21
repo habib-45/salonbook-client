@@ -468,10 +468,10 @@ function ConnectionBanner({
   return (
     <div
       role="status"
-      className="fixed right-4 bottom-4 z-[300] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-[#e8c7c9] bg-[#fffafa] p-4 shadow-[0_24px_70px_-30px_rgba(64,25,42,0.55)]"
+      className="fixed right-4 bottom-4 z-[300] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-danger-line bg-danger-soft p-4 shadow-[0_24px_70px_-30px_rgba(64,25,42,0.55)]"
     >
       <div className="flex items-start gap-3">
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#f7e4e4] text-[#9d3c43]">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-danger-soft text-danger">
           <WifiOff className="size-4" />
         </span>
         <div className="min-w-0 flex-1">
@@ -488,7 +488,7 @@ function ConnectionBanner({
               }
             }}
             disabled={isRetrying}
-            className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-sand bg-white/70 px-3 py-1.5 text-[0.625rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink disabled:opacity-60"
+            className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-sand bg-surface/70 px-3 py-1.5 text-[0.625rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink disabled:opacity-60"
           >
             {isRetrying ? (
               <LoaderCircle className="size-3 animate-spin" />

@@ -32,7 +32,7 @@ export function Field({
       </div>
       {children}
       {error ? (
-        <p className="text-xs leading-5 text-[#9d3c43]" role="alert">
+        <p className="text-xs leading-5 text-danger" role="alert">
           {error}
         </p>
       ) : null}

@@ -79,6 +79,8 @@ export interface BootstrapData {
 export interface AuthConfig {
   googleClientId: string | null
   googleDemoEnabled: boolean
+  authProvider?: "better-auth"
+  betterAuthBasePath?: string
 }
 
 export interface CheckoutSession {

@@ -22,6 +22,7 @@ import { useStore } from "@/components/providers/store-provider"
 import { useToast } from "@/components/providers/toast-provider"
 import { Avatar } from "@/components/ui/avatar"
 import { Logo } from "@/components/ui/logo"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { SALON } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 
@@ -114,7 +115,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-dvh bg-cream">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[272px] flex-col overflow-hidden bg-burgundy-dark text-cream lg:flex">
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[272px] flex-col overflow-hidden bg-burgundy-dark text-paper lg:flex">
         <div className="pointer-events-none absolute -top-28 -right-24 size-72 rounded-full bg-rose/15 blur-[70px]" />
         <div className="pointer-events-none absolute bottom-20 -left-24 size-64 rounded-full bg-gold/10 blur-[70px]" />
 
@@ -128,18 +129,18 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <span className="flex size-6 items-center justify-center rounded-full bg-white/10">
                 <Sparkles className="size-3 text-gold" />
               </span>
-              <span className="text-[0.625rem] font-bold tracking-[0.13em] text-cream/65 uppercase">
+              <span className="text-[0.625rem] font-bold tracking-[0.13em] text-paper/65 uppercase">
                 {currentUser.role === "admin" ? "Salon studio" : "Guest studio"}
               </span>
             </div>
-            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[0.5625rem] font-semibold text-cream/55">
+            <span className="rounded-full bg-white/10 px-2 py-0.5 text-[0.5625rem] font-semibold text-paper/55">
               Live API
             </span>
           </div>
         </div>
 
         <nav className="relative mt-6 flex-1 overflow-y-auto px-3" aria-label="Dashboard navigation">
-          <p className="px-3 pb-2 text-[0.5625rem] font-bold tracking-[0.18em] text-cream/35 uppercase">
+          <p className="px-3 pb-2 text-[0.5625rem] font-bold tracking-[0.18em] text-paper/35 uppercase">
             {currentUser.role === "admin" ? "Manage the salon" : "Your salon"}
           </p>
           <div className="space-y-1">
@@ -154,14 +155,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   className={cn(
                     "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition",
                     active
-                      ? "bg-cream text-burgundy shadow-[0_12px_30px_-20px_rgba(0,0,0,0.8)]"
-                      : "text-cream/65 hover:bg-white/[0.07] hover:text-cream"
+                      ? "bg-paper text-burgundy shadow-[0_12px_30px_-20px_rgba(0,0,0,0.8)]"
+                      : "text-paper/65 hover:bg-white/[0.07] hover:text-paper"
                   )}
                 >
                   <item.icon
                     className={cn(
                       "size-[1.05rem] shrink-0",
-                      active ? "text-burgundy" : "text-cream/40 group-hover:text-cream/70"
+                      active ? "text-accent" : "text-paper/40 group-hover:text-paper/70"
                     )}
                   />
                   <span className="font-medium">{item.label}</span>
@@ -177,7 +178,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/services"
               onClick={closeMobile}
-              className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm text-cream/55 transition hover:bg-white/[0.07] hover:text-cream"
+              className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm text-paper/55 transition hover:bg-white/[0.07] hover:text-paper"
             >
               <span className="inline-flex items-center gap-3">
                 <ArrowUpRight className="size-4" />
@@ -186,7 +187,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </Link>
             <a
               href={`tel:${SALON.phone.replace(/[^+\d]/g, "")}`}
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs text-cream/40 transition hover:bg-white/[0.07] hover:text-cream/75"
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs text-paper/40 transition hover:bg-white/[0.07] hover:text-paper/75"
             >
               <span className="size-1 rounded-full bg-gold" />
               {SALON.phone}
@@ -199,19 +200,19 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-2.5">
               <Avatar src={currentUser.image} name={currentUser.name} size={36} />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-semibold text-cream">{currentUser.name}</p>
-                <p className="truncate text-[0.625rem] text-cream/45">{currentUser.email}</p>
+                <p className="truncate text-xs font-semibold text-paper">{currentUser.name}</p>
+                <p className="truncate text-[0.625rem] text-paper/45">{currentUser.email}</p>
               </div>
             </div>
             <div className="mt-3 flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 text-[0.5625rem] font-semibold tracking-[0.08em] text-cream/40 uppercase">
+              <span className="inline-flex items-center gap-1.5 text-[0.5625rem] font-semibold tracking-[0.08em] text-paper/40 uppercase">
                 <ShieldCheck className="size-3 text-gold/80" />
                 {currentUser.role === "admin" ? "Administrator" : "Customer"}
               </span>
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[0.625rem] font-semibold text-cream/55 transition hover:bg-white/10 hover:text-cream"
+                className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[0.625rem] font-semibold text-paper/55 transition hover:bg-white/10 hover:text-paper"
               >
                 <LogOut className="size-3" />
                 Sign out
@@ -228,14 +229,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 onClick={() => setMobileOpen(true)}
-                className="flex size-9 items-center justify-center rounded-full border border-sand bg-white/60 text-ink-soft transition hover:text-ink lg:hidden"
+                className="flex size-9 items-center justify-center rounded-full border border-sand bg-surface/60 text-ink-soft transition hover:text-ink lg:hidden"
                 aria-label="Open dashboard menu"
                 aria-expanded={mobileOpen}
               >
                 <Menu className="size-4.5" />
               </button>
               <div className="min-w-0">
-                <p className="hidden text-[0.5625rem] font-bold tracking-[0.15em] text-burgundy uppercase sm:block">
+                <p className="hidden text-[0.5625rem] font-bold tracking-[0.15em] text-accent uppercase sm:block">
                   {currentUser.role === "admin" ? "Salon studio" : "Your salon"}
                 </p>
                 <p className="truncate text-sm font-semibold text-ink sm:mt-0.5">
@@ -245,8 +246,10 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="hidden items-center gap-1.5 rounded-full border border-[#e6d8c4] bg-[#fffaf2] px-3 py-1.5 text-[0.5625rem] font-bold tracking-[0.1em] text-[#84612d] uppercase md:inline-flex">
-                <span className="size-1.5 rounded-full bg-[#b68a45]" />
+              <ThemeToggle size="sm" />
+
+              <span className="hidden items-center gap-1.5 rounded-full border border-warning-line bg-warning-soft px-3 py-1.5 text-[0.5625rem] font-bold tracking-[0.1em] text-warning uppercase md:inline-flex">
+                <span className="size-1.5 rounded-full bg-warning-solid" />
                 Secure workspace
               </span>
 
@@ -254,7 +257,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 <button
                   type="button"
                   onClick={() => setAccountOpen((open) => !open)}
-                  className="flex h-9 items-center gap-2 rounded-full border border-sand/90 bg-white/60 py-0.5 pr-2 pl-0.5 text-xs font-semibold transition hover:border-sand-dark hover:bg-white"
+                  className="flex h-9 items-center gap-2 rounded-full border border-sand/90 bg-surface/60 py-0.5 pr-2 pl-0.5 text-xs font-semibold transition hover:border-sand-dark hover:bg-surface"
                   aria-expanded={accountOpen}
                   aria-haspopup="menu"
                 >
@@ -275,12 +278,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                     role="menu"
                     className="animate-fade-up absolute right-0 mt-2 w-60 overflow-hidden rounded-2xl border border-sand/80 bg-cream p-2 shadow-[0_24px_70px_-24px_rgba(45,30,22,0.5)]"
                   >
-                    <div className="rounded-xl bg-white/55 px-3 py-2.5">
+                    <div className="rounded-xl bg-surface/55 px-3 py-2.5">
                       <p className="truncate text-sm font-semibold">{currentUser.name}</p>
                       <p className="mt-0.5 truncate text-xs text-ink-soft">
                         {currentUser.email}
                       </p>
-                      <span className="mt-2 inline-flex rounded-full bg-rose-light/80 px-2 py-0.5 text-[0.5625rem] font-bold tracking-[0.1em] text-burgundy uppercase">
+                      <span className="mt-2 inline-flex rounded-full bg-rose-light/80 px-2 py-0.5 text-[0.5625rem] font-bold tracking-[0.1em] text-accent uppercase">
                         {currentUser.role}
                       </span>
                     </div>
@@ -288,7 +291,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                       href="/dashboard/profile"
                       role="menuitem"
                       onClick={() => setAccountOpen(false)}
-                      className="mt-1 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-white/70 hover:text-ink"
+                      className="mt-1 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-surface/70 hover:text-ink"
                     >
                       <UserRound className="size-4" />
                       Edit profile
@@ -297,7 +300,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                       href="/"
                       role="menuitem"
                       onClick={() => setAccountOpen(false)}
-                      className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-white/70 hover:text-ink"
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-surface/70 hover:text-ink"
                     >
                       <ArrowUpRight className="size-4" />
                       Visit the salon
@@ -306,7 +309,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                       type="button"
                       role="menuitem"
                       onClick={handleSignOut}
-                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-[#9d3c43] transition hover:bg-[#fff1f1]"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-danger transition hover:bg-danger-soft"
                     >
                       <LogOut className="size-4" />
                       Sign out
@@ -328,20 +331,23 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             aria-label="Close dashboard menu"
-            className="absolute inset-0 bg-ink/45 backdrop-blur-[2px]"
+            className="absolute inset-0 bg-scrim/60 backdrop-blur-[2px]"
             onClick={closeMobile}
           />
-          <div className="animate-fade-in absolute inset-y-0 left-0 flex w-[86%] max-w-[318px] flex-col overflow-y-auto bg-burgundy-dark text-cream shadow-2xl">
+          <div className="animate-fade-in absolute inset-y-0 left-0 flex w-[86%] max-w-[318px] flex-col overflow-y-auto bg-burgundy-dark text-paper shadow-2xl">
             <div className="flex items-center justify-between gap-4 px-5 py-5">
               <Logo variant="light" href="/dashboard" />
-              <button
-                type="button"
-                onClick={closeMobile}
-                className="flex size-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-cream/75"
-                aria-label="Close menu"
-              >
-                <X className="size-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                <ThemeToggle size="sm" />
+                <button
+                  type="button"
+                  onClick={closeMobile}
+                  className="flex size-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-paper/75"
+                  aria-label="Close menu"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
             </div>
 
             <div className="px-5">
@@ -349,7 +355,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 <Avatar src={currentUser.image} name={currentUser.name} size={40} />
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold">{currentUser.name}</p>
-                  <p className="truncate text-[0.6875rem] text-cream/45">
+                  <p className="truncate text-[0.6875rem] text-paper/45">
                     {currentUser.email}
                   </p>
                 </div>
@@ -369,8 +375,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                       className={cn(
                         "flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm",
                         active
-                          ? "bg-cream text-burgundy"
-                          : "text-cream/65 hover:bg-white/[0.07] hover:text-cream"
+                          ? "bg-paper text-burgundy"
+                          : "text-paper/65 hover:bg-white/[0.07] hover:text-paper"
                       )}
                     >
                       <item.icon className="size-4" />
@@ -383,7 +389,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 <Link
                   href="/services"
                   onClick={closeMobile}
-                  className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm text-cream/55 hover:bg-white/[0.07]"
+                  className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm text-paper/55 hover:bg-white/[0.07]"
                 >
                   <ArrowUpRight className="size-4" />
                   Browse the menu
@@ -391,7 +397,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm text-cream/55 hover:bg-white/[0.07]"
+                  className="flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-left text-sm text-paper/55 hover:bg-white/[0.07]"
                 >
                   <LogOut className="size-4" />
                   Sign out
@@ -399,7 +405,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </div>
             </nav>
 
-            <div className="border-t border-white/10 px-5 py-5 text-[0.625rem] leading-5 text-cream/35">
+            <div className="border-t border-white/10 px-5 py-5 text-[0.625rem] leading-5 text-paper/35">
               Your salon data is stored securely and synced with the SalonBook API.
             </div>
           </div>

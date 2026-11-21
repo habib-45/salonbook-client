@@ -121,7 +121,7 @@ export function HomePage() {
 
         <div className="container-page relative grid items-center gap-12 py-12 sm:py-16 lg:grid-cols-[1.03fr_0.97fr] lg:gap-16 lg:py-20 xl:gap-24">
           <div className="animate-fade-up max-w-[640px]">
-            <div className="inline-flex items-center gap-3 rounded-full border border-sand/90 bg-white/55 py-1.5 pr-4 pl-2 backdrop-blur">
+            <div className="inline-flex items-center gap-3 rounded-full border border-sand/90 bg-surface/55 py-1.5 pr-4 pl-2 backdrop-blur">
               <span className="flex -space-x-2">
                 {clients.map((client) => (
                   <Image
@@ -130,7 +130,7 @@ export function HomePage() {
                     alt=""
                     width={28}
                     height={28}
-                    className="size-7 rounded-full border-2 border-cream object-cover"
+                    className="size-7 rounded-full border-2 border-paper object-cover"
                   />
                 ))}
               </span>
@@ -143,7 +143,7 @@ export function HomePage() {
             <h1 className="mt-7 font-serif text-[3.6rem] leading-[0.91] tracking-[-0.045em] text-ink sm:text-[4.8rem] lg:text-[5.45rem] xl:text-[6rem]">
               Where beauty
               <br className="hidden sm:block" /> feels like a{" "}
-              <span className="relative inline-block italic text-burgundy">
+              <span className="relative inline-block italic text-accent">
                 ritual.
                 <svg
                   viewBox="0 0 230 12"
@@ -179,7 +179,7 @@ export function HomePage() {
 
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3 text-[0.6875rem] font-semibold text-ink-soft">
               <span className="inline-flex items-center gap-1.5">
-                <Scissors className="size-3.5 text-burgundy" />
+                <Scissors className="size-3.5 text-accent" />
                 Expert artistry
               </span>
               <span className="inline-flex items-center gap-1.5">
@@ -209,7 +209,7 @@ export function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent" />
 
-              <div className="absolute top-5 left-5 rounded-full border border-white/40 bg-cream/85 px-3.5 py-1.5 text-[0.625rem] font-bold tracking-[0.13em] text-burgundy uppercase backdrop-blur">
+              <div className="absolute top-5 left-5 rounded-full border border-white/40 bg-cream/85 px-3.5 py-1.5 text-[0.625rem] font-bold tracking-[0.13em] text-accent uppercase backdrop-blur">
                 Brooklyn, NY
               </div>
 
@@ -225,7 +225,7 @@ export function HomePage() {
                   </div>
                   <Link
                     href="/services"
-                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-burgundy text-cream transition hover:bg-burgundy-dark"
+                    className="flex size-10 shrink-0 items-center justify-center rounded-full bg-burgundy text-paper transition hover:bg-burgundy-dark"
                     aria-label="Browse services"
                   >
                     <ArrowUpRight className="size-4" />
@@ -234,7 +234,7 @@ export function HomePage() {
               </div>
             </div>
 
-            <div className="animate-soft-float absolute -top-3 -left-3 flex size-[5.5rem] flex-col items-center justify-center rounded-full border border-white/60 bg-burgundy text-center text-cream shadow-lg sm:-left-7 sm:size-24">
+            <div className="animate-soft-float absolute -top-3 -left-3 flex size-[5.5rem] flex-col items-center justify-center rounded-full border border-white/60 bg-burgundy text-center text-paper shadow-lg sm:-left-7 sm:size-24">
               <Sparkles className="size-3.5 text-rose" />
               <span className="mt-1 font-serif text-[1.55rem] leading-none">12+</span>
               <span className="mt-1 text-[0.5rem] font-bold tracking-[0.1em] uppercase opacity-75">
@@ -242,7 +242,7 @@ export function HomePage() {
               </span>
             </div>
 
-            <div className="absolute -right-2 bottom-36 hidden w-[10rem] rounded-2xl border border-sand/80 bg-white/85 p-3.5 shadow-lg backdrop-blur sm:block">
+            <div className="absolute -right-2 bottom-36 hidden w-[10rem] rounded-2xl border border-sand/80 bg-surface/85 p-3.5 shadow-lg backdrop-blur sm:block">
               <div className="flex items-center gap-1 text-gold">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <Star key={index} className="size-2.5 fill-current" />
@@ -290,7 +290,7 @@ export function HomePage() {
             title={
               <>
                 Rituals our guests
-                <br className="hidden sm:block" /> keep <span className="italic text-burgundy">coming back to.</span>
+                <br className="hidden sm:block" /> keep <span className="italic text-accent">coming back to.</span>
               </>
             }
             description="Every service begins with a conversation and ends with you feeling more like yourself. Explore a few of our most-loved rituals."
@@ -316,14 +316,14 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#f3e9df] py-20 sm:py-24 lg:py-28">
+      <section className="bg-cream-deep py-20 sm:py-24 lg:py-28">
         <div className="container-page">
           <SectionHeading
             eyebrow="Find your moment"
             title={
               <>
                 A ritual for every
-                <br className="hidden sm:block" /> version of <span className="italic text-burgundy">you.</span>
+                <br className="hidden sm:block" /> version of <span className="italic text-accent">you.</span>
               </>
             }
             description="From a quick polish to a full afternoon of care, explore the salon by category."
@@ -345,7 +345,7 @@ export function HomePage() {
                 <Link
                   key={category.name}
                   href={`/services?category=${encodeURIComponent(category.name)}`}
-                  className="group relative isolate flex min-h-[18rem] overflow-hidden rounded-2xl border border-white/50 bg-cream-deep focus-visible:ring-2 focus-visible:ring-burgundy focus-visible:ring-offset-4 focus-visible:ring-offset-[#f3e9df] focus-visible:outline-none sm:min-h-[19rem]"
+                  className="group relative isolate flex min-h-[18rem] overflow-hidden rounded-2xl border border-white/50 bg-cream-deep focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-cream-deep focus-visible:outline-none sm:min-h-[19rem]"
                 >
                   <Image
                     src={category.image}
@@ -362,13 +362,13 @@ export function HomePage() {
                     <p className="text-[0.625rem] font-bold tracking-[0.12em] text-rose uppercase">
                       {count > 0 ? `${count} ${count === 1 ? "ritual" : "rituals"}` : "Explore"}
                     </p>
-                    <h3 className="mt-2 font-serif text-[1.7rem] leading-[1.02] tracking-[-0.025em] text-cream">
+                    <h3 className="mt-2 font-serif text-[1.7rem] leading-[1.02] tracking-[-0.025em] text-paper">
                       {category.name}
                     </h3>
-                    <p className="mt-2 text-[0.6875rem] leading-5 text-cream/65">
+                    <p className="mt-2 text-[0.6875rem] leading-5 text-paper/65">
                       {category.description}
                     </p>
-                    <span className="mt-4 flex size-8 items-center justify-center rounded-full border border-white/30 text-cream transition group-hover:bg-cream group-hover:text-burgundy">
+                    <span className="mt-4 flex size-8 items-center justify-center rounded-full border border-white/30 text-paper transition group-hover:bg-cream group-hover:text-accent">
                       <ArrowUpRight className="size-3.5" />
                     </span>
                   </div>
@@ -391,7 +391,7 @@ export function HomePage() {
                 className="object-cover"
               />
             </div>
-            <div className="absolute -right-2 -bottom-10 w-[44%] overflow-hidden rounded-2xl border-[5px] border-cream bg-cream shadow-xl sm:-right-8 sm:w-[42%]">
+            <div className="absolute -right-2 -bottom-10 w-[44%] overflow-hidden rounded-2xl border-[5px] border-paper bg-cream shadow-xl sm:-right-8 sm:w-[42%]">
               <div className="relative aspect-[4/5]">
                 <Image
                   src={storyDetail}
@@ -402,10 +402,10 @@ export function HomePage() {
                 />
               </div>
             </div>
-            <div className="absolute top-8 -left-3 rounded-full border border-sand bg-cream/95 px-4 py-2 text-[0.625rem] font-bold tracking-[0.14em] text-burgundy uppercase shadow-sm sm:-left-6">
+            <div className="absolute top-8 -left-3 rounded-full border border-sand bg-cream/95 px-4 py-2 text-[0.625rem] font-bold tracking-[0.14em] text-accent uppercase shadow-sm sm:-left-6">
               Est. 2018 · Brooklyn
             </div>
-            <div className="absolute -right-2 top-1/3 hidden size-24 flex-col items-center justify-center rounded-full bg-burgundy text-center text-cream shadow-lg sm:flex lg:-right-8">
+            <div className="absolute -right-2 top-1/3 hidden size-24 flex-col items-center justify-center rounded-full bg-burgundy text-center text-paper shadow-lg sm:flex lg:-right-8">
               <Heart className="size-4 text-rose" />
               <span className="mt-1 text-[0.55rem] font-bold tracking-[0.1em] uppercase opacity-80">
                 Care first
@@ -418,7 +418,7 @@ export function HomePage() {
             <h2 className="font-serif text-[2.5rem] leading-[1.04] tracking-[-0.04em] sm:text-[3.2rem] lg:text-[3.5rem]">
               More than an appointment.
               <br /> A pause that is{" "}
-              <span className="italic text-burgundy">entirely yours.</span>
+              <span className="italic text-accent">entirely yours.</span>
             </h2>
             <p className="mt-6 text-[0.9375rem] leading-7 text-ink-soft">
               SalonBook began with a simple idea: beauty should feel personal, not
@@ -445,7 +445,7 @@ export function HomePage() {
                 },
               ].map((item) => (
                 <div key={item.title} className="flex gap-4">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-cream-deep text-accent">
                     <item.icon className="size-4" />
                   </span>
                   <div>
@@ -463,7 +463,7 @@ export function HomePage() {
               </ButtonLink>
               <Link
                 href="/#visit"
-                className="inline-flex items-center gap-2 px-1 text-sm font-semibold text-ink-soft transition hover:text-burgundy"
+                className="inline-flex items-center gap-2 px-1 text-sm font-semibold text-ink-soft transition hover:text-accent"
               >
                 Visit the salon
                 <ArrowRight className="size-4" />
@@ -473,7 +473,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="bg-burgundy-dark py-20 text-cream sm:py-24 lg:py-28">
+      <section className="bg-burgundy-dark py-20 text-paper sm:py-24 lg:py-28">
         <div className="container-page">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-xl">
@@ -486,7 +486,7 @@ export function HomePage() {
                 One lovely <span className="italic text-rose">pause.</span>
               </h2>
             </div>
-            <p className="max-w-xs text-sm leading-6 text-cream/55">
+            <p className="max-w-xs text-sm leading-6 text-paper/55">
               Booking with us is simple. The hardest part is deciding which ritual to choose.
             </p>
           </div>
@@ -505,7 +505,7 @@ export function HomePage() {
                 <h3 className="mt-10 font-serif text-[1.8rem] leading-none tracking-[-0.025em]">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-[0.8125rem] leading-6 text-cream/55">{step.description}</p>
+                <p className="mt-3 text-[0.8125rem] leading-6 text-paper/55">{step.description}</p>
               </div>
             ))}
           </div>
@@ -519,7 +519,7 @@ export function HomePage() {
             title={
               <>
                 Notes from our
-                <br className="hidden sm:block" /> <span className="italic text-burgundy">chairs.</span>
+                <br className="hidden sm:block" /> <span className="italic text-accent">chairs.</span>
               </>
             }
             description="A few words from guests who have made SalonBook part of their rhythm."
@@ -531,7 +531,7 @@ export function HomePage() {
               <figure
                 key={testimonial.name}
                 className={`relative flex flex-col rounded-2xl border border-sand/80 p-6 sm:p-7 ${
-                  index === 1 ? "bg-burgundy text-cream" : "bg-white/55 text-ink"
+                  index === 1 ? "bg-burgundy text-paper" : "bg-surface/55 text-ink"
                 }`}
               >
                 <Quote
@@ -540,7 +540,7 @@ export function HomePage() {
                 />
                 <blockquote
                   className={`mt-5 flex-1 font-serif text-[1.45rem] leading-[1.3] tracking-[-0.02em] ${
-                    index === 1 ? "text-cream" : "text-ink"
+                    index === 1 ? "text-paper" : "text-ink"
                   }`}
                 >
                   “{testimonial.quote}”
@@ -554,12 +554,12 @@ export function HomePage() {
                     className="size-10 rounded-full object-cover"
                   />
                   <div>
-                    <p className={`text-xs font-bold ${index === 1 ? "text-cream" : "text-ink"}`}>
+                    <p className={`text-xs font-bold ${index === 1 ? "text-paper" : "text-ink"}`}>
                       {testimonial.name}
                     </p>
                     <p
                       className={`mt-0.5 text-[0.625rem] tracking-[0.03em] ${
-                        index === 1 ? "text-cream/55" : "text-ink-soft"
+                        index === 1 ? "text-paper/55" : "text-ink-soft"
                       }`}
                     >
                       {testimonial.detail}
@@ -589,7 +589,7 @@ export function HomePage() {
 
       <section className="pb-20 sm:pb-24 lg:pb-28">
         <div className="container-page">
-          <div className="relative overflow-hidden rounded-[1.75rem] bg-ink text-cream sm:rounded-[2rem]">
+          <div className="relative overflow-hidden rounded-[1.75rem] bg-burgundy-dark text-paper sm:rounded-[2rem]">
             <Image
               src={ctaImage}
               alt=""
@@ -606,7 +606,7 @@ export function HomePage() {
                 <h2 className="mt-4 font-serif text-[2.8rem] leading-[1] tracking-[-0.04em] sm:text-[3.6rem] lg:text-[4rem]">
                   Your chair is <span className="italic text-rose">waiting.</span>
                 </h2>
-                <p className="mt-4 max-w-md text-sm leading-6 text-cream/60">
+                <p className="mt-4 max-w-md text-sm leading-6 text-paper/60">
                   Browse the menu, choose a moment, and let us take care of the rest.
                   We can&apos;t wait to meet you.
                 </p>
@@ -620,7 +620,7 @@ export function HomePage() {
                   href="/signup"
                   variant="outline"
                   size="lg"
-                  className="border-white/30 text-cream hover:border-white/60 hover:bg-white/10 hover:text-cream"
+                  className="border-white/30 text-paper hover:border-white/60 hover:bg-white/10 hover:text-paper"
                 >
                   Create an account
                 </ButtonLink>

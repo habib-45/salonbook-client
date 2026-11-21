@@ -7,51 +7,64 @@ A warm, editorial system for a neighbourhood salon: cream paper, deep burgundy, 
 - **Shape language:** soft, rounded, generous whitespace, thin sand borders
 - **Motion:** gentle fades, small lifts, and restrained float effects
 - **Voice:** warm, direct, quietly confident
+- **Themes:** warm cream light mode and a deep espresso dark mode from one semantic token set
 
 ---
 
 ## 1. Colour
 
-Tokens are defined in `app/globals.css` with Tailwind CSS v4 `@theme` and used as utilities such as `bg-cream`, `text-burgundy`, and `border-sand`.
+Tokens are defined in `app/globals.css` with Tailwind CSS v4 `@theme`. Components use semantic utilities such as `bg-surface`, `text-ink`, `text-accent`, and `border-sand`; the same markup renders in both themes because `html.dark` overrides the variable values.
 
-### Core palette
+### Semantic tokens
 
-| Token | Hex | Use |
-| --- | --- | --- |
-| `cream` | `#faf5ef` | Page background, light surfaces |
-| `cream-deep` | `#f1e7db` | Secondary surfaces, wells, hover fills |
-| `sand` | `#e7d9c9` | Borders, dividers, quiet outlines |
-| `sand-dark` | `#d8c5b1` | Stronger borders and decorative rules |
-| `ink` | `#241c18` | Primary text and dark surfaces |
-| `ink-soft` | `#66574e` | Body copy, secondary labels |
-| `burgundy` | `#59243a` | Primary actions, links, active navigation |
-| `burgundy-dark` | `#40192a` | Sidebar, footer, high-contrast bands |
-| `rose` | `#c47d8b` | Accent, highlights, italic emphasis |
-| `rose-light` | `#f2dde1` | Soft accent fills and selection |
-| `sage` | `#778a72` | Success and calm confirmation |
-| `sage-light` | `#e7eee3` | Success backgrounds |
-| `gold` | `#b2874b` | Ratings, premium accents, small details |
-| `gold-light` | `#f1e5d1` | Warm highlight surfaces |
+| Token | Light | Dark | Use |
+| --- | --- | --- | --- |
+| `paper` | `#faf5ef` | `#faf5ef` | Text and marks on fixed dark surfaces |
+| `surface` | `#ffffff` | `#241d19` | Cards, panels, menus, inputs |
+| `scrim` | `#1b1210` | `#0b0807` | Modal and drawer backdrops |
+| `ink` | `#241c18` | `#f4ede5` | Primary text |
+| `ink-soft` | `#66574e` | `#b7a89e` | Body copy and secondary labels |
+| `cream` | `#faf5ef` | `#15110f` | Page background |
+| `cream-deep` | `#f1e7db` | `#211a16` | Secondary surfaces, wells, hover fills |
+| `sand` | `#e7d9c9` | `#352a24` | Borders, dividers, quiet outlines |
+| `sand-dark` | `#d8c5b1` | `#4a3a31` | Stronger borders and decorative rules |
+| `accent` | `#59243a` | `#e3a3b0` | Primary actions, links, active navigation |
+| `rose` | `#c47d8b` | `#d795a4` | Highlights and italic emphasis |
+| `rose-light` | `#f2dde1` | `#38232a` | Soft accent fills and selection |
+| `sage` | `#778a72` | `#9cb394` | Success and calm confirmation |
+| `sage-light` | `#e7eee3` | `#253024` | Success backgrounds |
+| `gold` | `#b2874b` | `#d6ab69` | Ratings, premium accents, small details |
+| `gold-light` | `#f1e5d1` | `#33291d` | Warm highlight surfaces |
+
+The original `burgundy` and `burgundy-dark` tokens remain for fixed dark brand surfaces such as the footer and sidebar.
 
 ### Functional colours
 
-Status and feedback use tinted surfaces rather than saturated primaries:
+Status and feedback use semantic tokens so both themes keep readable contrast:
 
-| Meaning | Treatment |
+| Meaning | Tokens |
 | --- | --- |
-| Success / paid / active | Sage tint, dark sage text |
-| Warning / pending / unpaid | Gold tint, warm brown text |
-| Danger / cancelled / blocked | Rose or muted red tint, dark red text |
-| Information | Cream-deep or gold-light surface, ink text |
-| Selected | Burgundy border or fill with cream text |
+| Success / paid / active | `success`, `success-soft`, `success-line`, `success-solid` |
+| Warning / pending / unpaid | `warning`, `warning-soft`, `warning-line`, `warning-solid` |
+| Danger / cancelled / blocked | `danger`, `danger-soft`, `danger-line`, `danger-solid` |
+| Information | `cream-deep` or `gold-light` surface, `ink` text |
+| Selected | `accent` border or fill with light text |
+
+### Theme behavior
+
+- `components/providers/theme-provider.tsx` reads `salonbook-theme` from `localStorage` and supports `light`, `dark`, and `system`.
+- `components/ui/theme-toggle.tsx` shows a moon in light mode and a sun in dark mode.
+- The toggle appears in the public navbar, auth layout, dashboard header, and mobile sidebar.
+- An inline script in `app/layout.tsx` applies the theme to `<html>` before paint, preventing a flash of the wrong palette.
+- `html.dark` sets `color-scheme: dark`, so native controls and scrollbars match.
 
 ### Usage rules
 
-- Use burgundy for one primary action per view, not for every link.
-- Keep large areas cream or cream-deep; dark burgundy is reserved for navigation, footer, and dramatic bands.
+- Use `accent` for one primary action per view, not for every link.
+- Keep large areas `cream` or `cream-deep`; fixed burgundy is reserved for navigation, footer, and dramatic bands.
 - Gold is an accent for ratings and fine details, never body text.
-- Do not place rose text on gold-light; use ink or burgundy for contrast.
-- Use the existing tokens instead of raw hex values except for one-off status tints already local to a component.
+- Use semantic tokens instead of raw hex values or `dark:` overrides wherever the token already expresses the intent.
+- When a component sits on a fixed dark surface, use `text-paper` / `text-cream` explicitly rather than `text-ink`.
 
 ---
 
@@ -74,7 +87,7 @@ Both are loaded through `next/font/google` in `app/layout.tsx` and exposed as CS
 | Page title | `font-serif text-4xl tracking-[-0.03em]` | Dashboard and auth headings |
 | Section title | `font-serif text-[2.5rem] sm:text-[3.2rem] tracking-[-0.04em]` | Marketing sections |
 | Card title | `font-serif text-xl` to `text-2xl` | Service and panel titles |
-| Eyebrow | `.eyebrow` | 11 px, 700 weight, 0.18em tracking, uppercase, burgundy |
+| Eyebrow | `.eyebrow` | 11 px, 700 weight, 0.18em tracking, uppercase, accent |
 | Body | `text-sm` or `text-base`, `leading-6`/`leading-7` | Ink-soft for supporting copy |
 | Meta / label | `text-[0.625rem]` to `text-xs`, uppercase tracking | Timestamps, table labels, helper text |
 
@@ -154,7 +167,7 @@ Sizes: `sm`, `md`, `lg`, `icon`. All buttons support a `loading` state with a sp
 
 ### Modal and confirmation — `components/ui/modal.tsx`, `confirm-dialog.tsx`
 
-- Modal panel uses a cream surface, thin sand border, rounded top corners, and a dimmed backdrop.
+- Modal panel uses a surface token, thin sand border, rounded top corners, and a scrim backdrop.
 - Escape closes, backdrop click closes where safe, body scroll is locked while open.
 - Confirmation dialogs state the consequence, use a destructive action for irreversible operations, and keep the safe action visually quieter.
 
@@ -185,9 +198,16 @@ Supported statuses: `pending`, `confirmed`, `cancelled`, `paid`, `unpaid`, `acti
 - `DashPanel` for grouped content with a title, action, and body.
 - `SectionLabel` for quiet grouping inside panels.
 
+### Theme toggle — `components/ui/theme-toggle.tsx`
+
+- A circular icon button with a moon in light mode and a sun in dark mode.
+- Uses `bg-surface`, `border-sand`, and `text-ink-soft`, with a visible hover and focus ring.
+- Carries an accessible label, "Toggle light and dark theme", and does not rely on the icon alone for meaning.
+- Sizes: `md` for headers and navbars, `sm` for compact sidebar rows.
+
 ### Navigation
 
-- Marketing navbar: transparent over cream, sticky, with a mobile drawer and account-aware actions.
+- Marketing navbar: transparent over cream, sticky, with a mobile drawer, theme toggle, and account-aware actions.
 - Dashboard sidebar: burgundy-dark, fixed on desktop, drawer on mobile, active item marked with a rose bar and lighter surface.
 - Account menu: avatar trigger, role label, profile, view salon, and sign out.
 - Footer: dark burgundy with salon details, hours, links, and social placeholders.
@@ -260,6 +280,9 @@ Respect reduced motion where practical; keep essential state changes instantaneo
 - [ ] Headings follow a sensible order on every page.
 - [ ] Text and controls remain usable at 200% zoom and 360 px width.
 - [ ] Animations are subtle and do not block interaction.
+- [ ] Both themes keep body text, muted labels, borders, status tints, and focus rings readable.
+- [ ] The theme toggle has an accessible name and a visible focus state.
+- [ ] The stored theme survives reload and a system preference change is followed while in system mode.
 
 ---
 
@@ -267,7 +290,7 @@ Respect reduced motion where practical; keep essential state changes instantaneo
 
 | Do | Don't |
 | --- | --- |
-| Use cream as the default canvas | Fill large areas with saturated burgundy or rose |
+| Use `cream`/`surface` as the default canvas | Fill large areas with saturated burgundy or rose |
 | Pair serif display type with restrained sans body copy | Use the serif for long paragraphs |
 | Keep one primary action per section | Compete with multiple filled burgundy buttons |
 | Use thin sand borders and soft shadows | Use heavy drop shadows or hard grey borders |

@@ -67,7 +67,7 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-sand/70 bg-[#f2e8dd]">
+      <section className="relative overflow-hidden border-b border-sand/70 bg-cream-deep">
         <div className="pointer-events-none absolute -top-32 right-[-6rem] size-[360px] rounded-full bg-rose-light/55 blur-[90px]" />
         <div className="pointer-events-none absolute bottom-[-10rem] left-[18%] size-[280px] rounded-full bg-gold-light/80 blur-[80px]" />
         <div className="container-page relative flex flex-col gap-8 py-14 sm:py-16 lg:flex-row lg:items-end lg:justify-between lg:py-20">
@@ -76,7 +76,7 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
             <h1 className="font-serif text-[3rem] leading-[0.96] tracking-[-0.045em] text-ink sm:text-[4rem] lg:text-[4.6rem]">
               A ritual for
               <br />
-              every <span className="italic text-burgundy">version of you.</span>
+              every <span className="italic text-accent">version of you.</span>
             </h1>
             <p className="mt-5 max-w-xl text-sm leading-7 text-ink-soft sm:text-[0.9375rem]">
               Explore hair, skin, makeup, nail, and spa services designed to make you feel
@@ -84,12 +84,12 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
             </p>
           </div>
 
-          <div className="flex shrink-0 items-center gap-4 rounded-2xl border border-white/70 bg-white/50 p-4 pr-5 backdrop-blur-sm sm:gap-5">
-            <span className="flex size-11 items-center justify-center rounded-full bg-burgundy text-cream">
+          <div className="flex shrink-0 items-center gap-4 rounded-2xl border border-sand/80 bg-surface/50 p-4 pr-5 backdrop-blur-sm sm:gap-5">
+            <span className="flex size-11 items-center justify-center rounded-full bg-burgundy text-paper">
               <ArrowUpRight className="size-4" />
             </span>
             <div>
-              <p className="text-[0.625rem] font-bold tracking-[0.13em] text-burgundy uppercase">
+              <p className="text-[0.625rem] font-bold tracking-[0.13em] text-accent uppercase">
                 Not sure where to begin?
               </p>
               <p className="mt-1 text-xs leading-5 text-ink-soft">
@@ -105,7 +105,7 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
 
       <section className="py-10 sm:py-12 lg:py-14">
         <div className="container-page">
-          <div className="rounded-2xl border border-sand/80 bg-white/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
+          <div className="rounded-2xl border border-sand/80 bg-surface/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
             <div className="flex flex-col gap-3 lg:flex-row">
               <label className="relative flex-1">
                 <span className="sr-only">Search services by name</span>
@@ -127,7 +127,7 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
                     aria-label="Filter by category"
                     value={category}
                     onChange={(event) => setCategory(event.target.value)}
-                    className="h-11 bg-white/70 pl-10 lg:w-[210px]"
+                    className="h-11 bg-surface/70 pl-10 lg:w-[210px]"
                   >
                     <option value="All services">All categories</option>
                     {SERVICE_CATEGORIES.map((option) => (
@@ -142,7 +142,7 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
                   aria-label="Sort services"
                   value={sort}
                   onChange={(event) => setSort(event.target.value as SortOption)}
-                  className="h-11 bg-white/70 lg:w-[190px]"
+                  className="h-11 bg-surface/70 lg:w-[190px]"
                 >
                   {Object.entries(sortLabels).map(([value, label]) => (
                     <option key={value} value={value}>
@@ -162,8 +162,8 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
                   className={cn(
                     "shrink-0 rounded-full border px-3.5 py-1.5 text-[0.6875rem] font-semibold transition",
                     category === option
-                      ? "border-burgundy bg-burgundy text-cream"
-                      : "border-sand/80 bg-white/45 text-ink-soft hover:border-sand-dark hover:text-ink"
+                      ? "border-accent bg-burgundy text-paper"
+                      : "border-sand/80 bg-surface/45 text-ink-soft hover:border-sand-dark hover:text-ink"
                   )}
                 >
                   {option === "All services" ? "All" : option}
@@ -200,7 +200,7 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
               <button
                 type="button"
                 onClick={clearFilters}
-                className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
+                className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-surface/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
               >
                 <X className="size-3" />
                 Clear filters
@@ -226,7 +226,7 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="inline-flex h-10 items-center rounded-full bg-burgundy px-5 text-sm font-semibold text-cream transition hover:bg-burgundy-dark"
+                    className="inline-flex h-10 items-center rounded-full bg-burgundy px-5 text-sm font-semibold text-paper transition hover:bg-burgundy-dark"
                   >
                     Show all services
                   </button>
@@ -236,9 +236,9 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
             )}
           </div>
 
-          <div className="mt-16 grid items-center gap-6 rounded-2xl bg-[#f1e7db] px-6 py-8 sm:px-8 lg:grid-cols-[1fr_auto]">
+          <div className="mt-16 grid items-center gap-6 rounded-2xl bg-cream-deep px-6 py-8 sm:px-8 lg:grid-cols-[1fr_auto]">
             <div className="max-w-xl">
-              <p className="text-[0.625rem] font-bold tracking-[0.15em] text-burgundy uppercase">
+              <p className="text-[0.625rem] font-bold tracking-[0.15em] text-accent uppercase">
                 A little guidance
               </p>
               <h2 className="mt-2 font-serif text-[2rem] leading-[1.08] tracking-[-0.03em] sm:text-[2.4rem]">
@@ -252,7 +252,7 @@ export function ServicesBrowser({ initialCategory }: { initialCategory: string }
             <div className="flex flex-col gap-2.5 sm:flex-row">
               <a
                 href="tel:+17185550184"
-                className="inline-flex h-11 items-center justify-center rounded-full bg-burgundy px-5 text-sm font-semibold text-cream transition hover:bg-burgundy-dark"
+                className="inline-flex h-11 items-center justify-center rounded-full bg-burgundy px-5 text-sm font-semibold text-paper transition hover:bg-burgundy-dark"
               >
                 Call the salon
               </a>

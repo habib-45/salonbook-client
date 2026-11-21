@@ -86,7 +86,7 @@ function ServiceDetailContent() {
   if (!service) {
     return (
       <div className="container-page flex min-h-[60vh] flex-col items-center justify-center py-16 text-center">
-        <span className="flex size-14 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+        <span className="flex size-14 items-center justify-center rounded-full bg-cream-deep text-accent">
           <Scissors className="size-6" />
         </span>
         <p className="eyebrow mt-6">Not found</p>
@@ -165,7 +165,7 @@ function ServiceDetailContent() {
       <div className="container-page py-7 sm:py-9">
         <Link
           href="/services"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-ink-soft transition hover:text-burgundy"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-ink-soft transition hover:text-accent"
         >
           <ArrowLeft className="size-3.5" />
           Back to all services
@@ -184,10 +184,10 @@ function ServiceDetailContent() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
               <div className="absolute bottom-4 left-4 flex flex-wrap gap-2">
-                <span className="rounded-full border border-white/30 bg-cream/90 px-3 py-1.5 text-[0.625rem] font-bold tracking-[0.1em] text-burgundy uppercase backdrop-blur">
+                <span className="rounded-full border border-white/30 bg-cream/90 px-3 py-1.5 text-[0.625rem] font-bold tracking-[0.1em] text-accent uppercase backdrop-blur">
                   {service.category}
                 </span>
-                <span className="rounded-full border border-white/20 bg-ink/30 px-3 py-1.5 text-[0.625rem] font-semibold text-cream backdrop-blur">
+                <span className="rounded-full border border-white/20 bg-scrim/35 px-3 py-1.5 text-[0.625rem] font-semibold text-paper backdrop-blur">
                   Signature ritual
                 </span>
               </div>
@@ -201,9 +201,9 @@ function ServiceDetailContent() {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-xl border border-sand/80 bg-white/45 px-4 py-3.5"
+                  className="rounded-xl border border-sand/80 bg-surface/45 px-4 py-3.5"
                 >
-                  <item.icon className="size-4 text-burgundy" />
+                  <item.icon className="size-4 text-accent" />
                   <p className="mt-2.5 text-[0.625rem] font-bold tracking-[0.1em] text-ink-soft uppercase">
                     {item.label}
                   </p>
@@ -212,7 +212,7 @@ function ServiceDetailContent() {
               ))}
             </div>
 
-            <div className="mt-8 rounded-2xl border border-sand/70 bg-white/35 p-5 sm:p-6">
+            <div className="mt-8 rounded-2xl border border-sand/70 bg-surface/35 p-5 sm:p-6">
               <h2 className="font-serif text-2xl tracking-[-0.02em]">The experience</h2>
               <p className="mt-3 text-sm leading-7 text-ink-soft">{service.description}</p>
               <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
@@ -237,7 +237,7 @@ function ServiceDetailContent() {
           </div>
 
           <div className="lg:sticky lg:top-28">
-            <p className="text-[0.625rem] font-bold tracking-[0.15em] text-burgundy uppercase">
+            <p className="text-[0.625rem] font-bold tracking-[0.15em] text-accent uppercase">
               {service.category}
             </p>
             <h1 className="mt-2 font-serif text-[2.9rem] leading-[0.96] tracking-[-0.04em] sm:text-[3.6rem]">
@@ -265,13 +265,13 @@ function ServiceDetailContent() {
             <p className="mt-5 text-[0.9375rem] leading-7 text-ink-soft">{service.description}</p>
 
             <div className="mt-5 flex items-baseline gap-2">
-              <span className="font-serif text-[2.3rem] leading-none tracking-[-0.03em] text-burgundy">
+              <span className="font-serif text-[2.3rem] leading-none tracking-[-0.03em] text-accent">
                 {formatCurrency(service.price)}
               </span>
               <span className="text-xs text-ink-soft">total · no deposit required</span>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-sand/80 bg-white/55 p-4 sm:p-5">
+            <div className="mt-6 rounded-2xl border border-sand/80 bg-surface/55 p-4 sm:p-5">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="font-serif text-[1.6rem] tracking-[-0.02em]">Request appointment</h2>
                 <Sparkles className="size-4 text-gold" />
@@ -281,9 +281,9 @@ function ServiceDetailContent() {
               </p>
 
               {currentUser?.role === "admin" ? (
-                <div className="mt-4 rounded-xl border border-[#e6d8c4] bg-[#fffaf2] p-4">
-                  <p className="text-sm font-semibold text-[#725b36]">You&apos;re signed in as an admin</p>
-                  <p className="mt-1 text-xs leading-5 text-[#725b36]/80">
+                <div className="mt-4 rounded-xl border border-warning-line bg-warning-soft p-4">
+                  <p className="text-sm font-semibold text-warning">You&apos;re signed in as an admin</p>
+                  <p className="mt-1 text-xs leading-5 text-warning/80">
                     Appointment requests are made by customers. You can manage this service
                     and upcoming appointments from the admin dashboard.
                   </p>
@@ -337,8 +337,8 @@ function ServiceDetailContent() {
                             className={cn(
                               "rounded-lg border px-1.5 py-2 text-[0.625rem] font-semibold transition",
                               selected
-                                ? "border-burgundy bg-burgundy text-cream"
-                                : "border-sand/80 bg-white/60 text-ink-soft hover:border-sand-dark hover:text-ink",
+                                ? "border-accent bg-burgundy text-paper"
+                                : "border-sand/80 bg-surface/60 text-ink-soft hover:border-sand-dark hover:text-ink",
                               !date && "cursor-not-allowed opacity-45",
                               unavailable && "cursor-not-allowed border-dashed opacity-35 line-through"
                             )}
@@ -356,7 +356,7 @@ function ServiceDetailContent() {
                       })}
                     </div>
                     {fieldErrors.timeSlot ? (
-                      <p className="text-xs text-[#9d3c43]" role="alert">
+                      <p className="text-xs text-danger" role="alert">
                         {fieldErrors.timeSlot}
                       </p>
                     ) : null}
@@ -374,7 +374,7 @@ function ServiceDetailContent() {
                   </Field>
 
                   <div className="flex items-start gap-2 rounded-xl bg-cream-deep/65 px-3 py-2.5 text-[0.625rem] leading-5 text-ink-soft">
-                    <CreditCard className="mt-0.5 size-3.5 shrink-0 text-burgundy" />
+                    <CreditCard className="mt-0.5 size-3.5 shrink-0 text-accent" />
                     Payment isn&apos;t due now. You can pay securely from your dashboard once
                     the salon confirms your appointment.
                   </div>
@@ -424,10 +424,10 @@ function ServiceDetailContent() {
         }
       >
         {createdAppointment ? (
-          <div className="rounded-2xl border border-sand/80 bg-white/50 p-4">
+          <div className="rounded-2xl border border-sand/80 bg-surface/50 p-4">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[0.625rem] font-bold tracking-[0.12em] text-burgundy uppercase">
+                <p className="text-[0.625rem] font-bold tracking-[0.12em] text-accent uppercase">
                   {service.category}
                 </p>
                 <p className="mt-1 font-serif text-2xl tracking-[-0.02em]">{service.serviceName}</p>

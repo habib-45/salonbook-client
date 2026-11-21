@@ -42,12 +42,12 @@ export function Footer() {
   const { currentUser } = useStore()
 
   return (
-    <footer id="visit" className="scroll-mt-24 bg-[#211916] text-cream">
+    <footer id="visit" className="scroll-mt-24 bg-[#211916] text-paper">
       <div className="container-page pt-14 pb-10 sm:pt-20">
         <div className="grid gap-12 border-b border-white/10 pb-12 lg:grid-cols-[1.35fr_0.65fr_1fr_1fr] lg:gap-10">
           <div>
             <Logo variant="light" />
-            <p className="mt-5 max-w-xs text-sm leading-6 text-cream/60">
+            <p className="mt-5 max-w-xs text-sm leading-6 text-paper/60">
               A neighbourhood salon for considered hair, skin, and beauty rituals — made
               personal, never rushed.
             </p>
@@ -61,7 +61,7 @@ export function Footer() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={social.label}
-                    className="flex size-9 items-center justify-center rounded-full border border-white/15 text-cream/70 transition hover:border-rose hover:bg-rose/10 hover:text-cream"
+                    className="flex size-9 items-center justify-center rounded-full border border-white/15 text-paper/70 transition hover:border-rose hover:bg-rose/10 hover:text-paper"
                   >
                     <Icon />
                   </a>
@@ -74,26 +74,26 @@ export function Footer() {
             <p className="text-[0.65rem] font-bold tracking-[0.18em] text-rose uppercase">
               Explore
             </p>
-            <nav className="mt-5 flex flex-col gap-3 text-sm text-cream/65" aria-label="Footer navigation">
-              <Link href="/" className="transition hover:text-cream">
+            <nav className="mt-5 flex flex-col gap-3 text-sm text-paper/65" aria-label="Footer navigation">
+              <Link href="/" className="transition hover:text-paper">
                 Home
               </Link>
-              <Link href="/services" className="transition hover:text-cream">
+              <Link href="/services" className="transition hover:text-paper">
                 Browse services
               </Link>
-              <Link href="/#story" className="transition hover:text-cream">
+              <Link href="/#story" className="transition hover:text-paper">
                 Our story
               </Link>
               {currentUser ? (
-                <Link href="/dashboard" className="transition hover:text-cream">
+                <Link href="/dashboard" className="transition hover:text-paper">
                   Dashboard
                 </Link>
               ) : (
                 <>
-                  <Link href="/signin" className="transition hover:text-cream">
+                  <Link href="/signin" className="transition hover:text-paper">
                     Sign in
                   </Link>
-                  <Link href="/signup" className="transition hover:text-cream">
+                  <Link href="/signup" className="transition hover:text-paper">
                     Create account
                   </Link>
                 </>
@@ -105,7 +105,7 @@ export function Footer() {
             <p className="text-[0.65rem] font-bold tracking-[0.18em] text-rose uppercase">
               Visit us
             </p>
-            <ul className="mt-5 space-y-3.5 text-sm leading-6 text-cream/65">
+            <ul className="mt-5 space-y-3.5 text-sm leading-6 text-paper/65">
               <li className="flex gap-2.5">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-rose" />
                 <span>{SALON.address}</span>
@@ -113,7 +113,7 @@ export function Footer() {
               <li>
                 <a
                   href={`tel:${SALON.phone.replace(/[^+\d]/g, "")}`}
-                  className="flex gap-2.5 transition hover:text-cream"
+                  className="flex gap-2.5 transition hover:text-paper"
                 >
                   <Phone className="mt-0.5 size-4 shrink-0 text-rose" />
                   {SALON.phone}
@@ -122,7 +122,7 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${SALON.email}`}
-                  className="flex gap-2.5 transition hover:text-cream"
+                  className="flex gap-2.5 transition hover:text-paper"
                 >
                   <Mail className="mt-0.5 size-4 shrink-0 text-rose" />
                   {SALON.email}
@@ -135,11 +135,11 @@ export function Footer() {
             <p className="text-[0.65rem] font-bold tracking-[0.18em] text-rose uppercase">
               Opening hours
             </p>
-            <ul className="mt-5 space-y-3 text-sm text-cream/65">
+            <ul className="mt-5 space-y-3 text-sm text-paper/65">
               {SALON.hours.map((entry) => (
                 <li key={entry.days}>
-                  <span className="block text-cream/85">{entry.days}</span>
-                  <span className="inline-flex items-center gap-1.5 text-xs text-cream/50">
+                  <span className="block text-paper/85">{entry.days}</span>
+                  <span className="inline-flex items-center gap-1.5 text-xs text-paper/50">
                     <Clock3 className="size-3" />
                     {entry.time}
                   </span>
@@ -149,7 +149,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 pt-6 text-[0.6875rem] text-cream/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 pt-6 text-[0.6875rem] text-paper/40 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} SalonBook. All rights reserved.</p>
           <div className="flex items-center gap-5">
             <span>Weddings & events</span>

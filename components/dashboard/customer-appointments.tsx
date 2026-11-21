@@ -118,7 +118,7 @@ export function CustomerAppointments() {
         }
       />
 
-      <div className="mt-7 flex flex-col gap-3 rounded-2xl border border-sand/80 bg-white/55 p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-4">
+      <div className="mt-7 flex flex-col gap-3 rounded-2xl border border-sand/80 bg-surface/55 p-3.5 sm:flex-row sm:items-center sm:justify-between sm:p-4">
         <div className="flex gap-1.5 overflow-x-auto pb-0.5 hide-scrollbar" role="tablist" aria-label="Filter appointments">
           {filters.map((option) => (
             <button
@@ -130,8 +130,8 @@ export function CustomerAppointments() {
               className={cn(
                 "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-[0.6875rem] font-semibold transition",
                 filter === option.value
-                  ? "border-burgundy bg-burgundy text-cream"
-                  : "border-sand/80 bg-white/50 text-ink-soft hover:border-sand-dark hover:text-ink"
+                  ? "border-accent bg-burgundy text-paper"
+                  : "border-sand/80 bg-surface/50 text-ink-soft hover:border-sand-dark hover:text-ink"
               )}
             >
               {option.label}
@@ -139,7 +139,7 @@ export function CustomerAppointments() {
                 className={cn(
                   "rounded-full px-1.5 py-0.5 text-[0.5625rem] font-bold",
                   filter === option.value
-                    ? "bg-white/15 text-cream"
+                    ? "bg-white/15 text-paper"
                     : "bg-cream-deep text-ink-soft"
                 )}
               >
@@ -265,7 +265,7 @@ function CustomerAppointmentCard({
 
         <div className="flex min-w-0 flex-1 flex-col gap-4 p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0 flex-1">
-            <p className="text-[0.5625rem] font-bold tracking-[0.13em] text-burgundy uppercase">
+            <p className="text-[0.5625rem] font-bold tracking-[0.13em] text-accent uppercase">
               {appointment.service?.category ?? "Salon ritual"}
             </p>
             <h2 className="mt-1 font-serif text-[1.55rem] leading-tight tracking-[-0.025em]">
@@ -290,7 +290,7 @@ function CustomerAppointmentCard({
 
             {appointment.message ? (
               <p className="mt-3 flex items-start gap-1.5 rounded-lg bg-cream-deep/55 px-2.5 py-2 text-[0.6875rem] leading-5 text-ink-soft">
-                <MessageSquareText className="mt-0.5 size-3 shrink-0 text-burgundy" />
+                <MessageSquareText className="mt-0.5 size-3 shrink-0 text-accent" />
                 <span className="line-clamp-2">{appointment.message}</span>
               </p>
             ) : null}
@@ -330,7 +330,7 @@ function CustomerAppointmentCard({
                 Pay now
               </ButtonLink>
             ) : appointment.status === "confirmed" ? (
-              <span className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-sage/25 bg-sage-light/60 px-3 text-[0.6875rem] font-semibold text-[#516b48]">
+              <span className="inline-flex h-9 items-center justify-center gap-1.5 rounded-full border border-sage/25 bg-sage-light/60 px-3 text-[0.6875rem] font-semibold text-success">
                 <ReceiptText className="size-3.5" />
                 Payment complete
               </span>
@@ -348,7 +348,7 @@ function CustomerAppointmentCard({
             {appointment.status === "confirmed" && appointment.paymentStatus === "paid" ? (
               <Link
                 href={`/services/${appointment.serviceId}`}
-                className="inline-flex items-center justify-center gap-1 text-[0.625rem] font-semibold text-ink-soft transition hover:text-burgundy"
+                className="inline-flex items-center justify-center gap-1 text-[0.625rem] font-semibold text-ink-soft transition hover:text-accent"
               >
                 View ritual
                 <ArrowUpRight className="size-3" />

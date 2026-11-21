@@ -14,7 +14,7 @@ export function Avatar({ src, name, size = 40, className }: AvatarProps) {
       <span
         aria-label={name}
         className={cn(
-          "inline-flex shrink-0 items-center justify-center rounded-full bg-cream-deep font-semibold text-burgundy",
+          "inline-flex shrink-0 items-center justify-center rounded-full bg-cream-deep font-semibold text-accent",
           className
         )}
         style={{ width: size, height: size, fontSize: size * 0.32 }}

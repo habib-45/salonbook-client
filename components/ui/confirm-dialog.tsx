@@ -54,7 +54,7 @@ export function ConfirmDialog({
           className={cn(
             "flex size-10 shrink-0 items-center justify-center rounded-full",
             tone === "danger"
-              ? "bg-[#f7e4e4] text-[#9d3c43]"
+              ? "bg-danger-soft text-danger"
               : "bg-gold-light text-gold"
           )}
         >

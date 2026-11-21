@@ -32,7 +32,7 @@ export function PaymentCancelled() {
     return (
       <div className="flex min-h-[70vh] items-center justify-center text-center">
         <div className="max-w-md">
-          <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+          <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-cream-deep text-accent">
             <CreditCard className="size-6" />
           </span>
           <h1 className="mt-5 font-serif text-[2.3rem] leading-tight tracking-[-0.03em]">
@@ -55,7 +55,7 @@ export function PaymentCancelled() {
   return (
     <div className="mx-auto max-w-xl">
       <div className="animate-fade-up text-center">
-        <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-gold-light text-[#84612d]">
+        <span className="mx-auto flex size-16 items-center justify-center rounded-full bg-gold-light text-warning">
           <X className="size-7" strokeWidth={2.2} />
         </span>
         <p className="eyebrow mt-6 justify-center before:hidden">Checkout closed</p>
@@ -68,7 +68,7 @@ export function PaymentCancelled() {
         </p>
       </div>
 
-      <div className="animate-fade-up delay-75 mt-7 overflow-hidden rounded-[1.35rem] border border-sand/80 bg-white/70">
+      <div className="animate-fade-up delay-75 mt-7 overflow-hidden rounded-[1.35rem] border border-sand/80 bg-surface/70">
         <div className="flex items-center gap-3 border-b border-sand/70 px-5 py-4">
           <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-cream-deep">
             {service ? (
@@ -82,7 +82,7 @@ export function PaymentCancelled() {
             ) : null}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[0.5625rem] font-bold tracking-[0.12em] text-burgundy uppercase">
+            <p className="text-[0.5625rem] font-bold tracking-[0.12em] text-accent uppercase">
               {service?.category ?? "Salon ritual"}
             </p>
             <h2 className="mt-0.5 truncate font-serif text-[1.4rem] leading-tight tracking-[-0.02em]">
@@ -115,7 +115,7 @@ export function PaymentCancelled() {
           </div>
           <div className="flex items-center justify-between gap-3 border-t border-sand/70 pt-3">
             <span className="text-ink-soft">Outstanding payment</span>
-            <span className="font-serif text-xl leading-none tracking-[-0.02em] text-burgundy">
+            <span className="font-serif text-xl leading-none tracking-[-0.02em] text-accent">
               {formatCurrency(appointment.servicePrice)}
             </span>
           </div>
@@ -140,7 +140,7 @@ export function PaymentCancelled() {
       <p className="animate-fade-up delay-225 mt-7 flex items-center justify-center gap-1.5 text-center text-[0.625rem] leading-5 text-ink-soft/70">
         <ShieldCheck className="size-3" />
         No card details were shared with SalonBook.{" "}
-        <Link href="/dashboard/appointments" className="font-semibold text-burgundy hover:underline">
+        <Link href="/dashboard/appointments" className="font-semibold text-accent hover:underline">
           Manage your appointments
         </Link>
       </p>

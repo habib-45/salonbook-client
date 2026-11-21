@@ -11,16 +11,16 @@ const base =
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-burgundy text-cream shadow-[0_10px_24px_-14px_rgba(64,25,42,0.7)] hover:bg-burgundy-dark hover:shadow-[0_14px_28px_-14px_rgba(64,25,42,0.55)]",
+    "bg-burgundy text-paper shadow-[0_10px_24px_-14px_rgba(64,25,42,0.7)] hover:bg-burgundy-dark hover:shadow-[0_14px_28px_-14px_rgba(64,25,42,0.55)]",
   secondary:
     "bg-cream-deep text-ink hover:bg-sand border border-sand/70",
   outline:
-    "border border-ink/20 bg-transparent text-ink hover:border-ink/45 hover:bg-white/60",
+    "border border-ink/20 bg-transparent text-ink hover:border-ink/45 hover:bg-surface/60",
   ghost: "text-ink-soft hover:bg-ink/5 hover:text-ink",
   light:
-    "bg-cream text-burgundy shadow-[0_10px_24px_-16px_rgba(0,0,0,0.55)] hover:bg-white",
+    "bg-paper text-burgundy shadow-[0_10px_24px_-16px_rgba(0,0,0,0.55)] hover:bg-white",
   destructive:
-    "bg-[#9d3c43] text-white hover:bg-[#843138] shadow-[0_10px_24px_-14px_rgba(132,49,56,0.7)]",
+    "bg-danger-solid text-white hover:bg-danger-solid-hover shadow-[0_10px_24px_-14px_rgba(132,49,56,0.7)]",
 }
 
 const sizes: Record<ButtonSize, string> = {

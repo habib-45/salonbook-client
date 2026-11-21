@@ -49,7 +49,7 @@ export function AuthGate({
     return (
       <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-cream px-5 text-center">
         <Logo />
-        <div className="mt-10 flex size-14 items-center justify-center rounded-full bg-[#f8e4e4] text-[#9d3c43]">
+        <div className="mt-10 flex size-14 items-center justify-center rounded-full bg-danger-soft text-danger">
           <Ban className="size-6" />
         </div>
         <h1 className="mt-5 font-serif text-4xl tracking-[-0.03em]">Your access is paused</h1>
@@ -86,9 +86,9 @@ export function AuthGate({
 function AuthLoading({ label = "Opening your salon…" }: { label?: string }) {
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center gap-4 bg-cream px-5" role="status">
-      <span className="relative flex size-14 items-center justify-center rounded-full border border-sand bg-white/70">
-        <span className="absolute inset-0 animate-spin-slow rounded-full border-t border-burgundy" />
-        <span className="font-serif text-xl italic text-burgundy">S</span>
+      <span className="relative flex size-14 items-center justify-center rounded-full border border-sand bg-surface/70">
+        <span className="absolute inset-0 animate-spin-slow rounded-full border-t border-accent" />
+        <span className="font-serif text-xl italic text-accent">S</span>
       </span>
       <p className="flex items-center gap-2 text-xs font-semibold tracking-[0.12em] text-ink-soft uppercase">
         <LoaderCircle className="size-3.5 animate-spin" />
@@ -120,7 +120,7 @@ export function GuestOnly({ children }: { children: React.ReactNode }) {
   if (!isHydrated || currentUser) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <LoaderCircle className="size-5 animate-spin text-burgundy" />
+        <LoaderCircle className="size-5 animate-spin text-accent" />
       </div>
     )
   }

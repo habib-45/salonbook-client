@@ -19,9 +19,9 @@ export default function NotFound() {
 
       <main className="container-page flex flex-1 items-center justify-center py-14">
         <div className="w-full max-w-2xl text-center">
-          <div className="relative mx-auto flex size-20 items-center justify-center rounded-full border border-sand bg-white/60">
-            <span className="font-serif text-4xl italic text-burgundy">404</span>
-            <span className="absolute -right-1 -bottom-1 flex size-7 items-center justify-center rounded-full bg-gold text-cream">
+          <div className="relative mx-auto flex size-20 items-center justify-center rounded-full border border-sand bg-surface/60">
+            <span className="font-serif text-4xl italic text-accent">404</span>
+            <span className="absolute -right-1 -bottom-1 flex size-7 items-center justify-center rounded-full bg-gold text-paper">
               <Scissors className="size-3.5" />
             </span>
           </div>
@@ -49,16 +49,16 @@ export default function NotFound() {
           <div className="mt-10 grid gap-3 text-left sm:grid-cols-2">
             <Link
               href="/services"
-              className="group rounded-2xl border border-sand/80 bg-white/45 p-4 transition hover:border-sand-dark hover:bg-white/70"
+              className="group rounded-2xl border border-sand/80 bg-surface/45 p-4 transition hover:border-sand-dark hover:bg-surface/70"
             >
-              <span className="flex size-9 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+              <span className="flex size-9 items-center justify-center rounded-full bg-cream-deep text-accent">
                 <Search className="size-4" />
               </span>
               <p className="mt-3 text-sm font-semibold">Find your next ritual</p>
               <p className="mt-1 text-xs leading-5 text-ink-soft">
                 Search the full menu by name, category, or price.
               </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-[0.625rem] font-bold tracking-[0.08em] text-burgundy uppercase">
+              <span className="mt-3 inline-flex items-center gap-1 text-[0.625rem] font-bold tracking-[0.08em] text-accent uppercase">
                 Explore the menu
                 <ArrowUpRight className="size-3 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
@@ -66,16 +66,16 @@ export default function NotFound() {
 
             <Link
               href="/dashboard"
-              className="group rounded-2xl border border-sand/80 bg-white/45 p-4 transition hover:border-sand-dark hover:bg-white/70"
+              className="group rounded-2xl border border-sand/80 bg-surface/45 p-4 transition hover:border-sand-dark hover:bg-surface/70"
             >
-              <span className="flex size-9 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+              <span className="flex size-9 items-center justify-center rounded-full bg-cream-deep text-accent">
                 <CalendarDays className="size-4" />
               </span>
               <p className="mt-3 text-sm font-semibold">Check your appointments</p>
               <p className="mt-1 text-xs leading-5 text-ink-soft">
                 View requests, confirmations, and payment receipts.
               </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-[0.625rem] font-bold tracking-[0.08em] text-burgundy uppercase">
+              <span className="mt-3 inline-flex items-center gap-1 text-[0.625rem] font-bold tracking-[0.08em] text-accent uppercase">
                 Go to dashboard
                 <ArrowUpRight className="size-3 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>

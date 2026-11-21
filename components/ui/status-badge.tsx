@@ -12,43 +12,43 @@ type Status =
 
 const styles: Record<Status, { badge: string; dot: string; label: string }> = {
   pending: {
-    badge: "border-[#ead7b3] bg-[#fbf4e5] text-[#84612d]",
-    dot: "bg-[#b68a45]",
+    badge: "border-warning-line bg-warning-soft text-warning",
+    dot: "bg-warning-solid",
     label: "Pending",
   },
   confirmed: {
-    badge: "border-[#ccdac5] bg-[#f2f8ee] text-[#516b48]",
-    dot: "bg-[#718c66]",
+    badge: "border-success-line bg-success-soft text-success",
+    dot: "bg-success-solid",
     label: "Confirmed",
   },
   cancelled: {
-    badge: "border-[#e8c7c9] bg-[#fdf2f3] text-[#8f3f45]",
-    dot: "bg-[#aa5359]",
+    badge: "border-danger-line bg-danger-soft text-danger",
+    dot: "bg-danger-solid",
     label: "Cancelled",
   },
   paid: {
-    badge: "border-[#ccdac5] bg-[#f2f8ee] text-[#516b48]",
-    dot: "bg-[#718c66]",
+    badge: "border-success-line bg-success-soft text-success",
+    dot: "bg-success-solid",
     label: "Paid",
   },
   unpaid: {
-    badge: "border-[#ead7b3] bg-[#fbf4e5] text-[#84612d]",
-    dot: "bg-[#b68a45]",
+    badge: "border-warning-line bg-warning-soft text-warning",
+    dot: "bg-warning-solid",
     label: "Unpaid",
   },
   active: {
-    badge: "border-[#ccdac5] bg-[#f2f8ee] text-[#516b48]",
-    dot: "bg-[#718c66]",
+    badge: "border-success-line bg-success-soft text-success",
+    dot: "bg-success-solid",
     label: "Active",
   },
   inactive: {
-    badge: "border-[#ddd6cf] bg-[#f6f2ed] text-[#786e65]",
-    dot: "bg-[#968c83]",
+    badge: "border-sand bg-cream-deep text-ink-soft",
+    dot: "bg-ink-soft",
     label: "Inactive",
   },
   failed: {
-    badge: "border-[#e8c7c9] bg-[#fdf2f3] text-[#8f3f45]",
-    dot: "bg-[#aa5359]",
+    badge: "border-danger-line bg-danger-soft text-danger",
+    dot: "bg-danger-solid",
     label: "Failed",
   },
 }

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 export function Spinner({ className }: { className?: string }) {
   return (
     <LoaderCircle
-      className={cn("size-5 animate-spin text-burgundy", className)}
+      className={cn("size-5 animate-spin text-accent", className)}
       aria-hidden="true"
     />
   )
@@ -23,9 +23,9 @@ export function PageLoader({
       className={cn("flex min-h-[55vh] flex-col items-center justify-center gap-4", className)}
       role="status"
     >
-      <span className="relative flex size-14 items-center justify-center rounded-full border border-sand bg-white/70">
-        <span className="absolute inset-0 animate-spin-slow rounded-full border-t border-burgundy" />
-        <span className="font-serif text-xl italic text-burgundy">S</span>
+      <span className="relative flex size-14 items-center justify-center rounded-full border border-sand bg-surface/70">
+        <span className="absolute inset-0 animate-spin-slow rounded-full border-t border-accent" />
+        <span className="font-serif text-xl italic text-accent">S</span>
       </span>
       <p className="text-xs font-semibold tracking-[0.14em] text-ink-soft uppercase">{label}</p>
     </div>
@@ -49,7 +49,7 @@ export function ServiceGridSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-label="Loading services">
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="overflow-hidden rounded-2xl border border-sand/70 bg-white/50">
+        <div key={index} className="overflow-hidden rounded-2xl border border-sand/70 bg-surface/50">
           <Skeleton className="aspect-[4/3] rounded-none" />
           <div className="space-y-3 p-5">
             <Skeleton className="h-3 w-24" />
@@ -103,11 +103,11 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center rounded-2xl border border-dashed border-sand-dark/80 bg-white/40 px-6 py-14 text-center",
+        "flex flex-col items-center justify-center rounded-2xl border border-dashed border-sand-dark/80 bg-surface/40 px-6 py-14 text-center",
         className
       )}
     >
-      <span className="flex size-12 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+      <span className="flex size-12 items-center justify-center rounded-full bg-cream-deep text-accent">
         <Icon className="size-5" aria-hidden="true" />
       </span>
       <h3 className="mt-4 font-serif text-2xl tracking-[-0.02em]">{title}</h3>
@@ -129,9 +129,9 @@ export function FormAlert({
       role={tone === "error" ? "alert" : "status"}
       className={cn(
         "rounded-xl border px-3.5 py-3 text-sm leading-5",
-        tone === "error" && "border-[#e9c9c8] bg-[#fff7f6] text-[#8b3337]",
-        tone === "info" && "border-[#e6d8c4] bg-[#fffaf2] text-[#725b36]",
-        tone === "success" && "border-[#cddbc7] bg-[#f7fbf4] text-[#3f5837]"
+        tone === "error" && "border-danger-line bg-danger-soft text-danger",
+        tone === "info" && "border-warning-line bg-warning-soft text-warning",
+        tone === "success" && "border-success-line bg-success-soft text-success"
       )}
     >
       {children}

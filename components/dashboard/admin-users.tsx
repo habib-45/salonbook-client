@@ -134,7 +134,7 @@ export function AdminUsers() {
         />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-sand/80 bg-white/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
+      <div className="mt-6 rounded-2xl border border-sand/80 bg-surface/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
         <div className="flex flex-col gap-3 sm:flex-row">
           <label className="relative flex-1">
             <span className="sr-only">Search customers</span>
@@ -162,7 +162,7 @@ export function AdminUsers() {
             aria-label="Filter customers by access"
             value={filter}
             onChange={(event) => setFilter(event.target.value as StatusFilter)}
-            className="h-11 bg-white/70 sm:w-[190px]"
+            className="h-11 bg-surface/70 sm:w-[190px]"
           >
             <option value="all">All customers</option>
             <option value="active">Active only</option>
@@ -180,7 +180,7 @@ export function AdminUsers() {
           <button
             type="button"
             onClick={clearFilters}
-            className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
+            className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-surface/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
           >
             <X className="size-3" />
             Clear filters
@@ -234,7 +234,7 @@ export function AdminUsers() {
                       )
                       const spend = getCustomerSpend(db, customer.id)
                       return (
-                        <tr key={customer.id} className="transition hover:bg-white/45">
+                        <tr key={customer.id} className="transition hover:bg-surface/45">
                           <td className="px-5 py-3.5">
                             <div className="flex items-center gap-3">
                               <Avatar
@@ -277,7 +277,7 @@ export function AdminUsers() {
                               {appointmentCount === 1 ? "visit" : "visits"}
                             </span>
                           </td>
-                          <td className="px-5 py-3.5 text-xs font-bold text-burgundy">
+                          <td className="px-5 py-3.5 text-xs font-bold text-accent">
                             {formatCurrency(spend)}
                           </td>
                           <td className="px-5 py-3.5">
@@ -285,14 +285,14 @@ export function AdminUsers() {
                               className={cn(
                                 "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.625rem] font-semibold",
                                 customer.isBlocked
-                                  ? "border-[#e8c7c9] bg-[#fdf2f3] text-[#8f3f45]"
-                                  : "border-[#ccdac5] bg-[#f2f8ee] text-[#516b48]"
+                                  ? "border-danger-line bg-danger-soft text-danger"
+                                  : "border-success-line bg-success-soft text-success"
                               )}
                             >
                               <span
                                 className={cn(
                                   "size-1.5 rounded-full",
-                                  customer.isBlocked ? "bg-[#aa5359]" : "bg-[#718c66]"
+                                  customer.isBlocked ? "bg-danger-solid" : "bg-success-solid"
                                 )}
                               />
                               {customer.isBlocked ? "Blocked" : "Active"}
@@ -305,8 +305,8 @@ export function AdminUsers() {
                                 size="sm"
                                 className={cn(
                                   customer.isBlocked
-                                    ? "border-sage/30 text-[#516b48] hover:bg-sage-light/60"
-                                    : "border-[#e2c4c4] text-[#9d3c43] hover:bg-[#fff1f1]"
+                                    ? "border-sage/30 text-success hover:bg-sage-light/60"
+                                    : "border-danger-line text-danger hover:bg-danger-soft"
                                 )}
                                 onClick={() => setBlockTarget(customer)}
                               >
@@ -354,8 +354,8 @@ export function AdminUsers() {
                             className={cn(
                               "shrink-0 rounded-full border px-2 py-0.5 text-[0.5625rem] font-semibold",
                               customer.isBlocked
-                                ? "border-[#e8c7c9] bg-[#fdf2f3] text-[#8f3f45]"
-                                : "border-[#ccdac5] bg-[#f2f8ee] text-[#516b48]"
+                                ? "border-danger-line bg-danger-soft text-danger"
+                                : "border-success-line bg-success-soft text-success"
                             )}
                           >
                             {customer.isBlocked ? "Blocked" : "Active"}
@@ -366,7 +366,7 @@ export function AdminUsers() {
                             {appointmentCount}{" "}
                             {appointmentCount === 1 ? "appointment" : "appointments"}
                           </span>
-                          <span className="font-semibold text-burgundy">
+                          <span className="font-semibold text-accent">
                             {formatCurrency(spend)} spent
                           </span>
                           <span>Joined {formatDate(customer.createdAt.slice(0, 10))}</span>
@@ -386,8 +386,8 @@ export function AdminUsers() {
                         size="sm"
                         className={cn(
                           customer.isBlocked
-                            ? "border-sage/30 text-[#516b48] hover:bg-sage-light/60"
-                            : "border-[#e2c4c4] text-[#9d3c43] hover:bg-[#fff1f1]"
+                            ? "border-sage/30 text-success hover:bg-sage-light/60"
+                            : "border-danger-line text-danger hover:bg-danger-soft"
                         )}
                         onClick={() => setBlockTarget(customer)}
                       >

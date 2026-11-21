@@ -20,6 +20,7 @@ import { useToast } from "@/components/providers/toast-provider"
 import { Avatar } from "@/components/ui/avatar"
 import { ButtonLink } from "@/components/ui/button"
 import { Logo } from "@/components/ui/logo"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { SALON } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 
@@ -89,7 +90,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="hidden border-b border-white/10 bg-burgundy-dark text-cream/85 md:block">
+      <div className="hidden border-b border-white/10 bg-burgundy-dark text-paper/85 md:block">
         <div className="container-page flex h-8 items-center justify-between gap-6 text-[0.6875rem] tracking-[0.02em]">
           <div className="flex items-center gap-5">
             <span className="inline-flex items-center gap-1.5">
@@ -124,7 +125,7 @@ export function Navbar() {
                 className={cn(
                   "relative rounded-full px-3.5 py-2 text-[0.8125rem] font-medium transition-colors",
                   isActive(pathname, link.href)
-                    ? "text-burgundy"
+                    ? "text-accent"
                     : "text-ink-soft hover:text-ink"
                 )}
               >
@@ -144,7 +145,7 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={() => setAccountOpen((open) => !open)}
-                  className="flex h-10 items-center gap-2.5 rounded-full border border-sand/90 bg-white/60 py-1 pr-2.5 pl-1.5 text-sm font-semibold text-ink transition hover:border-sand-dark hover:bg-white"
+                  className="flex h-10 items-center gap-2.5 rounded-full border border-sand/90 bg-surface/60 py-1 pr-2.5 pl-1.5 text-sm font-semibold text-ink transition hover:border-sand-dark hover:bg-surface"
                   aria-expanded={accountOpen}
                   aria-haspopup="menu"
                 >
@@ -162,10 +163,10 @@ export function Navbar() {
                     role="menu"
                     className="animate-fade-up absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-sand/80 bg-cream p-2 shadow-[0_24px_70px_-24px_rgba(45,30,22,0.5)]"
                   >
-                    <div className="rounded-xl bg-white/55 px-3 py-2.5">
+                    <div className="rounded-xl bg-surface/55 px-3 py-2.5">
                       <p className="truncate text-sm font-semibold">{currentUser.name}</p>
                       <p className="mt-0.5 truncate text-xs text-ink-soft">{currentUser.email}</p>
-                      <span className="mt-2 inline-flex rounded-full bg-rose-light/80 px-2 py-0.5 text-[0.625rem] font-bold tracking-[0.1em] text-burgundy uppercase">
+                      <span className="mt-2 inline-flex rounded-full bg-rose-light/80 px-2 py-0.5 text-[0.625rem] font-bold tracking-[0.1em] text-accent uppercase">
                         {currentUser.role}
                       </span>
                     </div>
@@ -173,7 +174,7 @@ export function Navbar() {
                       href="/dashboard"
                       role="menuitem"
                       onClick={closeMenus}
-                      className="mt-1 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-white/70 hover:text-ink"
+                      className="mt-1 flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-surface/70 hover:text-ink"
                     >
                       <LayoutDashboard className="size-4" />
                       Dashboard
@@ -182,7 +183,7 @@ export function Navbar() {
                       href="/dashboard/profile"
                       role="menuitem"
                       onClick={closeMenus}
-                      className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-white/70 hover:text-ink"
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-ink-soft transition hover:bg-surface/70 hover:text-ink"
                     >
                       <UserRound className="size-4" />
                       My profile
@@ -191,7 +192,7 @@ export function Navbar() {
                       type="button"
                       role="menuitem"
                       onClick={handleSignOut}
-                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-[#9d3c43] transition hover:bg-[#fff1f1]"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-danger transition hover:bg-danger-soft"
                     >
                       <LogOut className="size-4" />
                       Sign out
@@ -203,7 +204,7 @@ export function Navbar() {
               <>
                 <Link
                   href="/signin"
-                  className="hidden rounded-full px-3.5 py-2 text-sm font-semibold text-ink-soft transition hover:bg-white/60 hover:text-ink sm:inline-flex"
+                  className="hidden rounded-full px-3.5 py-2 text-sm font-semibold text-ink-soft transition hover:bg-surface/60 hover:text-ink sm:inline-flex"
                 >
                   Sign in
                 </Link>
@@ -223,9 +224,11 @@ export function Navbar() {
               Book now
             </ButtonLink>
 
+            <ThemeToggle />
+
             <button
               type="button"
-              className="flex size-10 items-center justify-center rounded-full border border-sand/90 bg-white/55 text-ink lg:hidden"
+              className="flex size-10 items-center justify-center rounded-full border border-sand/90 bg-surface/55 text-ink lg:hidden"
               onClick={() => setMenuOpen((open) => !open)}
               aria-expanded={menuOpen}
               aria-controls="mobile-navigation"
@@ -252,8 +255,8 @@ export function Navbar() {
                   className={cn(
                     "flex items-center justify-between rounded-xl px-4 py-3.5 font-serif text-2xl tracking-[-0.02em]",
                     isActive(pathname, link.href)
-                      ? "bg-cream-deep text-burgundy"
-                      : "text-ink hover:bg-white/60"
+                      ? "bg-cream-deep text-accent"
+                      : "text-ink hover:bg-surface/60"
                   )}
                 >
                   {link.label}
@@ -266,7 +269,7 @@ export function Navbar() {
 
             {isHydrated && currentUser ? (
               <div className="space-y-3">
-                <div className="flex items-center gap-3 rounded-2xl border border-sand/70 bg-white/55 p-3">
+                <div className="flex items-center gap-3 rounded-2xl border border-sand/70 bg-surface/55 p-3">
                   <Avatar src={currentUser.image} name={currentUser.name} size={44} />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold">{currentUser.name}</p>
@@ -279,7 +282,7 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="w-full rounded-full border border-[#e2c4c4] py-3 text-sm font-semibold text-[#9d3c43]"
+                  className="w-full rounded-full border border-danger-line py-3 text-sm font-semibold text-danger"
                 >
                   Sign out
                 </button>
@@ -295,11 +298,11 @@ export function Navbar() {
               </div>
             )}
 
-            <div className="mt-8 rounded-2xl bg-burgundy px-5 py-6 text-cream">
+            <div className="mt-8 rounded-2xl bg-burgundy px-5 py-6 text-paper">
               <p className="font-serif text-2xl leading-tight tracking-[-0.02em]">
                 Your chair is waiting.
               </p>
-              <p className="mt-2 text-xs leading-5 text-cream/70">
+              <p className="mt-2 text-xs leading-5 text-paper/70">
                 Call us at {SALON.phone} or browse the full service menu.
               </p>
               <ButtonLink href="/services" variant="light" size="sm" className="mt-4" onClick={closeMenus}>

@@ -155,7 +155,7 @@ export function CustomerOverview() {
 
       <div className="mt-6 grid gap-5 xl:grid-cols-[1.45fr_0.9fr]">
         <div className="space-y-5">
-          <section className="relative overflow-hidden rounded-[1.35rem] border border-burgundy-dark/20 bg-burgundy-dark text-cream shadow-[0_24px_60px_-36px_rgba(64,25,42,0.7)]">
+          <section className="relative overflow-hidden rounded-[1.35rem] border border-burgundy-dark/20 bg-burgundy-dark text-paper shadow-[0_24px_60px_-36px_rgba(64,25,42,0.7)]">
             <Image
               src={
                 nextAppointment?.service?.image ??
@@ -169,11 +169,11 @@ export function CustomerOverview() {
             <div className="absolute inset-0 bg-gradient-to-r from-burgundy-dark via-burgundy-dark/90 to-burgundy-dark/35" />
             <div className="relative p-5 sm:p-7">
               <div className="flex items-center justify-between gap-4">
-                <p className="text-[0.625rem] font-bold tracking-[0.16em] text-cream/55 uppercase">
+                <p className="text-[0.625rem] font-bold tracking-[0.16em] text-paper/55 uppercase">
                   {nextAppointment ? "Your next appointment" : "Your next moment"}
                 </p>
                 {nextAppointment ? (
-                  <StatusBadge status={nextAppointment.status} className="border-white/15 bg-white/10 text-cream" />
+                  <StatusBadge status={nextAppointment.status} className="border-white/15 bg-white/10 text-paper" />
                 ) : null}
               </div>
 
@@ -182,7 +182,7 @@ export function CustomerOverview() {
                   <h2 className="mt-4 max-w-lg font-serif text-[2.2rem] leading-[1.02] tracking-[-0.035em] sm:text-[2.7rem]">
                     {nextAppointment.service?.serviceName}
                   </h2>
-                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-cream/65">
+                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-paper/65">
                     <span className="inline-flex items-center gap-1.5">
                       <CalendarDays className="size-3.5 text-rose" />
                       {formatWeekday(nextAppointment.appointmentDate)},{" "}
@@ -209,14 +209,14 @@ export function CustomerOverview() {
                         Complete payment
                       </ButtonLink>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[0.6875rem] font-semibold text-cream/80">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[0.6875rem] font-semibold text-paper/80">
                         <ReceiptText className="size-3.5 text-gold" />
                         Paid · {formatCurrency(nextAppointment.servicePrice)}
                       </span>
                     )}
                     <Link
                       href={`/services/${nextAppointment.serviceId}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-cream/70 transition hover:text-cream"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-paper/70 transition hover:text-paper"
                     >
                       View ritual
                       <ArrowUpRight className="size-3.5" />
@@ -228,7 +228,7 @@ export function CustomerOverview() {
                   <h2 className="mt-4 max-w-md font-serif text-[2.2rem] leading-[1.02] tracking-[-0.035em] sm:text-[2.6rem]">
                     There&apos;s room for a little ritual.
                   </h2>
-                  <p className="mt-3 max-w-md text-sm leading-6 text-cream/60">
+                  <p className="mt-3 max-w-md text-sm leading-6 text-paper/60">
                     Browse the menu and choose a moment that feels like yours. We&apos;ll take
                     care of the rest.
                   </p>
@@ -247,7 +247,7 @@ export function CustomerOverview() {
             action={
               <Link
                 href="/dashboard/appointments"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-burgundy hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline"
               >
                 View all
                 <ArrowRight className="size-3.5" />
@@ -316,7 +316,7 @@ export function CustomerOverview() {
             description="A quick look at your latest appointments and payments."
             action={
               paymentsDue.length > 0 ? (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fbf4e5] px-2.5 py-1 text-[0.625rem] font-semibold text-[#84612d]">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-2.5 py-1 text-[0.625rem] font-semibold text-warning">
                   <CreditCard className="size-3" />
                   {formatCurrency(dueTotal)} due
                 </span>
@@ -355,7 +355,7 @@ export function CustomerOverview() {
                           ) : (
                             <Link
                               href={`/dashboard/payments/${appointment.id}`}
-                              className="text-[0.6875rem] font-semibold text-burgundy hover:underline"
+                              className="text-[0.6875rem] font-semibold text-accent hover:underline"
                             >
                               Pay now
                             </Link>
@@ -392,7 +392,7 @@ export function CustomerOverview() {
                 {paymentsDue.slice(0, 3).map((appointment) => (
                   <div
                     key={appointment.id}
-                    className="rounded-xl border border-[#ead7b3] bg-[#fbf7ec] p-3.5"
+                    className="rounded-xl border border-warning-line bg-warning-soft p-3.5"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -404,7 +404,7 @@ export function CustomerOverview() {
                           {appointment.timeSlot}
                         </p>
                       </div>
-                      <span className="shrink-0 text-sm font-bold text-burgundy">
+                      <span className="shrink-0 text-sm font-bold text-accent">
                         {formatCurrency(appointment.servicePrice)}
                       </span>
                     </div>
@@ -424,13 +424,13 @@ export function CustomerOverview() {
               </div>
             ) : (
               <div className="rounded-xl bg-sage-light/60 px-4 py-5 text-center">
-                <span className="mx-auto flex size-9 items-center justify-center rounded-full bg-white/70 text-sage">
+                <span className="mx-auto flex size-9 items-center justify-center rounded-full bg-surface/70 text-sage">
                   <ReceiptText className="size-4" />
                 </span>
-                <p className="mt-2.5 text-xs font-semibold text-[#516b48]">
+                <p className="mt-2.5 text-xs font-semibold text-success">
                   Everything is settled.
                 </p>
-                <p className="mt-1 text-[0.625rem] leading-5 text-[#516b48]/75">
+                <p className="mt-1 text-[0.625rem] leading-5 text-success/75">
                   Payments become available once the salon confirms an appointment.
                 </p>
               </div>
@@ -443,7 +443,7 @@ export function CustomerOverview() {
             action={
               <Link
                 href="/services"
-                className="inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-burgundy hover:underline"
+                className="inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-accent hover:underline"
               >
                 See all
                 <ArrowUpRight className="size-3" />
@@ -455,7 +455,7 @@ export function CustomerOverview() {
               <Link
                 key={service.id}
                 href={`/services/${service.id}`}
-                className="group flex items-center gap-3 rounded-xl p-1.5 transition hover:bg-white/60"
+                className="group flex items-center gap-3 rounded-xl p-1.5 transition hover:bg-surface/60"
               >
                 <div className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-cream-deep">
                   <Image
@@ -471,17 +471,17 @@ export function CustomerOverview() {
                   <p className="mt-0.5 text-[0.625rem] text-ink-soft">
                     {service.category}
                   </p>
-                  <p className="mt-1 text-[0.6875rem] font-bold text-burgundy">
+                  <p className="mt-1 text-[0.6875rem] font-bold text-accent">
                     {formatCurrency(service.price)}
                   </p>
                 </div>
-                <ArrowUpRight className="size-3.5 shrink-0 text-ink-soft/50 transition group-hover:text-burgundy" />
+                <ArrowUpRight className="size-3.5 shrink-0 text-ink-soft/50 transition group-hover:text-accent" />
               </Link>
             ))}
           </DashPanel>
 
-          <div className="rounded-[1.35rem] border border-sand/80 bg-[#f1e7db] p-5">
-            <p className="text-[0.5625rem] font-bold tracking-[0.15em] text-burgundy uppercase">
+          <div className="rounded-[1.35rem] border border-sand/80 bg-cream-deep p-5">
+            <p className="text-[0.5625rem] font-bold tracking-[0.15em] text-accent uppercase">
               Visit us
             </p>
             <p className="mt-2 font-serif text-[1.6rem] leading-tight tracking-[-0.025em]">
@@ -489,17 +489,17 @@ export function CustomerOverview() {
             </p>
             <div className="mt-3 space-y-2 text-[0.6875rem] leading-5 text-ink-soft">
               <p className="flex items-start gap-2">
-                <MapPin className="mt-0.5 size-3.5 shrink-0 text-burgundy" />
+                <MapPin className="mt-0.5 size-3.5 shrink-0 text-accent" />
                 {SALON.address}
               </p>
               <p className="flex items-center gap-2">
-                <Phone className="size-3.5 shrink-0 text-burgundy" />
+                <Phone className="size-3.5 shrink-0 text-accent" />
                 {SALON.phone}
               </p>
             </div>
             <Link
               href="/#visit"
-              className="mt-4 inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-burgundy hover:underline"
+              className="mt-4 inline-flex items-center gap-1 text-[0.6875rem] font-semibold text-accent hover:underline"
             >
               Hours & directions
               <ArrowUpRight className="size-3" />

@@ -82,7 +82,7 @@ export function ProfileView() {
       />
 
       <div className="mt-7 grid items-start gap-5 lg:grid-cols-[0.78fr_1.22fr]">
-        <div className="relative overflow-hidden rounded-[1.35rem] border border-burgundy-dark/25 bg-burgundy-dark p-5 text-cream shadow-[0_24px_60px_-40px_rgba(64,25,42,0.65)] sm:p-6">
+        <div className="relative overflow-hidden rounded-[1.35rem] border border-burgundy-dark/25 bg-burgundy-dark p-5 text-paper shadow-[0_24px_60px_-40px_rgba(64,25,42,0.65)] sm:p-6">
           <div className="pointer-events-none absolute -top-20 -right-16 size-52 rounded-full bg-rose/20 blur-[60px]" />
           <div className="pointer-events-none absolute -bottom-20 -left-20 size-52 rounded-full bg-gold/10 blur-[60px]" />
 
@@ -91,17 +91,17 @@ export function ProfileView() {
               <Avatar src={image || currentUser.image} name={name || currentUser.name} size={64} />
             </span>
             <div className="min-w-0">
-              <p className="text-[0.5625rem] font-bold tracking-[0.14em] text-cream/45 uppercase">
+              <p className="text-[0.5625rem] font-bold tracking-[0.14em] text-paper/45 uppercase">
                 {currentUser.role === "admin" ? "Salon administrator" : "Salon guest"}
               </p>
               <h2 className="mt-1 truncate font-serif text-[1.8rem] leading-tight tracking-[-0.025em]">
                 {name || currentUser.name}
               </h2>
-              <p className="mt-0.5 truncate text-xs text-cream/55">{currentUser.email}</p>
+              <p className="mt-0.5 truncate text-xs text-paper/55">{currentUser.email}</p>
             </div>
           </div>
 
-          <div className="relative mt-6 space-y-3 border-t border-white/10 pt-5 text-xs text-cream/65">
+          <div className="relative mt-6 space-y-3 border-t border-white/10 pt-5 text-xs text-paper/65">
             <p className="flex items-center gap-2.5">
               <Mail className="size-3.5 shrink-0 text-rose" />
               <span className="truncate">{currentUser.email}</span>
@@ -124,7 +124,7 @@ export function ProfileView() {
             <button
               type="button"
               onClick={() => setSignOutOpen(true)}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-white/15 text-xs font-semibold text-cream/70 transition hover:bg-white/10 hover:text-cream"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-white/15 text-xs font-semibold text-paper/70 transition hover:bg-white/10 hover:text-paper"
             >
               <LogOut className="size-3.5" />
               Sign out
@@ -209,9 +209,9 @@ export function ProfileView() {
             description="Your SalonBook account is protected by the API, not by this browser."
           >
             <div className="space-y-3">
-              <div className="flex flex-col gap-3 rounded-xl border border-sand/80 bg-white/45 p-3.5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 rounded-xl border border-sand/80 bg-surface/45 p-3.5 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-start gap-3">
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cream-deep text-burgundy">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-cream-deep text-accent">
                     <KeyRound className="size-4" />
                   </span>
                   <div>

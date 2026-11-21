@@ -5,8 +5,8 @@ This document explains what was built, how the full-stack architecture fits toge
 - **Project:** SalonBook — full-stack salon appointment booking platform
 - **Assignment:** Programming Hero full-stack assignment, Category 002
 - **Client stack:** Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4
-- **API stack:** Express 5, MongoDB, JWT, bcrypt, Stripe, ImgBB
-- **Status:** Client and API wired end-to-end
+- **API stack:** Express 5, MongoDB, Better Auth, JWT, bcrypt, Stripe, ImgBB
+- **Status:** Deployed on Vercel with Better Auth, live client/API URLs, and separate public repositories
 - **Companion docs:** [README](../README.md) · [Design system](design-system.md)
 
 ---
@@ -19,7 +19,7 @@ SalonBook is a two-sided booking platform:
 - **Customers** track pending and confirmed visits, cancel pending requests, pay for confirmed appointments, and maintain their profile.
 - **Admins** manage the service catalogue, approve or cancel appointments, block or restore customer access, and review/export transactions.
 
-The UI is production-shaped: typed domain models, role guards, validation, loading skeletons, empty states, accessible dialogs, and toast feedback. The data layer calls a separate Express API backed by MongoDB; authentication uses JWTs, Google tokens are verified server-side, images are uploaded to ImgBB, and payments use Stripe Checkout with a verified webhook.
+The UI is production-shaped: typed domain models, role guards, validation, loading skeletons, empty states, accessible dialogs, and toast feedback. The data layer calls a separate Express API backed by MongoDB; Better Auth handles credentials and issues the JWTs that Express verifies, Google tokens are verified server-side, images are uploaded to ImgBB, and payments use Stripe Checkout with a verified webhook.
 
 ---
 
@@ -49,11 +49,13 @@ The UI is production-shaped: typed domain models, role guards, validation, loadi
 | Customer overview statistics | Done | Total, pending, confirmed, and cancelled counts in `customer-overview.tsx` |
 | Admin overview statistics | Done | Customers, active services, total requests, pending, confirmed, and successful payments |
 | Appointment request date | Done | Customer appointment cards show the request timestamp |
-| JWT verification middleware | Done | `serverside/src/middleware/auth.js`; role and blocked status re-read on every request |
+| Better Auth authentication | Done | `serverside/src/auth/better-auth.js`; email/password, bcrypt, user model, accounts, JWT plugin |
+| JWT verification middleware | Done | `serverside/src/middleware/auth.js`; Better Auth verifies the JWT and the API re-reads role and blocked status |
 | Server-side role verification | Done | `requireRole` guards plus admin/customer route middleware on the API |
 | Stripe webhook-only payment updates | Done | Webhook route verifies the signature, amount, and idempotent session before marking paid |
 | Service image upload only | Done | Admin service form uses `ImageUpload`; no image-URL field |
 | Responsive, professional salon UI | Done | Custom design system, fluid layouts, mobile navigation and tables |
+| Light and dark theme | Done | `components/providers/theme-provider.tsx`, `components/ui/theme-toggle.tsx`, semantic CSS variables in `app/globals.css` |
 | Loading states | Done | Route-level loading files, skeletons, button spinners, auth hydrating states |
 | Toast notifications | Done | `components/providers/toast-provider.tsx`; no `alert()` or `confirm()` |
 | Error handling | Done | Inline validation, `FormAlert`, root/dashboard error boundaries, 404 page |
@@ -76,12 +78,12 @@ The UI is production-shaped: typed domain models, role guards, validation, loadi
 
 | Area | Implementation |
 | --- | --- |
-| Authentication | Email/password checked by the API; bcrypt hashes; signed JWT returned to the client |
-| Session | JWT in `localStorage`, sent as `Authorization: Bearer` and verified on every request |
-| Google sign-in | Google Identity Services access token verified by the API; seeded fallback when unconfigured |
+| Authentication | Better Auth email/password with bcrypt hashes; Better Auth JWT plugin signs the API token |
+| Session | JWT in `localStorage`, sent as `Authorization: Bearer` and verified by Better Auth on every request |
+| Google sign-in | Google Identity Services access token verified by the API, then linked to a Better Auth user; seeded fallback when unconfigured |
 | Image upload | Browser compresses to a data URL; API uploads to ImgBB or stores a size-limited inline fallback |
 | Payments | Stripe Checkout Session created by the API; hosted card form; verified webhook marks paid |
-| Data | MongoDB collections `users`, `services`, `appointments`, and `transactions` |
+| Data | MongoDB collections `users`, `account`, `session`, `verification`, `jwks`, `services`, `appointments`, and `transactions` |
 | Role checks | UI `AuthGate` plus server middleware that re-reads the role and blocked flag |
 
 ---
@@ -94,9 +96,10 @@ The UI is production-shaped: typed domain models, role guards, validation, loadi
 Browser
   └─ app/layout.tsx (fonts, metadata)
       └─ AppProviders
-          ├─ ToastProvider ............ accessible notifications
-          └─ StoreProvider ............ hydration, session, all actions
-              └─ App Router pages
+          ├─ ThemeProvider ............ light/dark/system preference
+          └─ ToastProvider ............ accessible notifications
+              └─ StoreProvider ........ hydration, session, all actions
+                  └─ App Router pages
                   ├─ (marketing) ....... navbar, footer, public pages
                   ├─ (auth) ............ split-screen sign-in/up
                   └─ dashboard ......... AuthGate + DashboardShell
@@ -116,7 +119,8 @@ Browser
 | State and actions | `components/providers/store-provider.tsx` | Bootstrap hydration, token session, async API actions, optimistic user state |
 | API client | `lib/api.ts`, `lib/google.ts` | Fetch wrapper, typed errors, token storage, Google token request |
 | Domain and selectors | `lib/types.ts`, `lib/selectors.ts`, `lib/utils.ts` | Types, joins/statistics, formatting and date helpers |
-| Styling | `app/globals.css` | Tailwind theme tokens, typography, base styles, animations |
+| Styling | `app/globals.css` | Tailwind theme tokens, light/dark palettes, typography, base styles, animations |
+| Theme | `components/providers/theme-provider.tsx`, `components/ui/theme-toggle.tsx` | Persists light/dark/system preference and applies it before paint |
 
 ### Data flow
 
@@ -133,11 +137,18 @@ Protection is intentionally layered:
 
 `callbackUrl` is sanitized by `safeCallbackUrl` so only same-origin relative paths are accepted.
 
-### Authentication decision
+### Authentication with Better Auth
 
-The brief asks for Better Auth and also requires JWT verification middleware on an Express API. This build uses a small JWT auth layer in Express so the API can verify a bearer token, reload the user, and enforce role and blocked-user rules on every protected route. Passwords are hashed with bcrypt, Google tokens are verified server-side, and the client stores only the signed JWT.
+The API uses **Better Auth** as the authentication engine:
 
-If Better Auth is a hard submission requirement, it can be introduced as the credential and Google identity provider, with Better Auth's JWT plugin issuing the token that the existing Express middleware verifies. That migration changes the auth routes, seed script, and client sign-in/sign-up calls; the rest of the data model and business rules stay the same. Confirm this before submitting if the evaluator checks for the Better Auth package specifically.
+- `serverside/src/auth/better-auth.js` configures Better Auth with the MongoDB adapter, the `users`, `session`, `account`, and `verification` collections, and a custom bcrypt hash/verify pair.
+- `role`, `isBlocked`, `provider`, and `googleId` are Better Auth additional fields marked `input: false`, so a browser cannot promote itself to admin or clear its own block.
+- The JWT plugin signs short-lived API tokens with EdDSA. The Express middleware calls Better Auth's `verifyJWT`, reloads the user from MongoDB, and re-checks the role and blocked flag on every protected request.
+- Legacy SalonBook users had a `passwordHash` on the user document. Startup and `npm run auth:migrate` backfill those hashes into Better Auth `account` records, so existing accounts keep working without a password reset.
+- The client still receives a compact `{ token, user }` response from `/api/auth/register` and `/api/auth/login`; it never talks to Better Auth directly. Better Auth's own handler is available at `/api/auth/better/*` for diagnostics and future OAuth flows.
+- Google sign-in keeps the Google Identity Services access-token flow: the API verifies the token with Google, creates or links the user and Google account record, then issues a Better Auth JWT. The seeded Google demo account follows the same path.
+
+This keeps the JWT verification requirement and the existing Express business routes intact while making Better Auth the source of truth for credentials, sessions, and token signing.
 
 ### Dashboard statistics
 
@@ -163,7 +174,7 @@ All types live in `lib/types.ts`.
 | `provider` | `"credentials" \| "google"`? | Account origin |
 | `createdAt` | ISO string | "Member since" display |
 
-Password hashes are stored in MongoDB with bcrypt and are never returned by the API.
+Password hashes are stored by Better Auth in the `account` collection with bcrypt and are never returned by the API. The legacy `passwordHash` user field is retained only so older records can be migrated into Better Auth accounts.
 
 ### Service
 
@@ -228,12 +239,12 @@ Appointment dates are relative to the day the seed is first created, so the dash
 
 ### Authentication and account access
 
-- Sign-in normalizes the email and verifies the password against its bcrypt hash in MongoDB.
-- The API issues a signed JWT; every protected request re-reads the user, role, and blocked flag from the database.
+- Sign-in normalizes the email and Better Auth verifies the password against its bcrypt hash in the `account` collection.
+- Better Auth's JWT plugin issues the API token; every protected request verifies it, reloads the user, and re-checks the role and blocked flag from MongoDB.
 - Blocked accounts cannot sign in or use protected endpoints and see a dedicated blocked screen if their token is still active.
 - Sign-up requires a name of at least 2 characters, a valid unique email, and a password with at least 6 characters, one uppercase letter, and one lowercase letter.
 - New accounts are always `customer` role and are signed in immediately.
-- Google sign-in sends a Google token to the API for verification; the seeded Google fallback is used when no client ID is configured and demo mode is enabled.
+- Google sign-in sends a Google token to the API for verification, then creates or links the Better Auth user and account record. The seeded Google fallback is used when no client ID is configured and demo mode is enabled.
 - Sign-out clears the stored JWT and redirects home.
 
 ### Booking
@@ -335,6 +346,7 @@ Customer requests        pending ──────────────► c
 - **Dialogs:** modal and confirmation components close on Escape, restore body scroll, trap visual focus within the panel, and require explicit confirmation for destructive actions.
 - **Accessibility:** labelled fields, `aria-invalid`, descriptive errors, `aria-live` toasts, keyboard-operable menus, visible focus rings, semantic headings, and alt text for meaningful imagery.
 - **No native dialogs:** `alert()`, `confirm()`, and `prompt()` are not used anywhere in the app.
+- **Theme:** light, dark, and system modes share one semantic token set. The toggle is available in the public navbar, auth layout, dashboard header, and mobile sidebar. The preference is stored in `localStorage` under `salonbook-theme`, and an inline script applies it before first paint to avoid a flash. Dark mode keeps the warm salon character rather than switching to a neutral grey palette.
 
 ---
 
@@ -424,6 +436,8 @@ To reset the demo snapshot, run `npm run seed:fresh` in the server repository. T
 - [ ] No `alert()`, `confirm()`, or `prompt()` exists.
 - [ ] Keyboard Escape closes modals and menus.
 - [ ] Toasts announce success and failure without blocking the page.
+- [ ] Theme toggle switches every public, auth, and dashboard surface without unreadable text or invisible borders.
+- [ ] A reload keeps the chosen theme, and a fresh browser follows the system preference without a flash.
 - [ ] 404 and error pages render with the brand shell and useful actions.
 - [ ] `npm run typecheck`, `npm run lint`, and `npm run build` all pass.
 - [ ] Layout has no horizontal overflow at 360 px, 768 px, 1024 px, and 1440 px.
@@ -447,9 +461,10 @@ The client talks to the Express API in the companion `serverside` repository. Al
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
-| `POST` | `/auth/register` | Create a customer account |
-| `POST` | `/auth/login` | Credential sign-in |
-| `GET` | `/auth/config` | Google client ID and demo availability |
+| `POST` | `/auth/register` | Create a customer account through Better Auth |
+| `POST` | `/auth/login` | Better Auth credential sign-in, returns a Better Auth JWT |
+| `GET` | `/auth/config` | Auth provider, Google client ID, and demo availability |
+| `ALL` | `/auth/better/*` | Better Auth handler (diagnostics and future OAuth flows) |
 | `POST` | `/auth/google` | Verify a Google token and issue a JWT |
 | `POST` | `/auth/google/demo` | Seeded Google fallback when enabled |
 | `GET` | `/auth/me` | Current user |
@@ -475,11 +490,11 @@ The client talks to the Express API in the companion `serverside` repository. Al
 
 ### Server-side rules
 
-- Session validation, role checks, and blocked-account checks on every protected request.
+- Better Auth JWT validation, role checks, and blocked-account checks on every protected request.
 - Ownership checks for appointments, payments, and profile updates.
 - Booking validation (active service, future date, valid slot, duplicate prevention).
 - Appointment status transitions and service deletion guards.
-- Password hashing with bcrypt; hashes are never serialized.
+- Better Auth credential hashes use bcrypt and are never serialized.
 - Stripe amount calculation from the database, not the client.
 - Payment state changes only from a verified webhook.
 - Image type and size validation before upload.
@@ -491,22 +506,45 @@ The client talks to the Express API in the companion `serverside` repository. Al
 | `NEXT_PUBLIC_API_URL` | Client | Express API base URL, including `/api` |
 | `NEXT_PUBLIC_APP_URL` | Client | Public origin for metadata |
 
-Server-only values live in the API repository: `PORT`, `MONGODB_URI`, `DB_USER`, `DB_PASS`, `DB_NAME`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `CLIENT_URL`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_CURRENCY`, `IMGBB_API_KEY`, `GOOGLE_CLIENT_ID`, and `ALLOW_GOOGLE_DEMO`.
+Server-only values live in the API repository: `PORT`, `MONGODB_URI`, `DB_USER`, `DB_PASS`, `DB_NAME`, `BETTER_AUTH_SECRET` (or legacy `JWT_SECRET`), `BETTER_AUTH_URL`, `JWT_EXPIRES_IN`, `CLIENT_URL`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_CURRENCY`, `IMGBB_API_KEY`, `GOOGLE_CLIENT_ID`, and `ALLOW_GOOGLE_DEMO`.
 
 ---
 
 ## 14. Known limitations
 
-- Stripe payments require server keys and a webhook secret; without them the checkout page shows a configuration message.
-- Google OAuth requires an authorized JavaScript origin and a server client ID; otherwise the seeded demo account is used.
-- ImgBB uploads require a key; without one the API stores compressed inline data URLs for local development.
-- No email verification, password reset, reschedule, refund, or coupon flow.
-- Uploaded inline images are size-limited; production should configure ImgBB.
+- No email verification, password reset, reschedule, refund, coupon, or multi-location flow.
+- Stripe Checkout is implemented with the configured test secret key. A valid webhook signing secret from the deployed Stripe endpoint must replace the placeholder before a production payment can be marked paid end-to-end.
+- Google sign-in uses a real OAuth Web Client ID; the deployed client origin must be added to the authorized JavaScript origins in Google Cloud Console before the live Google button can complete.
+- ImgBB uploads are configured through `IMGBB_API_KEY`; when the key is absent the API stores compressed inline data URLs for local development.
+- Uploaded inline images are size-limited; production should always configure ImgBB.
 - The seeded passwords are for review only and must be changed for a real salon.
+- The light/dark preference is stored per browser, not per account.
+- The hosted review database contains real review data, so `npm run seed:fresh` must not be run against it without permission.
 
 ---
 
-## 15. Development history
+## 15. Deployment and verification status
+
+| Item | Status | Detail |
+| --- | --- | --- |
+| Live client | Deployed | https://salonbook-client-sandy.vercel.app |
+| Live API | Deployed | https://salonbook-api-mu.vercel.app |
+| Health check | Verified | `/api/health` returns `status: ok` and `database: connected` |
+| Client repository | Public | https://github.com/habib-45/client-side-9 |
+| Server repository | Public | https://github.com/habib-45/serside-9 |
+| Better Auth | Verified | Demo admin and customer credential logins return Better Auth JWTs; `/api/auth/better/jwks` responds |
+| Role-scoped bootstrap | Verified | Admin sees users, appointments, and transactions; customer sees only their own data |
+| CORS | Verified | The deployed client origin passes preflight; unknown origins are rejected |
+| Seeded review accounts | Verified | Admin and customer demo logins work against the hosted database |
+| Stripe | Configured, needs live webhook secret | Checkout creation is wired; the deployed webhook endpoint must be registered in Stripe and its signing secret installed |
+| Google OAuth | Configured, needs origin | A Web Client ID is set; add the deployed client origin to Google Cloud Console |
+| ImgBB | Configured | An API key is set on the server; uploads should be smoke-tested with a review service or profile image |
+
+Production smoke tests already passed for health, public bootstrap, demo admin/customer login, role-scoped bootstrap, JWKS, and CORS preflight.
+
+---
+
+## 16. Development history
 
 Work was delivered in focused commits so each layer is reviewable:
 
@@ -526,12 +564,15 @@ Work was delivered in focused commits so each layer is reviewable:
 14. Loading, error, and not-found states.
 15. API-backed store, token session, and Google OAuth.
 16. README, server documentation, and project documentation.
+17. Better Auth migration with the MongoDB adapter, bcrypt compatibility, JWT plugin, and legacy account backfill.
+18. Light/dark theme system, semantic colour tokens, and theme toggles across public and dashboard surfaces.
+19. Vercel deployment for both repositories, production environment variables, hosted demo accounts, and live-link documentation.
 
 Run `git log --oneline` in both repositories for the full list.
 
 ---
 
-## 16. Submission checklist
+## 17. Submission checklist
 
 - [x] Public home, services, sign-in, and sign-up pages
 - [x] Protected service details and booking
@@ -546,12 +587,15 @@ Run `git log --oneline` in both repositories for the full list.
 - [x] 20+ meaningful commits
 - [x] README with setup, routes, demo accounts, and scripts
 - [x] Environment variable names documented
-- [x] Express API, MongoDB, JWT auth, and role middleware
+- [x] Express API, MongoDB, Better Auth, JWT verification, and role middleware
 - [x] Stripe Checkout with verified webhook payments
 - [x] ImgBB uploads with an inline development fallback
+- [x] Light and dark theme with system detection and persistence
 - [x] TypeScript, ESLint, and production build verified
 - [x] Customer and admin overview statistics match the brief
 - [x] Appointment request date shown to customers
-- [ ] Add live site URL after deployment
-- [ ] Add GitHub client and server repository URLs
-- [ ] Confirm whether the evaluator requires Better Auth specifically; the current build uses JWT auth
+- [x] Live client and API deployed on Vercel
+- [x] Separate public GitHub client and server repositories
+- [x] Live links and repository links documented in both READMEs
+- [ ] Replace the Stripe webhook placeholder with a signing secret from the deployed endpoint and record a test payment
+- [ ] Add the deployed client origin to Google Cloud Console and verify real Google sign-in

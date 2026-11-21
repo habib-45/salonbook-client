@@ -106,7 +106,7 @@ export function Modal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-ink/50 p-0 backdrop-blur-[3px] sm:items-center sm:p-5"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-scrim/60 p-0 backdrop-blur-[3px] sm:items-center sm:p-5"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onOpenChange(false)
       }}
@@ -119,7 +119,7 @@ export function Modal({
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
         className={cn(
-          "animate-fade-up max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl border border-white/70 bg-cream shadow-[0_30px_120px_-30px_rgba(33,24,19,0.65)] outline-none sm:rounded-3xl",
+          "animate-fade-up max-h-[92dvh] w-full overflow-y-auto rounded-t-3xl border border-sand/70 bg-cream shadow-[0_30px_120px_-30px_rgba(33,24,19,0.65)] outline-none sm:rounded-3xl",
           sizes[size],
           className
         )}
@@ -127,7 +127,7 @@ export function Modal({
         <div className="flex items-start justify-between gap-5 border-b border-sand/80 px-5 py-5 sm:px-6">
           <div className="min-w-0">
             {eyebrow ? (
-              <p className="mb-1.5 text-[0.625rem] font-bold tracking-[0.16em] text-burgundy uppercase">
+              <p className="mb-1.5 text-[0.625rem] font-bold tracking-[0.16em] text-accent uppercase">
                 {eyebrow}
               </p>
             ) : null}
@@ -143,7 +143,7 @@ export function Modal({
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-sand/80 bg-white/60 text-ink-soft transition hover:bg-white hover:text-ink focus-visible:ring-2 focus-visible:ring-rose focus-visible:outline-none"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full border border-sand/80 bg-surface/60 text-ink-soft transition hover:bg-surface hover:text-ink focus-visible:ring-2 focus-visible:ring-rose focus-visible:outline-none"
             aria-label="Close dialog"
           >
             <X className="size-4" />
@@ -151,7 +151,7 @@ export function Modal({
         </div>
         <div className={cn("px-5 py-5 sm:px-6", bodyClassName)}>{children}</div>
         {footer ? (
-          <div className="flex flex-col-reverse gap-2.5 border-t border-sand/80 bg-white/35 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+          <div className="flex flex-col-reverse gap-2.5 border-t border-sand/80 bg-surface/35 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
             {footer}
           </div>
         ) : null}

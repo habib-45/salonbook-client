@@ -21,8 +21,8 @@ export function Logo({ variant = "dark", className, href = "/" }: LogoProps) {
         className={cn(
           "relative flex size-10 items-center justify-center rounded-full border transition-transform duration-300 group-hover:-rotate-6",
           variant === "dark"
-            ? "border-burgundy/10 bg-burgundy text-cream"
-            : "border-white/15 bg-cream text-burgundy"
+            ? "border-accent/10 bg-burgundy text-paper"
+            : "border-white/15 bg-paper text-burgundy"
         )}
       >
         <span className="font-serif text-[1.45rem] leading-none italic">S</span>
@@ -36,7 +36,7 @@ export function Logo({ variant = "dark", className, href = "/" }: LogoProps) {
       <span
         className={cn(
           "font-serif text-[1.65rem] leading-none tracking-[-0.035em]",
-          variant === "dark" ? "text-ink" : "text-cream"
+          variant === "dark" ? "text-ink" : "text-paper"
         )}
       >
         Salon<span className="italic">Book</span>
@@ -49,7 +49,7 @@ export function LogoMark({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "relative flex size-10 items-center justify-center rounded-full bg-burgundy text-cream",
+        "relative flex size-10 items-center justify-center rounded-full bg-burgundy text-paper",
         className
       )}
     >

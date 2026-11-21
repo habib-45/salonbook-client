@@ -19,7 +19,7 @@ export default function DashboardError({
   return (
     <div className="flex min-h-[60vh] items-center justify-center py-8">
       <div className="w-full max-w-lg text-center">
-        <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-[#f7e4e4] text-[#9d3c43]">
+        <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-danger-soft text-danger">
           <CircleAlert className="size-6" />
         </span>
         <p className="eyebrow mt-5 justify-center before:hidden">Dashboard error</p>
@@ -47,7 +47,7 @@ export default function DashboardError({
         </div>
         <p className="mt-5 text-[0.625rem] text-ink-soft/65">
           Still stuck?{" "}
-          <Link href="/dashboard/profile" className="font-semibold text-burgundy hover:underline">
+          <Link href="/dashboard/profile" className="font-semibold text-accent hover:underline">
             Visit your profile
           </Link>{" "}
           to check your account details.

@@ -189,7 +189,7 @@ export function AdminAppointments() {
         />
       </div>
 
-      <div className="mt-6 rounded-2xl border border-sand/80 bg-white/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
+      <div className="mt-6 rounded-2xl border border-sand/80 bg-surface/55 p-3.5 shadow-[0_18px_50px_-42px_rgba(52,37,28,0.45)] sm:p-4">
         <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
           <div
             className="flex gap-1.5 overflow-x-auto pb-0.5 hide-scrollbar"
@@ -206,8 +206,8 @@ export function AdminAppointments() {
                 className={cn(
                   "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-[0.6875rem] font-semibold transition",
                   filter === option.value
-                    ? "border-burgundy bg-burgundy text-cream"
-                    : "border-sand/80 bg-white/50 text-ink-soft hover:border-sand-dark hover:text-ink"
+                    ? "border-accent bg-burgundy text-paper"
+                    : "border-sand/80 bg-surface/50 text-ink-soft hover:border-sand-dark hover:text-ink"
                 )}
               >
                 {option.label}
@@ -215,7 +215,7 @@ export function AdminAppointments() {
                   className={cn(
                     "rounded-full px-1.5 py-0.5 text-[0.5625rem] font-bold",
                     filter === option.value
-                      ? "bg-white/15 text-cream"
+                      ? "bg-white/15 text-paper"
                       : "bg-cream-deep text-ink-soft"
                   )}
                 >
@@ -243,7 +243,7 @@ export function AdminAppointments() {
               onChange={(event) =>
                 setPaymentFilter(event.target.value as PaymentFilter)
               }
-              className="h-11 bg-white/70 sm:w-[165px]"
+              className="h-11 bg-surface/70 sm:w-[165px]"
             >
               <option value="all">All payments</option>
               <option value="paid">Paid only</option>
@@ -262,7 +262,7 @@ export function AdminAppointments() {
           <button
             type="button"
             onClick={clearFilters}
-            className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
+            className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-surface/50 px-3 py-1.5 text-[0.6875rem] font-semibold text-ink-soft transition hover:border-sand-dark hover:text-ink"
           >
             <X className="size-3" />
             Clear filters
@@ -312,7 +312,7 @@ export function AdminAppointments() {
                   </thead>
                   <tbody className="divide-y divide-sand/70">
                     {visible.map((appointment) => (
-                      <tr key={appointment.id} className="transition hover:bg-white/45">
+                      <tr key={appointment.id} className="transition hover:bg-surface/45">
                         <td className="px-5 py-3.5">
                           <div className="flex items-center gap-3">
                             <Avatar
@@ -327,7 +327,7 @@ export function AdminAppointments() {
                                 </span>
                                 {appointment.customer?.isBlocked ? (
                                   <ShieldAlert
-                                    className="size-3.5 shrink-0 text-[#9d3c43]"
+                                    className="size-3.5 shrink-0 text-danger"
                                     aria-label="Blocked customer"
                                   />
                                 ) : null}
@@ -356,7 +356,7 @@ export function AdminAppointments() {
                           </p>
                         </td>
                         <td className="px-5 py-3.5">
-                          <p className="text-xs font-bold text-burgundy">
+                          <p className="text-xs font-bold text-accent">
                             {formatCurrency(appointment.servicePrice)}
                           </p>
                           <StatusBadge
@@ -391,7 +391,7 @@ export function AdminAppointments() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="border-[#e2c4c4] text-[#9d3c43] hover:bg-[#fff1f1]"
+                                className="border-danger-line text-danger hover:bg-danger-soft"
                                 onClick={() => setCancelTarget(appointment)}
                               >
                                 <X className="size-3.5" />
@@ -426,7 +426,7 @@ export function AdminAppointments() {
                           {appointment.customer?.name ?? "Customer"}
                           {appointment.customer?.isBlocked ? (
                             <ShieldAlert
-                              className="size-3.5 shrink-0 text-[#9d3c43]"
+                              className="size-3.5 shrink-0 text-danger"
                               aria-label="Blocked customer"
                             />
                           ) : null}
@@ -463,7 +463,7 @@ export function AdminAppointments() {
 
                   <div className="mt-3 flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs font-bold text-burgundy">
+                      <p className="text-xs font-bold text-accent">
                         {formatCurrency(appointment.servicePrice)}
                       </p>
                       <StatusBadge
@@ -490,7 +490,7 @@ export function AdminAppointments() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border-[#e2c4c4] text-[#9d3c43] hover:bg-[#fff1f1]"
+                          className="border-danger-line text-danger hover:bg-danger-soft"
                           onClick={() => setCancelTarget(appointment)}
                         >
                           <X className="size-3.5" />

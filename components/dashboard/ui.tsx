@@ -38,10 +38,10 @@ export function PageHeader({
 }
 
 const tones = {
-  burgundy: "bg-burgundy text-cream",
-  rose: "bg-rose-light text-burgundy",
+  burgundy: "bg-burgundy text-paper",
+  rose: "bg-rose-light text-accent",
   sage: "bg-sage-light text-sage",
-  gold: "bg-gold-light text-[#84612d]",
+  gold: "bg-gold-light text-warning",
   neutral: "bg-cream-deep text-ink-soft",
 } as const
 
@@ -65,7 +65,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "surface-card flex flex-col justify-between gap-5 p-5 transition duration-300 hover:-translate-y-0.5 hover:bg-white/80",
+        "surface-card flex flex-col justify-between gap-5 p-5 transition duration-300 hover:-translate-y-0.5 hover:bg-surface/80",
         className
       )}
     >

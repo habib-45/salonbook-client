@@ -107,10 +107,10 @@ export function ImageUpload({
           "group relative overflow-hidden rounded-2xl border border-dashed transition",
           aspect === "square" ? "aspect-square max-w-[220px]" : "aspect-[16/9]",
           isDragging
-            ? "border-burgundy bg-rose-light/40"
+            ? "border-accent bg-rose-light/40"
             : error
-              ? "border-[#b54a4e] bg-[#fff8f7]"
-              : "border-sand-dark bg-white/45 hover:border-burgundy/45 hover:bg-white/70"
+              ? "border-danger-solid bg-danger-soft"
+              : "border-sand-dark bg-surface/45 hover:border-accent/45 hover:bg-surface/70"
         )}
         onDragOver={(event) => {
           event.preventDefault()
@@ -136,7 +136,7 @@ export function ImageUpload({
                 type="button"
                 onClick={() => inputRef.current?.click()}
                 disabled={disabled || isProcessing}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/90 px-3 text-xs font-semibold text-ink shadow-sm backdrop-blur transition hover:bg-white"
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface/90 px-3 text-xs font-semibold text-ink shadow-sm backdrop-blur transition hover:bg-surface"
               >
                 <Upload className="size-3.5" />
                 Replace
@@ -145,7 +145,7 @@ export function ImageUpload({
                 type="button"
                 onClick={() => onChange("")}
                 disabled={disabled}
-                className="inline-flex size-8 items-center justify-center rounded-full bg-white/90 text-[#9d3c43] shadow-sm backdrop-blur transition hover:bg-white"
+                className="inline-flex size-8 items-center justify-center rounded-full bg-surface/90 text-danger shadow-sm backdrop-blur transition hover:bg-surface"
                 aria-label="Remove image"
               >
                 <Trash2 className="size-3.5" />
@@ -159,7 +159,7 @@ export function ImageUpload({
             disabled={disabled || isProcessing}
             className="flex size-full flex-col items-center justify-center gap-2.5 px-5 text-center disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <span className="flex size-11 items-center justify-center rounded-full bg-cream-deep text-burgundy transition group-hover:bg-rose-light">
+            <span className="flex size-11 items-center justify-center rounded-full bg-cream-deep text-accent transition group-hover:bg-rose-light">
               {isProcessing ? (
                 <LoaderCircle className="size-5 animate-spin" />
               ) : (
@@ -177,13 +177,13 @@ export function ImageUpload({
 
         {isProcessing && value ? (
           <span className="absolute inset-0 flex items-center justify-center bg-cream/70 backdrop-blur-sm">
-            <LoaderCircle className="size-6 animate-spin text-burgundy" />
+            <LoaderCircle className="size-6 animate-spin text-accent" />
           </span>
         ) : null}
       </div>
 
       {error ? (
-        <p className="text-xs leading-5 text-[#9d3c43]" role="alert">
+        <p className="text-xs leading-5 text-danger" role="alert">
           {error}
         </p>
       ) : null}

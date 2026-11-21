@@ -95,7 +95,7 @@ export function SignUpForm() {
         <h1 className="font-serif text-[2.9rem] leading-[0.98] tracking-[-0.04em] text-ink sm:text-[3.25rem]">
           Make a little room
           <br />
-          for <span className="italic text-burgundy">yourself.</span>
+          for <span className="italic text-accent">yourself.</span>
         </h1>
         <p className="mt-4 text-sm leading-6 text-ink-soft">
           Create your account to request appointments and keep every ritual in one place.
@@ -181,7 +181,7 @@ export function SignUpForm() {
               <span
                 key={rule.label}
                 className={`inline-flex items-center gap-1 text-[0.625rem] ${
-                  rule.met ? "text-[#54784a]" : "text-ink-soft/65"
+                  rule.met ? "text-success" : "text-ink-soft/65"
                 }`}
               >
                 {rule.met ? <Check className="size-3" /> : <X className="size-3" />}
@@ -242,15 +242,15 @@ export function SignUpForm() {
         Already have an account?{" "}
         <Link
           href="/signin"
-          className="font-semibold text-burgundy underline decoration-rose/50 underline-offset-4 transition hover:decoration-burgundy"
+          className="font-semibold text-accent underline decoration-rose/50 underline-offset-4 transition hover:decoration-accent"
         >
           Sign in
         </Link>
       </p>
 
       <p className="mt-5 border-t border-sand/70 pt-4 text-center text-[0.625rem] leading-5 text-ink-soft/75">
-        Your password is hashed with bcrypt before it is stored, and your profile lives in
-        the SalonBook database — never in this browser.
+        Better Auth stores your credential hash in the SalonBook database, and your profile
+        never lives in this browser.
       </p>
     </div>
   )
